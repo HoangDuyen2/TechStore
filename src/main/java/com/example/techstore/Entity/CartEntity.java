@@ -3,6 +3,7 @@ package com.example.techstore.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Setter
@@ -15,16 +16,16 @@ import java.util.List;
 @Table(name = "carts")
 public class CartEntity {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cartId;
+    private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @OneToOne(mappedBy = "cart")
     private UserEntity user;
 
     @OneToMany(mappedBy = "cart")
-    private List<CartDetailEntity> cartDetailEntityList;
+    private List<CartDetailEntity> cartDetails;
 
     @Column(name = "total_price",nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 0")
-    private Long totalPrice;
+    private BigDecimal totalPrice;
 }

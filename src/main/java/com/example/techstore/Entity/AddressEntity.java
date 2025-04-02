@@ -3,6 +3,8 @@ package com.example.techstore.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity
@@ -14,8 +16,11 @@ import lombok.*;
 public class AddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "addressId")
+    @Column(name = "id")
     private Long id;
+
+    @Column(nullable = false, length = 100)
+    private String detail;
 
     @Column(nullable = false, length = 100)
     private String street;
@@ -28,4 +33,10 @@ public class AddressEntity {
 
     @Column(nullable = false, length = 100)
     private String province;
+
+    @OneToOne(mappedBy = "address")
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "address")
+    private List<OrderEntity> orders;
 }

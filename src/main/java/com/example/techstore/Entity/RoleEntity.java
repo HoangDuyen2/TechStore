@@ -4,6 +4,8 @@ import com.example.techstore.Enum.ERole;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity
@@ -15,10 +17,13 @@ import lombok.*;
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "roleId")
-    private int roleId;
+    @Column(name = "id")
+    private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "roleName", nullable = false)
-    private ERole roleName;
+    @Column(name = "name", nullable = false)
+    private ERole name;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private List<UserEntity> userEntities;
 }

@@ -15,26 +15,26 @@ import java.util.List;
 @Table(name = "reviews")
 public class ReviewEntity {
     @Id
-    @Column(name = "reviewId")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false, length = 65535)
     private String comment;
 
     @Column(nullable = false)
-    private double rating;
+    private int rating;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId", nullable = false, referencedColumnName = "id")
     private UserEntity user;
 
     @ManyToOne
-    @JoinColumn(name = "productId", nullable = false)
+    @JoinColumn(name = "productId", nullable = false, referencedColumnName = "id")
     private ProductEntity product;
 
     @ManyToOne
-    @JoinColumn(name = "orderId", nullable = false)
+    @JoinColumn(name = "orderId", nullable = false, referencedColumnName = "id")
     private OrderEntity order;
 
     @OneToMany(mappedBy = "review")
@@ -44,6 +44,6 @@ public class ReviewEntity {
     private List<ReviewEntity> response;
 
     @ManyToOne
-    @JoinColumn(name = "parentReviewId")
-    private ReviewEntity parentReview;//Đây là review cha
+    @JoinColumn(name = "parentReviewId", nullable = true, referencedColumnName = "id")
+    private ReviewEntity parentReview; //Đây là review cha
 }

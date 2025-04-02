@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Setter
 @Getter
@@ -15,8 +16,9 @@ import java.time.LocalDate;
 @Table(name = "discounts")
 public class DiscountEntity {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int discountId;
+    private Long id;
 
     @Column(name = "discountName", nullable = false)
     private String name;
@@ -29,4 +31,7 @@ public class DiscountEntity {
 
     @Column(name = "expiriedDate")
     private LocalDate expiredDate;
+
+    @OneToMany(mappedBy = "discount")
+    private List<OrderEntity> orders;
 }

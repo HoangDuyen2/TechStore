@@ -15,10 +15,14 @@ import java.math.BigDecimal;
 @Table(name = "wallets")
 public class WalletEntity {
     @Id
-    @Column(name = "walletId")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
     private BigDecimal balance;
+
+    @OneToOne
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    private UserEntity user;
 }

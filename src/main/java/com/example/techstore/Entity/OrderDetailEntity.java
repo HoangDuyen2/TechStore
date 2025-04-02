@@ -13,15 +13,16 @@ import lombok.*;
 @Table(name = "orderdetails")
 public class OrderDetailEntity {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderDetailId;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "orderId", referencedColumnName = "id")
     private OrderEntity order;
 
     @ManyToOne
-    @JoinColumn(name = "productId", referencedColumnName = "productId")
+    @JoinColumn(name = "productId", referencedColumnName = "id")
     private ProductEntity product;
 
     @Column(name = "quantity", nullable = false)

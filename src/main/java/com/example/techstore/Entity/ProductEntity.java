@@ -14,13 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Table(name = "products")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Sử dụng bảng chung cho tất cả các loại sản phẩm
-@DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType.STRING) // Cột phân biệt loại sản phẩm
-public abstract class ProductEntity {
+public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productId")
-    private long productId;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -35,14 +33,42 @@ public abstract class ProductEntity {
     private String warrantyPeriod;
 
     @ManyToOne
-    @JoinColumn(name = "brandId", referencedColumnName = "brandId")
+    @JoinColumn(name = "brandId", referencedColumnName = "id")
     private BrandEntity brand;
 
-    @ManyToOne
-    @JoinColumn(name = "reviewId", referencedColumnName = "reviewId")
-    private ReviewEntity review;
+    @OneToMany(mappedBy = "product")
+    private List<ReviewEntity> reviews;
 
     @OneToMany(mappedBy = "product")
-    private List<ImageEntity> image;
+    private List<ImageEntity> images;
 
+    @OneToMany(mappedBy = "product")
+    private List<CartDetailEntity> cartDetails;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetailEntity> orderDetails;
+
+    @Column(name = "batteryCapacity")
+    private String batteryCapacity;
+
+    @Column(name = "fontcamera")
+    private String fontCamera;
+
+    @Column(name = "rearcamera")
+    private String rearCamera;
+
+    @Column(name = "connectivity")
+    private String connectivity;
+
+    @Column(name = "stockQuantity")
+    private int stockQuantity;
+
+    @Column(name = "operatingSystem")
+    private String operatingSystem;
+
+    @Column(name = "processor")
+    private String processor;
+
+    @Column(name = "sim")
+    private String sim;
 }

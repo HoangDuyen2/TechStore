@@ -15,10 +15,11 @@ import java.util.List;
 @Table(name = "payment")
 public class PaymentEntity {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long paymentId;
+    private Long id;
 
-    @Column(name = "paymentName", nullable = false, length = 255)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 
     @OneToMany(mappedBy = "payment")

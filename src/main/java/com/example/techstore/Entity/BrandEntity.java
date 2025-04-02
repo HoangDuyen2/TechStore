@@ -16,15 +16,15 @@ import java.util.List;
 public class BrandEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "brandId")
+    @Column(name = "id")
     private Long id;
 
     @Column(nullable = false, length = 100)
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "imageId", referencedColumnName = "imageId")
-    private ImageEntity img;
+    @JoinColumn(name = "imageId", referencedColumnName = "id")
+    private ImageEntity image;
 
     @OneToMany(mappedBy = "brand")
     private List<ProductEntity> products;

@@ -14,12 +14,15 @@ import lombok.*;
 public class AccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "accountId")
-    private int accountId;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "email")
-    private String eamil;
+    private String email;
 
     @Column(name = "password")
-    private String passwords;
+    private String password;
+
+    @OneToOne(mappedBy = "account")
+    private UserEntity user;
 }

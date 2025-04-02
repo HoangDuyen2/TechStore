@@ -1,7 +1,11 @@
 package com.example.techstore.Entity;
 
+import com.example.techstore.Enum.EGender;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Setter
 @Getter
@@ -11,13 +15,11 @@ import lombok.*;
 @AllArgsConstructor
 @Data
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Sử dụng bảng chung cho tất cả các loại sản phẩm
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING) // Cột phân biệt loại sản phẩm
-public abstract class UserEntity {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
-    private int userId;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "firstName")
     private String firstName;
@@ -25,25 +27,52 @@ public abstract class UserEntity {
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "address")
-    private String address;
 
     @Column(name = "phoneNumber")
-    private String phone;
+    private String phoneNumber;
 
     @Column(name = "dateOfBirth")
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Column(name = "gender")
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private EGender gender;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "addressId", referencedColumnName = "id")
+    private AddressEntity address;
+
+    @OneToOne
+    @JoinColumn(name = "imageId", referencedColumnName = "id")
     private ImageEntity image;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "accountId", referencedColumnName = "id")
     private AccountEntity account;
 
     @ManyToOne
-    @JoinColumn(name = "roleId", referencedColumnName = "roleId")
+    @JoinColumn(name = "roleId", referencedColumnName = "id")
     private RoleEntity role;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cartId", referencedColumnName = "id")
+    private CartEntity cart;
+
+    @OneToMany(mappedBy = "user")
+    private List<OrderEntity> orders;
+
+    @Column(name = "cccd")
+    private String cccd;
+
+    @Column(name = "relativeName")
+    private String relativeName;
+
+    @Column(name = "relativePhoneNumber")
+    private String relativePhoneNumber;
+
+    @OneToMany(mappedBy = "user")
+    private List<ReviewEntity> reviews;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private WalletEntity wallet;
 }
