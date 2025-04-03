@@ -38,9 +38,8 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private EGender gender;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "addressId", referencedColumnName = "id")
-    private AddressEntity address;
+    @OneToMany(mappedBy = "user")
+    private List<AddressEntity> address;
 
     @OneToOne
     @JoinColumn(name = "imageId", referencedColumnName = "id")

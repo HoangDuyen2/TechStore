@@ -34,7 +34,8 @@ public class AddressEntity {
     @Column(nullable = false, length = 100)
     private String province;
 
-    @OneToOne(mappedBy = "address")
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     private UserEntity user;
 
     @OneToMany(mappedBy = "address")
