@@ -29,8 +29,8 @@ public class ProductEntity {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "warrantyPeriod")
-    private String warrantyPeriod;
+    @Column(name = "warranty")
+    private String warranty;
 
     @ManyToOne
     @JoinColumn(name = "brandId", referencedColumnName = "id")
@@ -51,8 +51,8 @@ public class ProductEntity {
     @Column(name = "batteryCapacity")
     private String batteryCapacity;
 
-    @Column(name = "fontcamera")
-    private String fontCamera;
+    @Column(name = "frontcamera")
+    private String frontCamera;
 
     @Column(name = "rearcamera")
     private String rearCamera;
