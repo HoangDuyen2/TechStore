@@ -32,6 +32,9 @@ public class DiscountEntity {
     @Column(name = "expiriedDate")
     private LocalDate expiredDate;
 
+    @Column(name = "quantity")
+    private int quantity;
+
     @OneToMany(mappedBy = "discount")
     private List<OrderEntity> orders;
 }
