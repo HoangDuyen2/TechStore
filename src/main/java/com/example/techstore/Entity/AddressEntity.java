@@ -37,7 +37,4 @@ public class AddressEntity {
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private UserEntity user;
-
-    @OneToMany(mappedBy = "address")
-    private List<OrderEntity> orders;
 }

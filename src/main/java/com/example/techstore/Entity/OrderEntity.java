@@ -25,9 +25,8 @@ public class OrderEntity{
     @Column(name = "orderDate", nullable = false)
     private LocalDateTime orderDate;
 
-    @ManyToOne
-    @JoinColumn(name = "addressId", referencedColumnName = "id")
-    private AddressEntity address;
+    @Column(name = "address", nullable = false)
+    private String address;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "orderStatus", nullable = false)
