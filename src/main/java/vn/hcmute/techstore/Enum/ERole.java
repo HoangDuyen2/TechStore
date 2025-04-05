@@ -1,4 +1,4 @@
-package com.example.techstore.Enum;
+package vn.hcmute.techstore.Enum;
 
 public enum ERole {
     CUSTOMER,

@@ -1,6 +1,6 @@
-package com.example.techstore.Entity;
+package vn.hcmute.techstore.Entity;
 
-import com.example.techstore.Enum.EGender;
+import vn.hcmute.techstore.Enum.EGender;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.example.techstore.Entity;
+package vn.hcmute.techstore.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;

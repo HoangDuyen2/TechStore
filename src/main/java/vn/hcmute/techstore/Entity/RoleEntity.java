@@ -1,6 +1,6 @@
-package com.example.techstore.Entity;
+package vn.hcmute.techstore.Entity;
 
-import com.example.techstore.Enum.ERole;
+import vn.hcmute.techstore.Enum.ERole;
 import jakarta.persistence.*;
 import lombok.*;
 

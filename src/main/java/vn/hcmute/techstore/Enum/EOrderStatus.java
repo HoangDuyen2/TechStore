@@ -1,4 +1,4 @@
-package com.example.techstore.Enum;
+package vn.hcmute.techstore.Enum;
 
 public enum EOrderStatus {
     PENDING_CONFIRMATION,// Đơn hàng đang chờ xác nhận
