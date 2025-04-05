@@ -1,4 +1,4 @@
-package vn.hcmute.techstore.Entity;
+package hcmute.edu.vn.techstore.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;

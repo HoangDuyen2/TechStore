@@ -1,4 +1,4 @@
-package vn.hcmute.techstore.Enum;
+package hcmute.edu.vn.techstore.Enum;
 
 public enum EOrderStatus {
     PENDING_CONFIRMATION,// Đơn hàng đang chờ xác nhận

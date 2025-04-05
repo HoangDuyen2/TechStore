@@ -1,4 +1,4 @@
-package vn.hcmute.techstore.Enum;
+package hcmute.edu.vn.techstore.Enum;
 
 public enum ERole {
     CUSTOMER,

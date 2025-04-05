@@ -1,6 +1,6 @@
-package vn.hcmute.techstore.Entity;
+package hcmute.edu.vn.techstore.Entity;
 
-import vn.hcmute.techstore.Enum.EGender;
+import hcmute.edu.vn.techstore.Enum.EGender;
 import jakarta.persistence.*;
 import lombok.*;
 

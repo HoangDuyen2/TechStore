@@ -1,6 +1,6 @@
-package vn.hcmute.techstore.Entity;
+package hcmute.edu.vn.techstore.Entity;
 
-import vn.hcmute.techstore.Enum.EOrderStatus;
+import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
