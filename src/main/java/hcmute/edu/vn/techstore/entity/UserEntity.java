@@ -7,6 +7,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Setter
 @Getter
 @Entity
@@ -15,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Table(name = "users")
-public class UserEntity {
+public class UserEntity extends TrackingDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
