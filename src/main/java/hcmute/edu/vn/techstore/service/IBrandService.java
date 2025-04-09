@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface IBrandService {
     Page<BrandResponse> findAll(Pageable pageable);
 
+
+
     boolean addBrand(BrandRequest brandRequest, MultipartFile file);
 
     boolean updateBrand(BrandRequest brandRequest, Long id);
