@@ -1,10 +1,12 @@
 package hcmute.edu.vn.techstore.repository;
 
-import hcmute.edu.vn.techstore.entity.BrandEntity;
+import hcmute.edu.vn.techstore.entity.ImageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface BrandRepository extends JpaRepository<BrandEntity, Long> {
-    BrandEntity findByName(String name);
+public interface ImageRepository extends JpaRepository<ImageEntity, Long> {
+
 }

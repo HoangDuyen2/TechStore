@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.dto;
+package hcmute.edu.vn.techstore.dto.response;
 
 import lombok.*;
 
