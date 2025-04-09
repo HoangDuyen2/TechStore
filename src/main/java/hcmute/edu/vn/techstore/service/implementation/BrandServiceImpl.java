@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.service.implementation;
 
+import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import hcmute.edu.vn.techstore.dto.request.BrandRequest;
 import hcmute.edu.vn.techstore.dto.response.BrandResponse;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class IBrandServiceImpl implements IBrandService {
+public class BrandServiceImpl implements IBrandService {
     @Autowired
     private BrandRepository brandRepository;
     @Autowired
@@ -31,7 +32,7 @@ public class IBrandServiceImpl implements IBrandService {
                 .id(brand.getId())
                 .name(brand.getName())
                 .quantity(productRepository.countByBrand_Id(brand.getId()))
-                .sale(orderDetailRepository.countAllByProduct_Brand_Id(brand.getId()))
+                .sale(orderDetailRepository.countAllByOrder_OrderStatusAndProduct_Brand_Id(EOrderStatus.DELIVERED_SUCCESSFULLY, brand.getId()))
                 .image(brand.getImage().getImagePath())
                 .build());
     }
