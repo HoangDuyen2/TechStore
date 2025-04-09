@@ -30,7 +30,4 @@ public class ImageEntity {
 
     @OneToOne(mappedBy = "image")
     private UserEntity user;
-
-    @OneToOne(mappedBy = "image")
-    private BrandEntity brand;
 }

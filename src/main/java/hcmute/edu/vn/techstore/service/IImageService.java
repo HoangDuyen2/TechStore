@@ -7,4 +7,10 @@ public interface IImageService {
     Long addImage(MultipartFile file);
 
     ImageEntity findById(Long aLong);
+
+    String saveImage(MultipartFile file);
+
+    String updateImage(MultipartFile file, String filename);
+
+    boolean deleteImage(String filename);
 }

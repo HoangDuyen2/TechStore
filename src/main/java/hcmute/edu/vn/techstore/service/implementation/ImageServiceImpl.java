@@ -45,13 +45,8 @@ public class ImageServiceImpl implements IImageService {
         return imageRepository.findById(aLong).orElse(null);
     }
 
-    private boolean isValidSuffixImage(String img) {
-        return img.endsWith(".jpg") || img.endsWith(".jpeg") ||
-                img.endsWith(".png") || img.endsWith(".gif") ||
-                img.endsWith(".bmp");
-    }
-
-    private String saveImage(MultipartFile file) {
+    @Override
+    public String saveImage(MultipartFile file) {
         try {
             // get file name
             String fileName = file.getOriginalFilename();
@@ -68,7 +63,14 @@ public class ImageServiceImpl implements IImageService {
         }
     }
 
-    private String updateImage(MultipartFile file, String filename) {
+    private boolean isValidSuffixImage(String img) {
+        return img.endsWith(".jpg") || img.endsWith(".jpeg") ||
+                img.endsWith(".png") || img.endsWith(".gif") ||
+                img.endsWith(".bmp");
+    }
+
+    @Override
+    public String updateImage(MultipartFile file, String filename) {
         try {
             if (deleteImage(filename)) {
                 return saveImage(file);
@@ -79,7 +81,8 @@ public class ImageServiceImpl implements IImageService {
         return saveImage(file);
     }
 
-    private boolean deleteImage(String filename) {
+    @Override
+    public boolean deleteImage(String filename) {
         try {
             Path file = root.resolve(filename);
             return Files.deleteIfExists(file);

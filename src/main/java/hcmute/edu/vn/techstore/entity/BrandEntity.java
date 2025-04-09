@@ -22,9 +22,8 @@ public class BrandEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "imageId", referencedColumnName = "id")
-    private ImageEntity image;
+    @Column(nullable = false)
+    private String image;
 
     @OneToMany(mappedBy = "brand")
     private List<ProductEntity> products;
