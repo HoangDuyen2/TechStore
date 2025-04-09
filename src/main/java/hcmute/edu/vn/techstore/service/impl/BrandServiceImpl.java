@@ -1,8 +1,8 @@
-package hcmute.edu.vn.techstore.service.implementation;
+package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.Enum.EOrderStatus;
-import hcmute.edu.vn.techstore.dto.request.BrandRequest;
-import hcmute.edu.vn.techstore.dto.response.BrandResponse;
+import hcmute.edu.vn.techstore.model.request.BrandRequest;
+import hcmute.edu.vn.techstore.model.response.BrandResponse;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.repository.BrandRepository;
 import hcmute.edu.vn.techstore.repository.OrderDetailRepository;

@@ -12,13 +12,6 @@ public class Test {
         return "web/index1";
     }
 
-    @GetMapping("/add-product")
-    public String addProduct() {
-        return "admin/add-product";
-    }
 
-    @GetMapping("/product-list")
-    public String productList() {
-        return "admin/product-list";
-    }
+
 }

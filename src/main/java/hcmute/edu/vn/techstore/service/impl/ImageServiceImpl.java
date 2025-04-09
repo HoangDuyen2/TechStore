@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.service.implementation;
+package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.entity.ImageEntity;
 import hcmute.edu.vn.techstore.repository.ImageRepository;

@@ -1,7 +1,7 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
-import hcmute.edu.vn.techstore.dto.request.BrandRequest;
-import hcmute.edu.vn.techstore.dto.response.BrandResponse;
+import hcmute.edu.vn.techstore.model.request.BrandRequest;
+import hcmute.edu.vn.techstore.model.response.BrandResponse;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.service.IBrandService;
 import jakarta.validation.Valid;
