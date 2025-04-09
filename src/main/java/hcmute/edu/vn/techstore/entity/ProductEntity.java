@@ -32,22 +32,6 @@ public class ProductEntity {
     @Column(name = "warranty")
     private String warranty;
 
-    @ManyToOne
-    @JoinColumn(name = "brandId", referencedColumnName = "id")
-    private BrandEntity brand;
-
-    @OneToMany(mappedBy = "product")
-    private List<ReviewEntity> reviews;
-
-    @OneToMany(mappedBy = "product")
-    private List<ImageEntity> images;
-
-    @OneToMany(mappedBy = "product")
-    private List<CartDetailEntity> cartDetails;
-
-    @OneToMany(mappedBy = "product")
-    private List<OrderDetailEntity> orderDetails;
-
     @Column(name = "batteryCapacity")
     private String batteryCapacity;
 
@@ -74,4 +58,20 @@ public class ProductEntity {
 
     @Column(name = "thumbnail")
     private String thumbnail;
+
+    @ManyToOne
+    @JoinColumn(name = "brandId", referencedColumnName = "id")
+    private BrandEntity brand;
+
+    @OneToMany(mappedBy = "product")
+    private List<ReviewEntity> reviews;
+
+    @OneToMany(mappedBy = "product")
+    private List<ImageEntity> images;
+
+    @OneToMany(mappedBy = "product")
+    private List<CartDetailEntity> cartDetails;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetailEntity> orderDetails;
 }
