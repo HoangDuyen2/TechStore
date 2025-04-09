@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.Controller;
+package hcmute.edu.vn.techstore.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

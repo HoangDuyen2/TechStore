@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.Entity;
+package hcmute.edu.vn.techstore.entity;
 
 import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import jakarta.persistence.*;
