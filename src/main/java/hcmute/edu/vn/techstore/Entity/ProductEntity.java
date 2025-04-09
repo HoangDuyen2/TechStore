@@ -71,4 +71,7 @@ public class ProductEntity {
 
     @Column(name = "sim")
     private String sim;
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
 }
