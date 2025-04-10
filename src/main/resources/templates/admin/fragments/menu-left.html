@@ -58,24 +58,6 @@
                     </li>
                     <li class="menu-item has-children">
                         <a href="javascript:void(0);" class="menu-item-button">
-                            <div class="icon"><i class="icon-layers"></i></div>
-                            <div class="text">Brand</div>
-                        </a>
-                        <ul class="sub-menu">
-                            <li class="sub-menu-item">
-                                <a th:href="@{/admin/brands}" class="">
-                                    <div class="text">Brand list</div>
-                                </a>
-                            </li>
-                            <li class="sub-menu-item">
-                                <a th:href="@{/admin/brands/add}" class="">
-                                    <div class="text">New brand</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-item has-children">
-                        <a href="javascript:void(0);" class="menu-item-button">
                             <div class="icon"><i class="icon-box"></i></div>
                             <div class="text">Product</div>
                         </a>
@@ -94,23 +76,36 @@
                     </li>
                     <li class="menu-item has-children">
                         <a href="javascript:void(0);" class="menu-item-button">
-                            <div class="icon"><i class="icon-file-plus"></i></div>
-                            <div class="text">Order</div>
+                            <div class="icon"><i class="icon-layers"></i></div>
+                            <div class="text">Brand</div>
                         </a>
                         <ul class="sub-menu">
                             <li class="sub-menu-item">
-                                <a href="oder-list.html" class="">
-                                    <div class="text">Order list</div>
+                                <a th:href="@{/admin/brands}" class="">
+                                    <div class="text">Brand list</div>
                                 </a>
                             </li>
                             <li class="sub-menu-item">
-                                <a href="oder-detail.html" class="">
-                                    <div class="text">Order detail</div>
+                                <a th:href="@{/admin/brands/add}" class="">
+                                    <div class="text">New brand</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-item has-children">
+                        <a href="javascript:void(0);" class="menu-item-button">
+                            <div class="icon"><i class="icon-gift"></i></div>
+                            <div class="text">Discount</div>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="sub-menu-item">
+                                <a th:href="@{/admin/discounts}" class="">
+                                    <div class="text">Discount list</div>
                                 </a>
                             </li>
                             <li class="sub-menu-item">
-                                <a href="oder-tracking.html" class="">
-                                    <div class="text">Order tracking</div>
+                                <a th:href="@{/admin/discount/add}" class="">
+                                    <div class="text">New discount</div>
                                 </a>
                             </li>
                         </ul>

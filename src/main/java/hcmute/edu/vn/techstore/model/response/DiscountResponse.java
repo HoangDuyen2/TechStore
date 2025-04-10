@@ -1,0 +1,21 @@
+package hcmute.edu.vn.techstore.model.response;
+
+import lombok.*;
+
+import java.time.LocalDate;
+
+@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class DiscountResponse {
+    private Long id;
+    private String name;
+    private String code;
+    private int discountPercent;
+    private LocalDate expiredDate;
+    private int quantity;
+    private int usedQuantity;
+}

@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="https://www.thymeleaf.org">
 
-<!-- Mirrored from themesflat.co/html/remos/brand-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:40:54 GMT -->
+<!-- Mirrored from themesflat.co/html/remos/discount-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:40:54 GMT -->
 <div th:insert="~{admin/fragments/head::head}"></div>
 
 <body class="body">
@@ -45,15 +45,15 @@
                                         <i class="icon-chevron-right"></i>
                                     </li>
                                     <li>
-                                        <a th:href="@{/admin/brands}">
-                                            <div class="text-tiny">Brand</div>
+                                        <a th:href="@{/admin/discounts}">
+                                            <div class="text-tiny">Discount</div>
                                         </a>
                                     </li>
                                     <li>
                                         <i class="icon-chevron-right"></i>
                                     </li>
                                     <li>
-                                        <div class="text-tiny">All brand</div>
+                                        <div class="text-tiny">All discount</div>
                                     </li>
                                 </ul>
                             </div>
@@ -63,7 +63,7 @@
                                     <div class="wg-filter flex-grow">
                                         <div class="show">
                                             <div class="text-tiny"
-                                                 th:text="'Showing ' + ${brands.size()} + ' entries'"></div>
+                                                 th:text="'Showing ' + ${discounts.size()} + ' entries'"></div>
                                             <div class="select">
                                                 <select class="">
                                                     <option>10</option>
@@ -83,47 +83,46 @@
                                             </div>
                                         </form>
                                     </div>
-                                    <a class="tf-button style-1 w208" th:href="@{/admin/brands/add}"><i
+                                    <a class="tf-button style-1 w208" th:href="@{/admin/discounts/add}"><i
                                             class="icon-plus"></i>Add new</a>
                                 </div>
                                 <div class="wg-table table-all-category">
                                     <ul class="table-title flex gap20 mb-14">
                                         <li>
-                                            <div class="body-title">Brand</div>
+                                            <div class="body-title">Discount</div>
+                                        </li>
+                                        <li>
+                                            <div class="body-title">Code</div>
+                                        </li>
+                                        <li>
+                                            <div class="body-title">Percent</div>
+                                        </li>
+                                        <li>
+                                            <div class="body-title">Expired</div>
                                         </li>
                                         <li>
                                             <div class="body-title">Quantity</div>
                                         </li>
                                         <li>
-                                            <div class="body-title">Sale</div>
+                                            <div class="body-title">Used</div>
                                         </li>
                                         <li>
                                             <div class="body-title">Action</div>
                                         </li>
                                     </ul>
-                                    <ul class="flex flex-column" th:each="brand : ${brands}">
+                                    <ul class="flex flex-column" th:each="discount : ${discounts}">
                                         <li class="product-item gap14">
-                                            <div class="image no-bg">
-                                                <img th:if="${brand.image.startsWith('https')}"
-                                                     th:src="${brand.image}"
-                                                     class="product-image"
-                                                     alt="Ảnh sản phẩm mặc định">
-                                                <img th:unless="${brand.image.startsWith('https')}"
-                                                     th:src="@{'/uploads/' + ${brand.image}}"
-                                                     class="product-image"
-                                                     alt="Ảnh sản phẩm">
-                                            </div>
-                                            <div class="flex items-center justify-between gap20 flex-grow">
-                                                <div class="name">
-                                                    <a th:href="@{/admin/brands/edit/{id}(id=${brand.id})}" class="body-title-2"
-                                                       th:text="${brand.name}"></a>
-                                                </div>
-                                                <div class="body-text" th:text="${brand.quantity}"></div>
-                                                <div class="body-text" th:text="${brand.sale}"></div>
-                                                <input type="hidden" class="brand-id" th:value="${brand.id}">
+                                            <div class="flex items-center justify-between gap20 mb-14 flex-grow">
+                                                <div class="body-text" th:text="${discount.name}"></div>
+                                                <div class="body-text" th:text="${discount.code}"></div>
+                                                <div class="body-text" th:text="${discount.discountPercent}"></div>
+                                                <div class="body-text" th:text="${discount.expiredDate}"></div>
+                                                <div class="body-text" th:text="${discount.quantity}"></div>
+                                                <div class="body-text" th:text="${discount.usedQuantity}"></div>
+                                                <input type="hidden" class="discount-id" th:value="${discount.id}">
                                                 <div class="list-icon-function">
                                                     <a class="item edit"
-                                                       th:href="@{/admin/brands/edit/{id}(id=${brand.id})}">
+                                                       th:href="@{/admin/discounts/edit/{id}(id=${discount.id})}">
                                                         <i class="icon-edit-3"></i>
                                                     </a>
                                                     <a class="item confirm-text-delete">
@@ -136,7 +135,7 @@
                                 </div>
                                 <div class="divider"></div>
                                 <div class="flex items-center justify-between flex-wrap gap10">
-                                    <div class="text-tiny" th:text="'Showing ' + ${brands.size()} + ' entries'"></div>
+                                    <div class="text-tiny" th:text="'Showing ' + ${discounts.size()} + ' entries'"></div>
                                     <ul class="wg-pagination">
                                         <li th:if="${currentPage > 0}">
                                             <a th:href="@{/admin/brands(page=${currentPage - 1}, size=${size})}">
@@ -181,7 +180,7 @@
 <script>
     $(document).ready(function () {
         $(".confirm-text-delete").on("click", function () {
-            var brandId = $(this).closest("li").find(".brand-id").val(); // Lấy giá trị brandId từ hàng hiện tại
+            var discountId = $(this).closest("li").find(".discount-id").val(); // Lấy giá trị brandId từ hàng hiện tại
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -196,7 +195,7 @@
             }).then(function (t) {
                 if(t.value){
                     $.ajax({
-                        url: `/admin/brands/delete/${brandId}`,
+                        url: `/admin/discounts/delete/${discountId}`,
                         method: "GET",
                         success: function (response) {
                             if (response.status === "success") {
@@ -221,7 +220,7 @@
                             Swal.fire({
                                 icon: "error",
                                 title: "Error!",
-                                text: `Failed to delete the category.`,
+                                text: `Failed to delete the discount.`,
                                 confirmButtonClass: "btn btn-danger"
                             })
                         }
@@ -234,5 +233,5 @@
 
 </body>
 
-<!-- Mirrored from themesflat.co/html/remos/brand-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:47 GMT -->
+<!-- Mirrored from themesflat.co/html/remos/discount-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:47 GMT -->
 </html>

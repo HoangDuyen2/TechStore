@@ -27,7 +27,7 @@ public class DiscountEntity {
     private String code;
 
     @Column(name = "discountPercent")
-    private float discountPercent;
+    private int discountPercent;
 
     @Column(name = "expiriedDate")
     private LocalDate expiredDate;
