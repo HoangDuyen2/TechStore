@@ -89,6 +89,7 @@ public class BrandController {
         if (bindingResult.hasErrors()) {
             msg = bindingResult.getFieldError().getDefaultMessage();
             model.addAttribute("msg", msg);
+            model.addAttribute("brand", brandRequest);
             return "admin/brand/brand-list";
         }
         if (!brandRequest.getBrandName().matches("^[a-zA-Z].*")) {
@@ -100,6 +101,7 @@ public class BrandController {
         if (!brandRequest.getBrandName().matches("^[a-zA-Z0-9\\s]+$")) {
             msg = "Name is not valid";
             model.addAttribute("msg", msg);
+            model.addAttribute("brand", brandRequest);
             return "admin/brand/update-brand";
         }
         BrandEntity brand = brandService.findByName(brandRequest.getBrandName());
