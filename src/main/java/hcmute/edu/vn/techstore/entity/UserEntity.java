@@ -39,8 +39,8 @@ public class UserEntity extends TrackingDate {
     @Enumerated(EnumType.STRING)
     private EGender gender;
 
-    @OneToMany(mappedBy = "user")
-    private List<AddressEntity> address;
+    @Column(name = "address")
+    private String address;
 
     @OneToOne
     @JoinColumn(name = "imageId", referencedColumnName = "id")
