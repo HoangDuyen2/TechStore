@@ -1,5 +1,7 @@
 package hcmute.edu.vn.techstore.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +11,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Table(name = "accounts")
 public class AccountEntity {
     @Id
@@ -24,5 +25,6 @@ public class AccountEntity {
     private String password;
 
     @OneToOne(mappedBy = "account")
+    @JsonBackReference(value = "account-user")
     private UserEntity user;
 }

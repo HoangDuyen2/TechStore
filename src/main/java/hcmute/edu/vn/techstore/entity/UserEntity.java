@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import hcmute.edu.vn.techstore.Enum.EGender;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +15,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Table(name = "users")
 public class UserEntity extends TrackingDate {
     @Id
@@ -40,13 +40,14 @@ public class UserEntity extends TrackingDate {
     private EGender gender;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference(value = "user-address")
     private List<AddressEntity> address;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "imageId", referencedColumnName = "id")
     private ImageEntity image;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "accountId", referencedColumnName = "id")
     private AccountEntity account;
 

@@ -1,7 +1,8 @@
 package hcmute.edu.vn.techstore.Enum;
 
+
 public enum ERole {
-    CUSTOMER,
-    STAFF,
-    ADMIN
+    ROLE_CUSTOMER,
+    ROLE_STAFF,
+    ROLE_ADMIN
 }

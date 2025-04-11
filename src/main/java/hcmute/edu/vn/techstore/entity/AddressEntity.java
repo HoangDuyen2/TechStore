@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Table(name = "addresses")
 public class AddressEntity {
     @Id
@@ -32,7 +32,8 @@ public class AddressEntity {
     @Column(nullable = false, length = 100)
     private String province;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JsonBackReference(value = "user-address")
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private UserEntity user;
 }
