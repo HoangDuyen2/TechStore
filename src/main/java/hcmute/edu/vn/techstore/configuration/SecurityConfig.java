@@ -55,6 +55,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .logoutSuccessUrl("/home")
                         .permitAll()
                 )
                 .userDetailsService(userDetailServiceImpl)

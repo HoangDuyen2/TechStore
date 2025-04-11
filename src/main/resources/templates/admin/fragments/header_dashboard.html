@@ -421,12 +421,13 @@
                             </a>
                         </li>
                         <li>
-                            <a href="login.html" class="user-item">
+                            <a href="#" class="user-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <div class="icon">
                                     <i class="icon-log-out"></i>
                                 </div>
                                 <div class="body-title-2">Log out</div>
                             </a>
+                            <form id="logout-form" th:action="@{/logout}" method="post" style="display: none;"></form>
                         </li>
                     </ul>
                 </div>
@@ -434,3 +435,4 @@
         </div>
     </div>
 </div>
+
