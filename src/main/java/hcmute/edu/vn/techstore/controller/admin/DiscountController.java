@@ -1,10 +1,9 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
 import hcmute.edu.vn.techstore.entity.DiscountEntity;
-import hcmute.edu.vn.techstore.model.request.DiscountRequest;
-import hcmute.edu.vn.techstore.model.response.DiscountResponse;
-import hcmute.edu.vn.techstore.service.IDiscountService;
-import hcmute.edu.vn.techstore.service.impl.DiscountServiceImpl;
+import hcmute.edu.vn.techstore.dto.request.DiscountRequest;
+import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
+import hcmute.edu.vn.techstore.service.interfaces.IDiscountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin/discounts")

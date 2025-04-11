@@ -2,7 +2,7 @@ package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.entity.ImageEntity;
 import hcmute.edu.vn.techstore.repository.ImageRepository;
-import hcmute.edu.vn.techstore.service.IImageService;
+import hcmute.edu.vn.techstore.service.interfaces.IImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
