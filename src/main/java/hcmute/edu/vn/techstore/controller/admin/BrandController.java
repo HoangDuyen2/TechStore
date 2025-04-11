@@ -120,7 +120,7 @@ public class BrandController {
         } else {
             msg = "Something went wrong";
             model.addAttribute("msg", msg);
-            model.addAttribute("category", brandRequest);
+            model.addAttribute("brand", brandRequest);
         }
         return "admin/brand/update-brand";
     }
