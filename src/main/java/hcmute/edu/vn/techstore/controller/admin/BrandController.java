@@ -88,7 +88,7 @@ public class BrandController {
         String msg = "";
         if (bindingResult.hasErrors()) {
             msg = bindingResult.getFieldError().getDefaultMessage();
-            model.addAttribute("msg", msg);
+            model.addAttribute("error", msg);
             model.addAttribute("brand", brandRequest);
             return "admin/brand/brand-list";
         }
@@ -100,7 +100,7 @@ public class BrandController {
         }
         if (!brandRequest.getBrandName().matches("^[a-zA-Z0-9\\s]+$")) {
             msg = "Name is not valid";
-            model.addAttribute("msg", msg);
+            model.addAttribute("error", msg);
             model.addAttribute("brand", brandRequest);
             return "admin/brand/update-brand";
         }
@@ -121,7 +121,7 @@ public class BrandController {
             }
         } else {
             msg = "Something went wrong";
-            model.addAttribute("msg", msg);
+            model.addAttribute("error", msg);
             model.addAttribute("brand", brandRequest);
         }
         return "admin/brand/update-brand";
