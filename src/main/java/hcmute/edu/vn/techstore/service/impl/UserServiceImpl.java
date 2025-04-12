@@ -14,6 +14,8 @@ import hcmute.edu.vn.techstore.repository.UserRepository;
 import hcmute.edu.vn.techstore.service.IUserService;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -149,11 +151,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<UserResponse> getAllUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        List<UserResponse> userResponses = userEntities.stream().map(userEntity -> userResponseConverter.toUserResponse(userEntity)).toList();
-
-        return userResponses;
+    public Page<UserResponse> getAllUsers(Pageable pageable) {
+        Page<UserEntity> userEntities = userRepository.findAll(pageable);
+        return userEntities.map(userResponseConverter::toUserResponse);
     }
 
     @Override

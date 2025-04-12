@@ -124,21 +124,28 @@
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing 10 entries</div>
                                         <ul class="wg-pagination">
-                                            <li>
-                                                <a href="#"><i class="icon-chevron-left"></i></a>
+
+                                            <!-- Nút Previous: chỉ hiển thị khi users.number > 0 -->
+                                            <li th:if="${users.number > 0}">
+                                                <a th:href="@{'/admin/user?page=' + ${users.number - 1} + '&size=' + ${users.size}}">
+                                                    <i class="icon-chevron-left"></i>
+                                                </a>
                                             </li>
-                                            <li>
-                                                <a href="#">1</a>
+
+                                            <!-- Danh sách số trang -->
+                                            <li th:each="i : ${#numbers.sequence(0, users.totalPages - 1)}"
+                                                th:classappend="${i == users.number} ? 'active'">
+                                                <a th:href="@{'/admin/user?page=' + ${i} + '&size=' + ${users.size}}"
+                                                   th:text="${i + 1}">1</a>
                                             </li>
-                                            <li class="active">
-                                                <a href="#">2</a>
+
+                                            <!-- Nút Next: chỉ hiển thị khi chưa phải trang cuối -->
+                                            <li th:if="${users.number < users.totalPages - 1}">
+                                                <a th:href="@{'/admin/user?page=' + ${users.number + 1} + '&size=' + ${users.size}}">
+                                                    <i class="icon-chevron-right"></i>
+                                                </a>
                                             </li>
-                                            <li>
-                                                <a href="#">3</a>
-                                            </li>
-                                            <li>
-                                                <a href="#"><i class="icon-chevron-right"></i></a>
-                                            </li>
+
                                         </ul>
                                     </div>
                                 </div>
