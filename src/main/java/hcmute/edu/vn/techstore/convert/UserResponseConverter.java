@@ -23,7 +23,7 @@ public class UserResponseConverter {
     public UserResponse toUserResponse (UserEntity item) {
         UserResponse userResponse = modelMapper.map(item, UserResponse.class);
         userResponse.setUserId(item.getId());
-        userResponse.setAddress(item.getAddress().stream().findFirst().toString());
+        userResponse.setAddress(item.getAddress());
         userResponse.setFullName(item.getLastName() + " " + item.getFirstName());
 
         if (item.getAccount() != null) {
@@ -35,7 +35,7 @@ public class UserResponseConverter {
         }
 
         if (item.getImage() != null) {
-            userResponse.setImage(item.getImage().getImagePath());
+            userResponse.setImage(item.getImage());
         }
 
         return userResponse;

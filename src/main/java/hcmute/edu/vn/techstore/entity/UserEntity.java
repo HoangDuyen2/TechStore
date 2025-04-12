@@ -28,7 +28,6 @@ public class UserEntity extends TrackingDate {
     @Column(name = "lastName")
     private String lastName;
 
-
     @Column(name = "phoneNumber")
     private String phoneNumber;
 
@@ -39,13 +38,11 @@ public class UserEntity extends TrackingDate {
     @Enumerated(EnumType.STRING)
     private EGender gender;
 
-    @OneToMany(mappedBy = "user")
-    @JsonManagedReference(value = "user-address")
-    private List<AddressEntity> address;
+    @Column(name = "address")
+    private String address;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "imageId", referencedColumnName = "id")
-    private ImageEntity image;
+    @Column(name = "image")
+    private String image;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "accountId", referencedColumnName = "id")

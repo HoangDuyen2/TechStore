@@ -374,7 +374,7 @@
                                                          th:src="${user.getImage()}"
                                                          alt="Ảnh người dùng mặc định">
                                                     <img th:unless="${user.getImage().startsWith('https')}"
-                                                         th:src="@{${user.getImage()}}"
+                                                         th:src="@{'/uploads/' + ${user.getImage()}}"
                                                          alt="Ảnh người dùng mặc định">
                                                 </span>
                                                 <span class="flex flex-column">

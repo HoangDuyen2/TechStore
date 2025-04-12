@@ -2,15 +2,15 @@ package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.convert.UserResponseConverter;
-import hcmute.edu.vn.techstore.entity.AccountEntity;
-import hcmute.edu.vn.techstore.entity.ImageEntity;
-import hcmute.edu.vn.techstore.entity.RoleEntity;
-import hcmute.edu.vn.techstore.entity.UserEntity;
+import hcmute.edu.vn.techstore.entity.*;
+import hcmute.edu.vn.techstore.exception.DateOfBirthException;
 import hcmute.edu.vn.techstore.model.request.UserRequest;
 import hcmute.edu.vn.techstore.model.response.UserResponse;
 import hcmute.edu.vn.techstore.repository.AccountRepository;
+import hcmute.edu.vn.techstore.repository.ImageRepository;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
+import hcmute.edu.vn.techstore.service.IImageService;
 import hcmute.edu.vn.techstore.service.IUserService;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,6 +51,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     AccountRepository accountRepository;
 
+    @Autowired
+    private IImageService imageService;
+
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     public boolean register(UserRequest userRequest) throws IOException {
@@ -54,16 +61,17 @@ public class UserServiceImpl implements IUserService {
             return false;
         if (isValidation(userRequest))
             return false;
+        if (userRequest.getDateOfBirth() != null) {
+            if (!validateDateOfBirth(userRequest.getDateOfBirth()))
+                return false;
+        }
+
         AccountEntity accountEntity = AccountEntity
                     .builder()
                     .email(userRequest.getEmail())
                     .password(bCryptPasswordEncoder.encode(userRequest.getPassword()))
                     .build();
 
-        ImageEntity imageEntity = ImageEntity
-                    .builder()
-                    .imagePath(addImage(userRequest))
-                    .build();
         RoleEntity role = roleRepository.findByName(ERole.valueOf(userRequest.getRoleName()))
                 .orElseThrow(() -> new RuntimeException("Role not found"));
         UserEntity user = UserEntity
@@ -74,11 +82,27 @@ public class UserServiceImpl implements IUserService {
                     .phoneNumber(userRequest.getPhoneNumber())
                     .dateOfBirth(userRequest.getDateOfBirth())
                     .gender(userRequest.getGender())
-                    .image(imageEntity)
+                    .image(imageService.addImage(userRequest.getImage()))
+                    .isActived(true)
                     .role(role)
                     .build();
-        userRepository.save(user);
+
+        if (userRequest.getRoleName().contains("CUSTOMER")){
+            addUser(user);
+        }
+        else addStaffOrAdmin(user, userRequest);
         return true;
+    }
+
+    public void addUser(UserEntity user) {
+        userRepository.save(user);
+    }
+
+    public void addStaffOrAdmin(UserEntity user, UserRequest userRequest) {
+        user.setAddress(userRequest.getAddress());
+        user.setCccd(userRequest.getCccd());
+        user.setRelativeName(userRequest.getRelativeName());
+        userRepository.save(user);
     }
 
     public boolean isExists(UserRequest userRequest) {
@@ -105,6 +129,16 @@ public class UserServiceImpl implements IUserService {
         if (!checkPassword(userRequest.getPassword(), userRequest.getConfirmPassword())) {
             throw new BadCredentialsException("Password not match");
         }
+        if (!userRequest.getRelativePhoneNumber().equals("")){
+            if (!validateTenDigitsNumber(userRequest.getRelativePhoneNumber())){
+                throw new BadCredentialsException("Invalid relative phone number");
+            }
+        }
+        if (!userRequest.getCccd().equals("")){
+            if (!validateTwelveDigitsNumber(userRequest.getCccd())){
+                throw new BadCredentialsException("Invalid cccd number");
+            }
+        }
         return false;
     }
 
@@ -116,10 +150,33 @@ public class UserServiceImpl implements IUserService {
         return userRepository.findByPhoneNumber(phoneNumber) != null;
     }
 
+    public boolean validateTwelveDigitsNumber(String cccd) {
+        // Regex kiểm tra chuỗi gồm đúng 12 chữ số
+        Pattern pattern = Pattern.compile("^\\d{12}$");
+        Matcher matcher = pattern.matcher(cccd);
+        return matcher.matches();
+    }
+
+
     public boolean validateTenDigitsNumber(String phoneNumber) {
         Pattern pattern = Pattern.compile(("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"));
         Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.matches();
+    }
+
+    public boolean validateDateOfBirth(LocalDate dateOfBirth) {
+        // Kiểm tra nếu ngày sinh trong tương lai
+        if (dateOfBirth.isAfter(LocalDate.now())) {
+            throw new DateOfBirthException("Date of birth is not valid");
+        }
+
+        // Kiểm tra tuổi: ít nhất 18 tuổi và không quá 100 tuổi
+        int age = Period.between(dateOfBirth, LocalDate.now()).getYears();
+        if (age < 18 || age > 100) {
+            throw new DateOfBirthException("You must be between 18 and 100 years old");
+        }
+
+        return true; // Hợp lệ
     }
 
     public boolean validatePassword(String password) {
@@ -131,23 +188,6 @@ public class UserServiceImpl implements IUserService {
 
     public boolean checkPassword(String password, String confirmPassword) {
         return password.equals(confirmPassword);
-    }
-
-    public String addImage(UserRequest userRequest) throws IOException {
-        String imagePath = "/uploads/default-image.png";
-
-        MultipartFile imageFile = userRequest.getImage();
-        if (imageFile != null && !imageFile.isEmpty()) {
-            String originalFilename = imageFile.getOriginalFilename();
-            String fileName = UUID.randomUUID() + "_" + originalFilename;
-            Path uploadPath = Paths.get("src/main/resources/static/uploads");
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-            Files.copy(imageFile.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
-            imagePath = "/uploads/" + fileName;
-        }
-        return imagePath;
     }
 
     @Override

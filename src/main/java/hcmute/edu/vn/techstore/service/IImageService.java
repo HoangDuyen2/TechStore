@@ -4,7 +4,7 @@ import hcmute.edu.vn.techstore.entity.ImageEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface IImageService {
-    Long addImage(MultipartFile file);
+    String addImage(MultipartFile file);
 
     ImageEntity findById(Long aLong);
 

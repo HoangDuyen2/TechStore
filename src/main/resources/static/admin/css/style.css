@@ -6939,3 +6939,7 @@ select.h40 {
   width: 10%;
   min-width: 80px;
 }
+.text-danger{
+  font-size: 12px;
+  margin-top: 10px;
+}

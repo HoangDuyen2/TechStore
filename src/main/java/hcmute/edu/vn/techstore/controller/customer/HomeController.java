@@ -14,14 +14,8 @@ public class HomeController {
     @Autowired
     IUserService userService;
 
-    private UserResponse getCurrentUser() {
-        String email = SecurityUtils.getCurrentUsername();
-        return userService.getUserByEmail(email);
-    }
-
     @GetMapping("/home")
     public String home(Model model) {
-        model.addAttribute("user", getCurrentUser());
         return "web/index1";
     }
 }

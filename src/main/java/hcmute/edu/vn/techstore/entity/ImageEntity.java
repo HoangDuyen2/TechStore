@@ -28,6 +28,4 @@ public class ImageEntity {
     @JoinColumn(name = "reviewId", referencedColumnName = "id")
     private ReviewEntity review;
 
-    @OneToOne(mappedBy = "image")
-    private UserEntity user;
 }

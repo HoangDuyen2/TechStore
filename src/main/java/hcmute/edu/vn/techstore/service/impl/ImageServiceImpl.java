@@ -19,11 +19,11 @@ public class ImageServiceImpl implements IImageService {
     private final Path root = Paths.get("./uploads");
 
     @Override
-    public Long addImage(MultipartFile file) {
+    public String addImage(MultipartFile file) {
         try {
             String img = "";
-            if (file == null) {
-                img = "/uploads/default.jpg";
+            if (file == null||file.getSize()==0) {
+                img = "default.png";
             } else {
                 if (!isValidSuffixImage(file.getOriginalFilename())) {
                     return null;
@@ -33,7 +33,7 @@ public class ImageServiceImpl implements IImageService {
             ImageEntity imageEntity = new ImageEntity();
             imageEntity.setImagePath(img);
             imageRepository.save(imageEntity);
-            return imageEntity.getId();
+            return imageEntity.getImagePath();
         } catch (Exception e) {
             e.printStackTrace();
         }

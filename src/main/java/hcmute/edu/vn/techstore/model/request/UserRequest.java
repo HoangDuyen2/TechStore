@@ -38,13 +38,20 @@ public class UserRequest {
     @NotBlank(message = "Please enter your lastname!")
     private String lastName;
 
+    private String address;
+
     private EGender gender;
 
-    @NotNull(message = "Please enter your date of birth!")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     private MultipartFile image;
 
     private String roleName;
+
+    private String cccd;
+
+    private String relativeName;
+
+    private String relativePhoneNumber;
 }

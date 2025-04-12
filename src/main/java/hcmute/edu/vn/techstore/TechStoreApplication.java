@@ -12,12 +12,14 @@ import hcmute.edu.vn.techstore.repository.AccountRepository;
 import hcmute.edu.vn.techstore.repository.ImageRepository;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
+import hcmute.edu.vn.techstore.service.IImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.math.BigDecimal;
@@ -36,6 +38,9 @@ public class TechStoreApplication {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private IImageService imageService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TechStoreApplication.class, args);
@@ -69,9 +74,6 @@ public class TechStoreApplication {
 				WalletEntity adminWallet = new WalletEntity();
 				adminWallet.setBalance(BigDecimal.ZERO);
 
-				ImageEntity adminImage = new ImageEntity();
-				adminImage.setImagePath("/uploads/default-image.png");
-
 				// Create admin account
 				AccountEntity adminAccount = new AccountEntity();
 				adminAccount.setEmail("admin@techstore.com");
@@ -83,7 +85,7 @@ public class TechStoreApplication {
 				adminUser.setLastName("User");
 				adminUser.setPhoneNumber("0123456789");
 				adminUser.setGender(EGender.MALE);
-				adminUser.setImage(adminImage);
+				adminUser.setImage(imageService.addImage(null));
 				adminUser.setRole(adminRole);
 				adminUser.setCart(adminCart);
 				adminUser.setActived(true);
@@ -110,16 +112,13 @@ public class TechStoreApplication {
 				staffAccount.setEmail("staff@techstore.com");
 				staffAccount.setPassword(passwordEncoder.encode("staff123"));
 
-				ImageEntity staffImage = new ImageEntity();
-				staffImage.setImagePath("/uploads/default-image.png");
-
 				// Create staff user
 				UserEntity staffUser = new UserEntity();
 				staffUser.setFirstName("Staff");
 				staffUser.setLastName("User");
 				staffUser.setPhoneNumber("0987654321");
 				staffUser.setGender(EGender.MALE);
-				staffUser.setImage(staffImage);
+				staffUser.setImage(imageService.addImage(null));
 				staffUser.setActived(true);
 				staffUser.setRole(staffRole);
 				staffUser.setCart(staffCart);

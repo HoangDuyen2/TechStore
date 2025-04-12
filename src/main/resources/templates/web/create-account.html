@@ -1162,11 +1162,13 @@
                                 </ul>
                                 <div class="register-action" data-animate="animate__fadeInUp">
                                     <label class="cust-checkbox-label login-read-text">
-                                        <span class="login-read">Tôi đã đọc và đồng ý với <a href="terms-condition.html">điều khoản & điều kiện.</a></span>
+                                        <span class="login-read">
+                                            Tôi đã đọc và đồng ý với <a href="terms-condition.html">điều khoản & điều kiện.</a>
+                                        </span>
                                         <input type="checkbox" id="login-terms" name="login-terms" class="cust-checkbox login-checkbox">
                                         <span class="cust-check"></span>
                                     </label>
-                                    <button type="submit" class="btn-style2 register-btn">Đăng ký</button>
+                                    <button type="submit" class="btn-style2 register-btn" id="registerBtn" disabled>Register</button>
                                 </div>
                             </form>
                         </div>
@@ -2109,6 +2111,21 @@
     </div>
     <div class="body-title-2">Log out</div>
 </a>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const checkbox = document.getElementById("login-terms");
+        const registerBtn = document.getElementById("registerBtn");
+
+        // Mặc định vô hiệu hóa nút register
+        registerBtn.disabled = true;
+
+        checkbox.addEventListener("change", function () {
+            registerBtn.disabled = !checkbox.checked;
+        });
+    });
+</script>
+
 <!-- back-to-top end -->
 <!-- plugin js -->
 <script th:src="@{/web/assert/js/plugin.js}"></script>

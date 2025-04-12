@@ -12,17 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class HomeController {
 
-    @Autowired
-    IUserService userService;
-
-    private UserResponse getCurrentUser() {
-        String email = SecurityUtils.getCurrentUsername();
-        return userService.getUserByEmail(email);
-    }
-
     @RequestMapping("/dashboard")
     public String dashboard(Model model) {
-        model.addAttribute("user", getCurrentUser());
         return "admin/index";
     }
 }
