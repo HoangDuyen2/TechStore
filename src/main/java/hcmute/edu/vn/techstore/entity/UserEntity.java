@@ -71,6 +71,9 @@ public class UserEntity extends TrackingDate {
     @Column(name = "relativePhoneNumber")
     private String relativePhoneNumber;
 
+    @Column(name = "isActived")
+    private boolean isActived;
+
     @OneToMany(mappedBy = "user")
     private List<ReviewEntity> reviews;
 

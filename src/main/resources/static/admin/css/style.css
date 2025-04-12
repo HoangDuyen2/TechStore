@@ -4865,7 +4865,7 @@ select.h40 {
   width: 452px;
 }
 .wg-table.table-all-user > * {
-  min-width: 1515px;
+  min-width: 800px;
 }
 .wg-table.table-all-user ul.table-title {
   padding: 12px;
@@ -4875,16 +4875,56 @@ select.h40 {
 .wg-table.table-all-user ul.table-title li {
   width: 100%;
 }
-.wg-table.table-all-user ul.table-title li:last-child {
-  width: 110px;
-  flex-shrink: 0;
-}
 .wg-table.table-all-user .user-item {
   padding: 12px;
   border-radius: 12px;
+  margin-bottom: 8px;
+  background: var(--White);
+}
+.wg-table.table-all-user .user-item .image {
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 15px;
+}
+.wg-table.table-all-user .user-item .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.wg-table.table-all-user .user-item .name {
+  width: 35%;
+  min-width: 220px;
 }
 .wg-table.table-all-user .user-item .body-text {
-  color: var(--Heading);
+  width: 20%;
+  min-width: 120px;
+}
+.wg-table.table-all-user .user-item .list-icon-function {
+  width: 10%;
+  min-width: 80px;
+  display: flex;
+  gap: 8px;
+}
+.wg-table.table-all-user .user-item .list-icon-function .item {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--Input);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.wg-table.table-all-user .user-item .list-icon-function .item:hover {
+  background: var(--Main);
+  color: var(--White);
+}
+.wg-table.table-all-user .user-item .list-icon-function .item i {
+  font-size: 16px;
 }
 .wg-table.table-all-user .user-item > .flex > div {
   width: 100%;
@@ -6753,4 +6793,149 @@ select.h40 {
   }
 }
 
-/*# sourceMappingURL=style.css.map */
+.radio-buttons .item {
+  width: 20px;
+  height: 20px;
+}
+
+.radio-buttons .item label {
+  width: 20px;
+  height: 20px;
+}
+
+.radio-buttons .item label div {
+  width: 20px;
+  height: 20px;
+}
+
+.radio-buttons .item input {
+  width: 20px;
+  height: 20px;
+}
+
+.user-item .active-label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #4CAF50;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.user-item .status-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #4CAF50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+}
+
+.user-item .status-check i {
+  color: white;
+}
+
+.user-item .toggle-switch {
+  position: relative;
+  width: 40px; /* giảm từ 46px xuống */
+  height: 16px;
+  background: #e4e4e4;
+  border-radius: 12px;
+  padding: 2px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.user-item .toggle-switch.active {
+  background: #4195ff;
+}
+
+.user-item .toggle-switch::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  left: 2px;
+  transition: all 0.3s ease;
+}
+
+.user-item .toggle-switch.active::before {
+  left: 18px; /* giảm từ 24 xuống 18 để sát phải */
+}
+
+.wg-table.table-all-user .user-item {
+  padding: 15px;
+  margin-bottom: 8px;
+  background: var(--White);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.wg-table.table-all-user .user-item .image {
+  width: 40px;
+  height: 50px;
+  min-width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.wg-table.table-all-user .user-item .name {
+  width: 35%;
+  min-width: 200px;
+}
+
+.wg-table.table-all-user .user-item .body-text {
+  width: 20%;
+  min-width: 120px;
+}
+
+.wg-table.table-all-user .user-item .toggle-switch {
+  width: 40px;
+  height: 24px;
+  min-width: 40px;
+  margin-right: 20px;
+}
+
+.wg-table.table-all-user .user-item .list-icon-function {
+  width: 10%;
+  min-width: 80px;
+  display: flex;
+  gap: 8px;
+}
+
+.wg-table.table-all-user ul.table-title {
+  padding: 15px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.wg-table.table-all-user ul.table-title li:nth-child(1) {
+  width: 35%;
+  min-width: 200px;
+  margin-left: 70px;
+}
+
+.wg-table.table-all-user ul.table-title li:nth-child(2),
+.wg-table.table-all-user ul.table-title li:nth-child(3) {
+  width: 20%;
+  min-width: 120px;
+}
+
+.wg-table.table-all-user ul.table-title li:nth-child(4) {
+  width: 10%;
+  min-width: 80px;
+}

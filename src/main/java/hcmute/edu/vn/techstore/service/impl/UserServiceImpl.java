@@ -1,14 +1,17 @@
 package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.Enum.ERole;
+import hcmute.edu.vn.techstore.convert.UserResponseConverter;
 import hcmute.edu.vn.techstore.entity.AccountEntity;
 import hcmute.edu.vn.techstore.entity.ImageEntity;
 import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.model.request.UserRequest;
+import hcmute.edu.vn.techstore.model.response.UserResponse;
 import hcmute.edu.vn.techstore.repository.AccountRepository;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
+import hcmute.edu.vn.techstore.service.IUserService;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,17 +25,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements IUserService {
     @Autowired
     UserRepository userRepository;
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    UserResponseConverter userResponseConverter;
 
     @Autowired
     AccountRepository accountRepository;
@@ -124,7 +132,7 @@ public class UserServiceImpl {
     }
 
     public String addImage(UserRequest userRequest) throws IOException {
-        String imagePath = "/uploads/default-image.jpg";
+        String imagePath = "/uploads/default-image.png";
 
         MultipartFile imageFile = userRequest.getImage();
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -138,5 +146,20 @@ public class UserServiceImpl {
             imagePath = "/uploads/" + fileName;
         }
         return imagePath;
+    }
+
+    @Override
+    public List<UserResponse> getAllUsers() {
+        List<UserEntity> userEntities = userRepository.findAll();
+        List<UserResponse> userResponses = userEntities.stream().map(userEntity -> userResponseConverter.toUserResponse(userEntity)).toList();
+
+        return userResponses;
+    }
+
+    @Override
+    public UserResponse getUserByEmail(String email) {
+        UserEntity userEntity = userRepository.findByAccount_Email(email);
+
+        return userResponseConverter.toUserResponse(userEntity);
     }
 }

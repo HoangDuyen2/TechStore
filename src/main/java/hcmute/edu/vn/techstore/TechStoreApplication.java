@@ -69,6 +69,9 @@ public class TechStoreApplication {
 				WalletEntity adminWallet = new WalletEntity();
 				adminWallet.setBalance(BigDecimal.ZERO);
 
+				ImageEntity adminImage = new ImageEntity();
+				adminImage.setImagePath("/uploads/default-image.png");
+
 				// Create admin account
 				AccountEntity adminAccount = new AccountEntity();
 				adminAccount.setEmail("admin@techstore.com");
@@ -80,8 +83,10 @@ public class TechStoreApplication {
 				adminUser.setLastName("User");
 				adminUser.setPhoneNumber("0123456789");
 				adminUser.setGender(EGender.MALE);
+				adminUser.setImage(adminImage);
 				adminUser.setRole(adminRole);
 				adminUser.setCart(adminCart);
+				adminUser.setActived(true);
 				adminUser.setWallet(adminWallet);
 				adminUser.setAccount(adminAccount);
 				adminAccount.setUser(adminUser);
@@ -105,12 +110,17 @@ public class TechStoreApplication {
 				staffAccount.setEmail("staff@techstore.com");
 				staffAccount.setPassword(passwordEncoder.encode("staff123"));
 
+				ImageEntity staffImage = new ImageEntity();
+				staffImage.setImagePath("/uploads/default-image.png");
+
 				// Create staff user
 				UserEntity staffUser = new UserEntity();
 				staffUser.setFirstName("Staff");
 				staffUser.setLastName("User");
 				staffUser.setPhoneNumber("0987654321");
 				staffUser.setGender(EGender.MALE);
+				staffUser.setImage(staffImage);
+				staffUser.setActived(true);
 				staffUser.setRole(staffRole);
 				staffUser.setCart(staffCart);
 				staffUser.setWallet(staffWallet);

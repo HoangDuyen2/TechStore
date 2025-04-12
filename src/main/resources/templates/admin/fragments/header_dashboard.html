@@ -368,13 +368,18 @@
             <div class="popup-wrap user type-header">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span class="header-user wg-user">
+                        <span class="header-user wg-user">
                                                 <span class="image">
-                                                    <img th:src="@{/admin/images/avatar/user-1.png}" alt="">
+                                                    <img th:if="${user.getImage().startsWith('https')}"
+                                                         th:src="${user.getImage()}"
+                                                         alt="Ảnh người dùng mặc định">
+                                                    <img th:unless="${user.getImage().startsWith('https')}"
+                                                         th:src="@{${user.getImage()}}"
+                                                         alt="Ảnh người dùng mặc định">
                                                 </span>
                                                 <span class="flex flex-column">
-                                                    <span class="body-title mb-2">Kristin Watson</span>
-                                                    <span class="text-tiny">Admin</span>
+                                                    <span class="body-title mb-2" th:text="${user.getFullName()}"></span>
+                                                    <span class="text-tiny" th:text="${user.getRoleName()}"></span>
                                                 </span>
                                             </span>
                     </button>
