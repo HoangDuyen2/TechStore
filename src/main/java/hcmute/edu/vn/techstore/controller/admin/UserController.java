@@ -3,7 +3,7 @@ package hcmute.edu.vn.techstore.controller.admin;
 import hcmute.edu.vn.techstore.model.request.UserRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,9 +16,9 @@ import java.util.Map;
 
 @Controller("userAdminController")
 @RequestMapping("/admin/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
 
     @GetMapping("")
     public String userList(Model model) {

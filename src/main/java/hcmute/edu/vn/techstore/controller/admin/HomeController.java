@@ -4,7 +4,8 @@ import hcmute.edu.vn.techstore.Enum.EGender;
 import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,10 +16,10 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class HomeController {
 
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
 
     @GetMapping("/dashboard")
     public String dashboard() {
@@ -27,7 +28,7 @@ public class HomeController {
 
     @GetMapping("/profile")
     public String adminProfile(Model model) {
-//        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         AdminProfileRequest adminProfileRequest = userService.findByAccount_Email("nguyenhahongtuan@gmail.com");
         model.addAttribute("adminProfile", adminProfileRequest);
         model.addAttribute("genders", EGender.values());

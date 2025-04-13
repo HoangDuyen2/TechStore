@@ -5,7 +5,7 @@ import hcmute.edu.vn.techstore.dto.response.BrandResponse;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.service.interfaces.IBrandService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,9 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/admin/brands")
+@RequiredArgsConstructor
 public class BrandController {
-    @Autowired
-    private IBrandService brandService;
+    private final IBrandService brandService;
 
     @GetMapping("")
     public String brands(Model model,
