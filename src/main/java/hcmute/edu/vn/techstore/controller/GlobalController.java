@@ -1,7 +1,7 @@
 package hcmute.edu.vn.techstore.controller;
 
-import hcmute.edu.vn.techstore.model.response.UserResponse;
-import hcmute.edu.vn.techstore.service.IUserService;
+import hcmute.edu.vn.techstore.dto.response.UserResponse;
+import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -67,7 +67,6 @@ public class UserServiceImpl implements IUserService {
                     .dateOfBirth(userRequest.getDateOfBirth())
                     .address(userRequest.getAddress())
                     .gender(userRequest.getGender())
-                    .image(imageService.saveImage(userRequest.getImage()))
                     .isActived(true)
                     .role(role)
                     .build();

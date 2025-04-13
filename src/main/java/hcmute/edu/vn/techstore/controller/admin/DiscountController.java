@@ -5,6 +5,7 @@ import hcmute.edu.vn.techstore.dto.request.DiscountRequest;
 import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
 import hcmute.edu.vn.techstore.service.interfaces.IDiscountService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
