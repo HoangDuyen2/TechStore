@@ -123,7 +123,7 @@ public class UserServiceImpl implements IUserService {
             throw new BadCredentialsException("Password not match");
         }
         if (userRequest.getRelativePhoneNumber() != null){
-            if (!userRequest.getRelativePhoneNumber().equals("")){
+            if (!userRequest.getRelativePhoneNumber().equals("")&&!validateTenDigitsNumber(userRequest.getPhoneNumber())){
                 throw new BadCredentialsException("Invalid relative phone number");
             }
         }
