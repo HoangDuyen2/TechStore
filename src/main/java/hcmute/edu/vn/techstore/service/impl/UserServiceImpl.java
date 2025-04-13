@@ -76,10 +76,14 @@ public class UserServiceImpl implements IUserService {
                     .phoneNumber(userRequest.getPhoneNumber())
                     .dateOfBirth(userRequest.getDateOfBirth())
                     .gender(userRequest.getGender())
-                    .image(imageService.saveImage(userRequest.getImage()))
                     .isActived(true)
                     .role(role)
                     .build();
+
+        if ((user.getImage() != null && !user.getImage().isEmpty())) {
+            user.setImage(imageService.saveImage(userRequest.getImage()));
+        }
+        else user.setImage("default.png");
 
         if (userRequest.getRoleName().contains("CUSTOMER")){
             addUser(user);
@@ -127,13 +131,13 @@ public class UserServiceImpl implements IUserService {
         if (!checkPassword(userRequest.getPassword(), userRequest.getConfirmPassword())) {
             throw new BadCredentialsException("Password not match");
         }
-        if (!userRequest.getRelativePhoneNumber().equals("")){
-            if (!validateTenDigitsNumber(userRequest.getRelativePhoneNumber())){
+        if (userRequest.getRelativePhoneNumber() != null){
+            if (!validateTenDigitsNumber(userRequest.getRelativePhoneNumber())&&!userRequest.getRelativePhoneNumber().equals("")){
                 throw new BadCredentialsException("Invalid relative phone number");
             }
         }
-        if (!userRequest.getCccd().equals("")){
-            if (!validateTwelveDigitsNumber(userRequest.getCccd())){
+        if (userRequest.getCccd() != null){
+            if (!validateTwelveDigitsNumber(userRequest.getCccd())&&!userRequest.getCccd().equals("")){
                 throw new BadCredentialsException("Invalid cccd number");
             }
         }
