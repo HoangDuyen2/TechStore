@@ -1,9 +1,10 @@
 package hcmute.edu.vn.techstore.controller;
 
-import hcmute.edu.vn.techstore.model.request.UserRequest;
-import hcmute.edu.vn.techstore.repository.UserRepository;
+import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.service.impl.UserServiceImpl;
+import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,10 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@RequiredArgsConstructor
 public class AuthController {
-
-    @Autowired
-    UserServiceImpl userService;
+    private final IUserService userService;
 
     @GetMapping("/register")
     public String getRegisterPage(Model model) {

@@ -4,6 +4,8 @@ import hcmute.edu.vn.techstore.Enum.EGender;
 import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.convert.UserResponseConverter;
 import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
+import hcmute.edu.vn.techstore.dto.request.UserRequest;
+import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.entity.AccountEntity;
 import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
@@ -12,6 +14,7 @@ import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IImageService;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,37 +23,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    UserResponseConverter userResponseConverter;
-
-    @Autowired
-    private IImageService imageService;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final UserResponseConverter userResponseConverter;
+    private final IImageService imageService;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    public boolean register(hcmute.edu.vn.techstore.model.request.UserRequest userRequest) throws IOException {
+    @Override
+    public boolean register(UserRequest userRequest) throws IOException {
         if (isExists(userRequest))
             return false;
         if (isValidation(userRequest))
@@ -75,6 +65,7 @@ public class UserServiceImpl implements IUserService {
                     .lastName(userRequest.getLastName())
                     .phoneNumber(userRequest.getPhoneNumber())
                     .dateOfBirth(userRequest.getDateOfBirth())
+                    .address(userRequest.getAddress())
                     .gender(userRequest.getGender())
                     .isActived(true)
                     .role(role)
@@ -96,14 +87,14 @@ public class UserServiceImpl implements IUserService {
         userRepository.save(user);
     }
 
-    public void addStaffOrAdmin(UserEntity user, hcmute.edu.vn.techstore.model.request.UserRequest userRequest) {
+    public void addStaffOrAdmin(UserEntity user, UserRequest userRequest) {
         user.setAddress(userRequest.getAddress());
         user.setCccd(userRequest.getCccd());
         user.setRelativeName(userRequest.getRelativeName());
         userRepository.save(user);
     }
 
-    public boolean isExists(hcmute.edu.vn.techstore.model.request.UserRequest userRequest) {
+    public boolean isExists(UserRequest userRequest) {
         UserEntity user = emailExists(userRequest.getEmail());
         if ((user != null && userRequest.getUserId() == null)||
                 (user != null&& !userRequest.getUserId().equals(user.getId()))) {
@@ -117,7 +108,7 @@ public class UserServiceImpl implements IUserService {
         return false;
     }
 
-    public boolean isValidation(hcmute.edu.vn.techstore.model.request.UserRequest userRequest) {
+    public boolean isValidation(UserRequest userRequest) {
         if (!EmailValidator.getInstance().isValid(userRequest.getEmail())) {
             throw new BadCredentialsException("Email is not valid");
         }
@@ -132,11 +123,11 @@ public class UserServiceImpl implements IUserService {
             throw new BadCredentialsException("Password not match");
         }
         if (userRequest.getRelativePhoneNumber() != null){
-            if (!validateTenDigitsNumber(userRequest.getRelativePhoneNumber())&&!userRequest.getRelativePhoneNumber().equals("")){
+            if (!userRequest.getRelativePhoneNumber().equals("")){
                 throw new BadCredentialsException("Invalid relative phone number");
             }
         }
-        if (userRequest.getCccd() != null){
+        if (userRequest.getCccd()!= null){
             if (!validateTwelveDigitsNumber(userRequest.getCccd())&&!userRequest.getCccd().equals("")){
                 throw new BadCredentialsException("Invalid cccd number");
             }
@@ -192,25 +183,25 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<hcmute.edu.vn.techstore.model.response.UserResponse> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         List<UserEntity> userEntities = userRepository.findAll();
         return userEntities.stream().map(userResponseConverter::toUserResponse).toList();
     }
 
     @Override
-    public hcmute.edu.vn.techstore.model.response.UserResponse getUserByEmail(String email) {
+    public UserResponse getUserByEmail(String email) {
         UserEntity userEntity = userRepository.findByAccount_Email(email).orElse(null);
         return userResponseConverter.toUserResponse(userEntity);
     }
 
     @Override
-    public hcmute.edu.vn.techstore.model.request.UserRequest getUserById(Long id) {
+    public UserRequest getUserById(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(null);
         return userResponseConverter.toUserRequest(userEntity);
     }
 
     @Override
-    public boolean updateUser(hcmute.edu.vn.techstore.model.request.UserRequest user) throws IOException {
+    public boolean updateUser(UserRequest user) throws IOException {
         try {
             UserEntity oldEntity = userRepository.findById(user.getUserId()).orElseThrow(null);
             UserEntity newEntity = userResponseConverter.toUserEntity(user);
@@ -302,5 +293,4 @@ public class UserServiceImpl implements IUserService {
         }
         return false;
     }
-
 }

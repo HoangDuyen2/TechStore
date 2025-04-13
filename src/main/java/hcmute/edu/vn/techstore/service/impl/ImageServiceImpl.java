@@ -3,6 +3,7 @@ package hcmute.edu.vn.techstore.service.impl;
 import hcmute.edu.vn.techstore.entity.ImageEntity;
 import hcmute.edu.vn.techstore.repository.ImageRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IImageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,9 +14,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ImageServiceImpl implements IImageService {
-    @Autowired
-    private ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
     private final Path root = Paths.get("./uploads");
 
     @Override
