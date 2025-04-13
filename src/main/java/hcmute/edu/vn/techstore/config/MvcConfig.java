@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.configuration;
+package hcmute.edu.vn.techstore.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

@@ -1,0 +1,233 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+
+<!-- Mirrored from themesflat.co/html/remos/add-attributes.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:48 GMT -->
+<div th:insert="~{admin/fragments/head::head}"></div>
+
+<body class="body">
+
+<!-- #wrapper -->
+<div id="wrapper">
+    <!-- #page -->
+    <div id="page" class="">
+        <!-- layout-wrap -->
+        <div class="layout-wrap">
+            <!-- preload -->
+            <div id="preload" class="preload-container">
+                <div class="preloading">
+                    <span></span>
+                </div>
+            </div>
+            <!-- /preload -->
+            <!-- section-menu-left -->
+            <div th:insert="~{admin/fragments/menu-left::section-menu-left}"></div>
+            <!-- /section-menu-left -->
+            <!-- section-content-right -->
+            <div class="section-content-right">
+                <!-- header-dashboard -->
+                <div th:insert="~{admin/fragments/header_dashboard::header-dashboard}"></div>
+                <!-- /header-dashboard -->
+                <!-- main-content -->
+                <div class="main-content">
+                    <!-- main-content-wrap -->
+                    <div class="main-content-inner">
+                        <!-- main-content-wrap -->
+                        <div class="main-content-wrap">
+                            <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                                <h3>Admin Profile</h3>
+                            </div>
+                            <!-- add-new-user -->
+                            <div class="block-warning" th:if="${error}">
+                                <i class="icon-alert-octagon"></i>
+                                <div class="body-title-2" th:text="${error}"></div>
+                            </div>
+                            <form th:action="@{/admin/update-profile}" method="post" enctype="multipart/form-data"
+                                  class="form-add-new-user form-style-2" th:object="${adminProfile}">
+                                <div class="wg-box">
+                                    <div class="left">
+                                        <h5 class="mb-4">Account</h5>
+                                        <div class="body-text">You can change your information here</div>
+                                    </div>
+                                    <div class="right flex-grow">
+                                        <fieldset class="name mb-24">
+                                            <div class="body-title mb-10">First Name</div>
+                                            <input class="flex-grow" type="text" placeholder="First name"
+                                                   name="firstName" tabindex="0" aria-required="true"
+                                                   required="required" th:field="*{firstName}">
+                                            <div class="block-warning" th:if="${#fields.hasErrors('firstName')}">
+                                                <i class="icon-alert-octagon"></i>
+                                                <div class="body-title-2" th:errors="*{firstName}"></div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="name mb-24">
+                                            <div class="body-title mb-10">Last Name</div>
+                                            <input class="flex-grow" type="text" placeholder="Last name"
+                                                   name="lastName" tabindex="0" aria-required="true"
+                                                   required="required" th:field="*{lastName}">
+                                            <div class="block-warning" th:if="${#fields.hasErrors('lastName')}">
+                                                <i class="icon-alert-octagon"></i>
+                                                <div class="body-title-2" th:errors="*{lastName}"></div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="name mb-24">
+                                            <div class="body-title mb-10">Phone Number</div>
+                                            <input class="flex-grow" type="text" placeholder="Phone number"
+                                                   name="phoneNumber" tabindex="0" aria-required="true"
+                                                   required="required" th:field="*{phoneNumber}">
+                                            <div class="block-warning" th:if="${#fields.hasErrors('phoneNumber')}">
+                                                <i class="icon-alert-octagon"></i>
+                                                <div class="body-title-2" th:errors="*{phoneNumber}"></div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="name mb-24">
+                                            <div class="body-title mb-10">Date Of Birth</div>
+                                            <input class="flex-grow" type="date" name="dateOfBirth"
+                                                   tabindex="0" aria-required="true" required="required"
+                                                   th:field="*{dateOfBirth}"
+                                                   th:value="${adminProfile.dateOfBirth != null ? #temporals.format(adminProfile.dateOfBirth, 'yyyy-MM-dd') : ''}">
+                                            <div class="block-warning" th:if="${#fields.hasErrors('dateOfBirth')}">
+                                                <i class="icon-alert-octagon"></i>
+                                                <div class="body-title-2" th:errors="*{dateOfBirth}"></div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="name mb-24">
+                                            <div class="body-title mb-10">Gender</div>
+                                            <div class="select">
+                                                <select class="" th:field="*{gender}">
+                                                    <option th:each="gender : ${genders}"
+                                                            th:value="${gender.name()}"
+                                                            th:text="${gender.name()}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="name mb-24">
+                                            <div class="body-title mb-10">Address</div>
+                                            <input class="flex-grow" type="text" placeholder="Address"
+                                                   name="address" tabindex="0" aria-required="true"
+                                                   required="required" th:field="*{address}">
+                                            <div class="block-warning" th:if="${#fields.hasErrors('address')}">
+                                                <i class="icon-alert-octagon"></i>
+                                                <div class="body-title-2" th:errors="*{address}"></div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="email mb-24">
+                                            <div class="body-title mb-10">Email</div>
+                                            <input class="flex-grow" type="email" placeholder="Email" name="email"
+                                                   tabindex="0" value="" aria-required="true"
+                                                   required="required" th:field="*{email}">
+                                            <div class="block-warning" th:if="${#fields.hasErrors('email')}">
+                                                <i class="icon-alert-octagon"></i>
+                                                <div class="body-title-2" th:errors="*{email}"></div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="password mb-24">
+                                            <div class="body-title mb-10">Password</div>
+                                            <input class="password-input" type="text" placeholder="Enter password"
+                                                   name="password" tabindex="0" aria-required="true"
+                                                   required="required" th:field="*{password}">
+                                            <span class="show-pass">
+                                                    <i class="icon-eye-off hide"></i>
+                                                    <i class="icon-eye view"></i>
+                                                </span>
+                                            <div class="block-warning" th:if="${#fields.hasErrors('password')}">
+                                                <i class="icon-alert-octagon"></i>
+                                                <div class="body-title-2" th:errors="*{password}"></div>
+                                            </div>
+                                        </fieldset>
+                                        <fieldset class="password">
+                                            <div class="body-title mb-10">Confirm password</div>
+                                            <input class="password-input" type="text" placeholder="Confirm password"
+                                                   name="confirmPassword" tabindex="0" aria-required="true"
+                                                   required="required" th:field="*{confirmPassword}">
+                                            <span class="show-pass">
+                                                    <i class="icon-eye-off hide"></i>
+                                                    <i class="icon-eye view"></i>
+                                                </span>
+                                            <div class="block-warning" th:if="${#fields.hasErrors('confirmPassword')}">
+                                                <i class="icon-alert-octagon"></i>
+                                                <div class="body-title-2" th:errors="*{confirmPassword}"></div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="wg-box">
+                                    <div class="left">
+                                        <h5 class="mb-4">Avatar</h5>
+                                        <div class="body-text">You can change your avatar here</div>
+                                    </div>
+                                    <div class="right flex-grow">
+                                        <fieldset class="mb-24">
+                                            <div class="upload-image flex-grow">
+                                                <div class="item up-load">
+                                                    <img th:src="@{'/uploads/' + ${adminProfile.image}}"
+                                                         class="product-image"
+                                                         alt="Avatar" width="300px;">
+                                                    <label class="uploadfile" for="myFile">
+                                                        <span class="icon">
+                                                            <i class="icon-upload-cloud"></i>
+                                                        </span>
+                                                        <span class="body-text">Drop your images here or select <span
+                                                                class="tf-color">click to browse</span></span>
+                                                        <input type="file" id="myFile" name="file">
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="bot">
+                                    <button class="tf-button w180" type="submit">Save</button>
+                                </div>
+
+                            </form>
+                            <!-- /add-new-user -->
+                        </div>
+                        <!-- /main-content-wrap -->
+                    </div>
+                    <!-- /main-content-wrap -->
+                    <!-- bottom-page -->
+                    <div th:insert="~{admin/fragments/bottom_page::bottom-page}"></div>
+                    <!-- /bottom-page -->
+                </div>
+                <!-- /main-content -->
+            </div>
+            <!-- /section-content-right -->
+        </div>
+        <!-- /layout-wrap -->
+    </div>
+    <!-- /#page -->
+</div>
+<!-- /#wrapper -->
+
+<!-- Javascript -->
+<div th:insert="~{admin/fragments/script::script}"></div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the date input element
+        const dateInput = document.getElementById('dateOfBirth');
+        
+        // Get the date value from Thymeleaf
+        const dateValue = /*[[${adminProfile.dateOfBirth}]]*/ '';
+        
+        if (dateValue) {
+            // Format the date as YYYY-MM-DD
+            const date = new Date(dateValue);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            
+            // Set the formatted date to the input
+            dateInput.value = formattedDate;
+        }
+    });
+</script>
+
+</body>
+
+
+<!-- Mirrored from themesflat.co/html/remos/add-new-user.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:42:31 GMT -->
+</html>

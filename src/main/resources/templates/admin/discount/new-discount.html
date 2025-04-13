@@ -100,7 +100,8 @@
                                         <div class="body-title">Discount expired date <span class="tf-color-1">*</span></div>
                                         <input class="flex-grow" type="date" name="expiredDate"
                                                tabindex="0" aria-required="true" required="required"
-                                               th:field="*{expiredDate}">
+                                               th:field="*{expiredDate}"
+                                               th:value="${discount.expiredDate != null ? #temporals.format(discount.expiredDate, 'yyyy-MM-dd') : ''}">
                                         <div class="block-warning" th:if="${#fields.hasErrors('expiredDate')}">
                                             <i class="icon-alert-octagon"></i>
                                             <div class="body-title-2" th:errors="*{expiredDate}"></div>
@@ -144,6 +145,28 @@
 
 <!-- Javascript -->
 <div th:insert="~{admin/fragments/script::script}"></div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the date input element
+        const dateInput = document.querySelector('input[name="expiredDate"]');
+        
+        // Get the date value from Thymeleaf
+        const dateValue = /*[[${discount.expiredDate}]]*/ '';
+        
+        if (dateValue) {
+            // Format the date as YYYY-MM-DD
+            const date = new Date(dateValue);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day}`;
+            
+            // Set the formatted date to the input
+            dateInput.value = formattedDate;
+        }
+    });
+</script>
 
 </body>
 

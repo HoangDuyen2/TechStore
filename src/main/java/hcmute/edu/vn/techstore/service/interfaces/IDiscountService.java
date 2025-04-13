@@ -1,8 +1,8 @@
-package hcmute.edu.vn.techstore.service;
+package hcmute.edu.vn.techstore.service.interfaces;
 
 import hcmute.edu.vn.techstore.entity.DiscountEntity;
-import hcmute.edu.vn.techstore.model.request.DiscountRequest;
-import hcmute.edu.vn.techstore.model.response.DiscountResponse;
+import hcmute.edu.vn.techstore.dto.request.DiscountRequest;
+import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

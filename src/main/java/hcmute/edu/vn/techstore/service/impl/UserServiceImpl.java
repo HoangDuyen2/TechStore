@@ -1,24 +1,7 @@
 package hcmute.edu.vn.techstore.service.impl;
 
-import hcmute.edu.vn.techstore.Enum.ERole;
-import hcmute.edu.vn.techstore.convert.UserResponseConverter;
-import hcmute.edu.vn.techstore.entity.*;
-import hcmute.edu.vn.techstore.exception.DateOfBirthException;
-import hcmute.edu.vn.techstore.model.request.UserRequest;
-import hcmute.edu.vn.techstore.model.response.UserResponse;
-import hcmute.edu.vn.techstore.repository.AccountRepository;
-import hcmute.edu.vn.techstore.repository.ImageRepository;
-import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
-import hcmute.edu.vn.techstore.service.IImageService;
-import hcmute.edu.vn.techstore.service.IUserService;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -242,6 +225,64 @@ public class UserServiceImpl implements IUserService {
             userRepository.save(userEntity);
         }
         return true;
+    }
+
+    @Override
+    public AdminProfileRequest findByAccount_Email(String accountEmail) {
+        UserEntity userEntity = userRepository.findByAccount_Email(accountEmail);
+        return AdminProfileRequest.builder()
+                .firstName(userEntity.getFirstName())
+                .lastName(userEntity.getLastName())
+                .phoneNumber(userEntity.getPhoneNumber())
+                .dateOfBirth(userEntity.getDateOfBirth())
+                .gender(userEntity.getGender().name())
+                .address(userEntity.getAddress())
+                .image(userEntity.getImage().getImagePath())
+                .email(userEntity.getAccount().getEmail())
+                .password(userEntity.getAccount().getPassword())
+                .confirmPassword(userEntity.getAccount().getPassword())
+                .build();
+    }
+
+    @Override
+    public boolean updateAdmin(AdminProfileRequest adminProfileRequest) {
+        try {
+            UserEntity user = userRepository.findByAccount_Email(adminProfileRequest.getEmail());
+            user.setFirstName(adminProfileRequest.getFirstName());
+            user.setLastName(adminProfileRequest.getLastName());
+            user.setPhoneNumber(adminProfileRequest.getPhoneNumber());
+            user.setDateOfBirth(adminProfileRequest.getDateOfBirth());
+            user.setGender(EGender.valueOf(adminProfileRequest.getGender()));
+            user.setAddress(adminProfileRequest.getAddress());
+            user.getAccount().setEmail(adminProfileRequest.getEmail());
+            user.getAccount().setPassword(adminProfileRequest.getPassword());
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateAdmin(AdminProfileRequest adminProfileRequest, MultipartFile file) {
+        try {
+            UserEntity user = userRepository.findByAccount_Email(adminProfileRequest.getEmail());
+            user.setFirstName(adminProfileRequest.getFirstName());
+            user.setLastName(adminProfileRequest.getLastName());
+            user.setPhoneNumber(adminProfileRequest.getPhoneNumber());
+            user.setDateOfBirth(adminProfileRequest.getDateOfBirth());
+            user.setGender(EGender.valueOf(adminProfileRequest.getGender()));
+            user.setAddress(adminProfileRequest.getAddress());
+            user.getAccount().setEmail(adminProfileRequest.getEmail());
+            user.getAccount().setPassword(adminProfileRequest.getPassword());
+            user.getImage().setImagePath(imageService.updateImage(file, user.getImage().getImagePath()));
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

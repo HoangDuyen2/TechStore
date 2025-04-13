@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.service;
+package hcmute.edu.vn.techstore.service.interfaces;
 
 import hcmute.edu.vn.techstore.entity.ImageEntity;
 import org.springframework.web.multipart.MultipartFile;

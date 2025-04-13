@@ -1,14 +1,14 @@
 package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.Enum.EOrderStatus;
-import hcmute.edu.vn.techstore.model.request.BrandRequest;
-import hcmute.edu.vn.techstore.model.response.BrandResponse;
+import hcmute.edu.vn.techstore.dto.request.BrandRequest;
+import hcmute.edu.vn.techstore.dto.response.BrandResponse;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.repository.BrandRepository;
 import hcmute.edu.vn.techstore.repository.OrderDetailRepository;
 import hcmute.edu.vn.techstore.repository.ProductRepository;
-import hcmute.edu.vn.techstore.service.IBrandService;
-import hcmute.edu.vn.techstore.service.IImageService;
+import hcmute.edu.vn.techstore.service.interfaces.IBrandService;
+import hcmute.edu.vn.techstore.service.interfaces.IImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.model.request;
+package hcmute.edu.vn.techstore.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.*;

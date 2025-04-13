@@ -1,9 +1,9 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
-import hcmute.edu.vn.techstore.model.request.BrandRequest;
-import hcmute.edu.vn.techstore.model.response.BrandResponse;
+import hcmute.edu.vn.techstore.dto.request.BrandRequest;
+import hcmute.edu.vn.techstore.dto.response.BrandResponse;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
-import hcmute.edu.vn.techstore.service.IBrandService;
+import hcmute.edu.vn.techstore.service.interfaces.IBrandService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -88,7 +88,8 @@ public class BrandController {
         String msg = "";
         if (bindingResult.hasErrors()) {
             msg = bindingResult.getFieldError().getDefaultMessage();
-            model.addAttribute("msg", msg);
+            model.addAttribute("error", msg);
+            model.addAttribute("brand", brandRequest);
             return "admin/brand/brand-list";
         }
         if (!brandRequest.getBrandName().matches("^[a-zA-Z].*")) {
@@ -99,7 +100,8 @@ public class BrandController {
         }
         if (!brandRequest.getBrandName().matches("^[a-zA-Z0-9\\s]+$")) {
             msg = "Name is not valid";
-            model.addAttribute("msg", msg);
+            model.addAttribute("error", msg);
+            model.addAttribute("brand", brandRequest);
             return "admin/brand/update-brand";
         }
         BrandEntity brand = brandService.findByName(brandRequest.getBrandName());
@@ -119,8 +121,8 @@ public class BrandController {
             }
         } else {
             msg = "Something went wrong";
-            model.addAttribute("msg", msg);
-            model.addAttribute("category", brandRequest);
+            model.addAttribute("error", msg);
+            model.addAttribute("brand", brandRequest);
         }
         return "admin/brand/update-brand";
     }
