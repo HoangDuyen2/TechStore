@@ -23,10 +23,8 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping("")
-    public String userList(Model model,
-                           @RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "10") int size) {
-        model.addAttribute("users", userService.getAllUsers(PageRequest.of(page, size)));
+    public String userList(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
 
         return "admin/user/all-user";
     }

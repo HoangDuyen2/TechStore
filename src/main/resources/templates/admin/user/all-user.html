@@ -86,7 +86,7 @@
                                                 <div class="body-title">Action</div>
                                             </li>
                                         </ul>
-                                        <ul class="flex flex-column">
+                                        <ul class="list">
                                             <li class="user-item gap14" th:each="eachUser : ${users}">
                                                 <div class="image">
                                                     <img th:if="${eachUser.getImage().startsWith('https')}"
@@ -123,29 +123,7 @@
                                     <div class="divider"></div>
                                     <div class="flex items-center justify-between flex-wrap gap10">
                                         <div class="text-tiny">Showing 10 entries</div>
-                                        <ul class="wg-pagination">
-
-                                            <!-- Nút Previous: chỉ hiển thị khi users.number > 0 -->
-                                            <li th:if="${users.number > 0}">
-                                                <a th:href="@{'/admin/user?page=' + ${users.number - 1} + '&size=' + ${users.size}}">
-                                                    <i class="icon-chevron-left"></i>
-                                                </a>
-                                            </li>
-
-                                            <!-- Danh sách số trang -->
-                                            <li th:each="i : ${#numbers.sequence(0, users.totalPages - 1)}"
-                                                th:classappend="${i == users.number} ? 'active'">
-                                                <a th:href="@{'/admin/user?page=' + ${i} + '&size=' + ${users.size}}"
-                                                   th:text="${i + 1}">1</a>
-                                            </li>
-
-                                            <!-- Nút Next: chỉ hiển thị khi chưa phải trang cuối -->
-                                            <li th:if="${users.number < users.totalPages - 1}">
-                                                <a th:href="@{'/admin/user?page=' + ${users.number + 1} + '&size=' + ${users.size}}">
-                                                    <i class="icon-chevron-right"></i>
-                                                </a>
-                                            </li>
-
+                                        <ul class="wg-pagination listPage">
                                         </ul>
                                     </div>
                                 </div>

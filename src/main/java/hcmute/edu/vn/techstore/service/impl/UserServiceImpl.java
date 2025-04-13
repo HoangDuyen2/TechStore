@@ -157,7 +157,6 @@ public class UserServiceImpl implements IUserService {
         return matcher.matches();
     }
 
-
     public boolean validateTenDigitsNumber(String phoneNumber) {
         Pattern pattern = Pattern.compile(("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"));
         Matcher matcher = pattern.matcher(phoneNumber);
@@ -191,9 +190,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Page<UserResponse> getAllUsers(Pageable pageable) {
-        Page<UserEntity> userEntities = userRepository.findAll(pageable);
-        return userEntities.map(userResponseConverter::toUserResponse);
+    public List<UserResponse> getAllUsers() {
+        List<UserEntity> userEntities = userRepository.findAll();
+        return userEntities.stream().map(userResponseConverter::toUserResponse).toList();
     }
 
     @Override

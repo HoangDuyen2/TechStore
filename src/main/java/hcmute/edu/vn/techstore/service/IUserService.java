@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IUserService {
     boolean register(UserRequest user) throws IOException;
-    Page<UserResponse> getAllUsers(Pageable pageable);
+    List<UserResponse> getAllUsers();
     UserResponse getUserByEmail(String email);
 
 }
