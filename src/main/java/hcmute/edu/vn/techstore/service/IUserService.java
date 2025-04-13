@@ -14,4 +14,5 @@ public interface IUserService {
     UserResponse getUserByEmail(String email);
     UserRequest getUserById(Long id);
     boolean updateUser(UserRequest user) throws IOException;
+    boolean updateActived(Long id, boolean actived);
 }

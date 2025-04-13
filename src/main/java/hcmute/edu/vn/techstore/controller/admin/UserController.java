@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
+import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.model.request.UserRequest;
 import hcmute.edu.vn.techstore.model.response.UserResponse;
 import hcmute.edu.vn.techstore.service.IAccountService;
@@ -9,12 +10,16 @@ import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller("userAdminController")
 @RequestMapping("/admin/users")
@@ -81,4 +86,32 @@ public class UserController {
         model.addAttribute("new_user", userRequest);
         return "admin/user/add-new-user";
     }
+
+    @GetMapping("/toggle-active/{id}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> toggleActive(@PathVariable("id") Long id,
+                                                            @RequestParam("active") boolean active) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            UserRequest userRequest = userService.getUserById(id);
+            if (userRequest.getRoleName() == "ROLE_ADMIN") {
+                response.put("status", "error");
+                response.put("message", "Can not change admin status");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            }
+
+            userService.updateActived(id, active);
+
+            response.put("status", "success");
+            response.put("message", "User status has been updated.");
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            response.put("status", "error");
+            response.put("message", "Failed to update status: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
 }

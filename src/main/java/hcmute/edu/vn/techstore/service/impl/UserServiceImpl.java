@@ -234,4 +234,14 @@ public class UserServiceImpl implements IUserService {
         return false;
     }
 
+    @Override
+    public boolean updateActived(Long id, boolean status) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(null);
+        if (userEntity != null) {
+            userEntity.setActived(status);
+            userRepository.save(userEntity);
+        }
+        return true;
+    }
+
 }

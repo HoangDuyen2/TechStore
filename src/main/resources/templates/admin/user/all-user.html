@@ -103,7 +103,8 @@
                                                     </div>
                                                     <div class="body-text" style="width: 8%; min-width: 50px" th:text="${eachUser.getPhoneNumber()}"></div>
                                                     <div class="body-text" style="width: 20%; min-width: 100px" th:text="${eachUser.getEmail()}"></div>
-                                                    <div class="toggle-switch" style="width: 2px;height: 20px; " th:classappend="${eachUser.actived ? 'active' : ''}" onclick="toggleSwitch(this)">
+                                                    <div class="toggle-switch" style="width: 2px;height: 20px; " th:classappend="${eachUser.actived ? 'active' : ''}"
+                                                         th:attr="data-user-id=${eachUser.userId}, data-active=${eachUser.actived}">
                                                     </div>
                                                     <div class="list-icon-function" style="width: 11%">
                                                         <div class="item eye">
@@ -145,14 +146,55 @@
 
     <!-- Javascript -->
     <div th:insert="~{admin/fragments/script::script}"></div>
-
+    <script th:src="@{/admin/plugins/sweetalert/sweetalert2.all.min.js}"></script>
     <script>
-        function toggleSwitch(element) {
-            element.classList.toggle('active');
-        }
+        $(document).ready(function () {
+            $(".toggle-switch").on("click", function () {
+                const $this = $(this);
+                const userId = $this.data("user-id");
+                const currentState = $this.data("active") === true || $this.data("active") === "true";
+                const newState = !currentState;
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: `This user will be ${newState ? 'activated' : 'deactivated'}.`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, do it!",
+                    cancelButtonText: "Cancel",
+                    buttonsStyling: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/admin/users/toggle-active/${userId}?active=${newState}`,
+                            method: "GET",
+                            success: function () {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Updated!",
+                                    text: "User status has been updated.",
+                                    confirmButtonColor: "#3085d6"
+                                }).then(() => {
+                                    // Reload hoặc cập nhật UI tại chỗ
+                                    location.reload();
+                                });
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Failed!",
+                                    text: "Unable to update user status.",
+                                    confirmButtonColor: "#d33"
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
     </script>
-
-
 </body>
 
 
