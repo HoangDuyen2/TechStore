@@ -12,7 +12,7 @@ import hcmute.edu.vn.techstore.repository.AccountRepository;
 import hcmute.edu.vn.techstore.repository.ImageRepository;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
-import hcmute.edu.vn.techstore.service.IImageService;
+import hcmute.edu.vn.techstore.service.interfaces.IImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

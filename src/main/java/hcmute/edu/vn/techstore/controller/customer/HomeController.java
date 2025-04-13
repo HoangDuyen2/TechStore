@@ -1,8 +1,6 @@
 package hcmute.edu.vn.techstore.controller.customer;
 
-import hcmute.edu.vn.techstore.model.response.UserResponse;
-import hcmute.edu.vn.techstore.service.IUserService;
-import hcmute.edu.vn.techstore.utils.SecurityUtils;
+import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

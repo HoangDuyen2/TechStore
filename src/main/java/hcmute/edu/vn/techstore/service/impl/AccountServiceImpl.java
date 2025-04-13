@@ -1,6 +1,6 @@
 package hcmute.edu.vn.techstore.service.impl;
 
-import hcmute.edu.vn.techstore.service.IAccountService;
+import hcmute.edu.vn.techstore.service.interfaces.IAccountService;
 import org.springframework.stereotype.Service;
 
 @Service
