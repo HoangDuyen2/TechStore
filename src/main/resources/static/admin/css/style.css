@@ -4900,7 +4900,7 @@ select.h40 {
 }
 .wg-table.table-all-user .user-item .body-text {
   width: 20%;
-  min-width: 120px;
+  min-width: 150px;
 }
 .wg-table.table-all-user .user-item .list-icon-function {
   width: 10%;
@@ -6931,8 +6931,8 @@ select.h40 {
 
 .wg-table.table-all-user ul.table-title li:nth-child(2),
 .wg-table.table-all-user ul.table-title li:nth-child(3) {
-  width: 20%;
-  min-width: 120px;
+  width: 80%;
+  min-width: 500px;
 }
 
 .wg-table.table-all-user ul.table-title li:nth-child(4) {
