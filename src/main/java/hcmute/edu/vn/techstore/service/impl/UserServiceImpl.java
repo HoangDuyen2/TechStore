@@ -49,9 +49,6 @@ public class UserServiceImpl implements IUserService {
     UserResponseConverter userResponseConverter;
 
     @Autowired
-    AccountRepository accountRepository;
-
-    @Autowired
     private IImageService imageService;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -82,7 +79,7 @@ public class UserServiceImpl implements IUserService {
                     .phoneNumber(userRequest.getPhoneNumber())
                     .dateOfBirth(userRequest.getDateOfBirth())
                     .gender(userRequest.getGender())
-                    .image(imageService.addImage(userRequest.getImage()))
+                    .image(imageService.saveImage(userRequest.getImage()))
                     .isActived(true)
                     .role(role)
                     .build();
@@ -106,10 +103,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     public boolean isExists(UserRequest userRequest) {
-        if (emailExists(userRequest.getEmail())) {
+        UserEntity user = emailExists(userRequest.getEmail());
+        if ((user != null && userRequest.getUserId() == null)||
+                (user != null&& !userRequest.getUserId().equals(user.getId()))) {
             throw new BadCredentialsException("Email is exists");
         }
-        if (phoneNumberExists(userRequest.getPhoneNumber())) {
+        UserEntity phone = phoneNumberExists(userRequest.getPhoneNumber());
+        if ((phone != null && userRequest.getUserId() == null)||
+                (phone != null&& !userRequest.getUserId().equals(phone.getId()))) {
             throw new BadCredentialsException("Phone number is exists");
         }
         return false;
@@ -142,12 +143,12 @@ public class UserServiceImpl implements IUserService {
         return false;
     }
 
-    public boolean emailExists(String email) {
-        return userRepository.findByAccount_Email(email) != null;
+    public UserEntity emailExists(String email) {
+        return userRepository.findByAccount_Email(email).orElse(null);
     }
 
-    public boolean phoneNumberExists(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber) != null;
+    public UserEntity phoneNumberExists(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber).orElse(null);
     }
 
     public boolean validateTwelveDigitsNumber(String cccd) {
@@ -197,8 +198,40 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserResponse getUserByEmail(String email) {
-        UserEntity userEntity = userRepository.findByAccount_Email(email);
-
+        UserEntity userEntity = userRepository.findByAccount_Email(email).orElse(null);
         return userResponseConverter.toUserResponse(userEntity);
     }
+
+    @Override
+    public UserRequest getUserById(Long id) {
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(null);
+        return userResponseConverter.toUserRequest(userEntity);
+    }
+
+    @Override
+    public boolean updateUser(UserRequest user) throws IOException {
+        try {
+            UserEntity oldEntity = userRepository.findById(user.getUserId()).orElseThrow(null);
+            UserEntity newEntity = userResponseConverter.toUserEntity(user);
+
+            if (oldEntity != null) {
+                AccountEntity accountEntity = oldEntity.getAccount();
+                accountEntity.setEmail(user.getEmail());
+                newEntity.setAccount(accountEntity);
+
+                if ((user.getImage() != null && !user.getImage().isEmpty())) {
+                    newEntity.setImage(imageService.saveImage(user.getImage()));
+                }
+                else newEntity.setImage(oldEntity.getImage());
+                newEntity.setActived(oldEntity.isActived());
+                userRepository.save(newEntity);
+                return true;
+            }
+            userResponseConverter.toUserEntity(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

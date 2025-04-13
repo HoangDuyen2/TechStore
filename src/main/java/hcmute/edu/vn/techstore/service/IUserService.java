@@ -12,5 +12,6 @@ public interface IUserService {
     boolean register(UserRequest user) throws IOException;
     List<UserResponse> getAllUsers();
     UserResponse getUserByEmail(String email);
-
+    UserRequest getUserById(Long id);
+    boolean updateUser(UserRequest user) throws IOException;
 }

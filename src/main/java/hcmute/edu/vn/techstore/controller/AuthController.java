@@ -30,6 +30,12 @@ public class AuthController {
             return "web/create-account";
         }
         try {
+            if (userRequest.getPassword() == null||userRequest.getPassword().equals("")) {
+                model.addAttribute("error","Please enter a password");
+            }
+            if (userRequest.getConfirmPassword() == null||userRequest.getConfirmPassword().equals("")) {
+                model.addAttribute("error","Please enter confirm password");
+            }
             userRequest.setRoleName("ROLE_CUSTOMER");
             if (userService.register(userRequest)) {
                 System.out.println("Registration successful for user: " + userRequest.getEmail());

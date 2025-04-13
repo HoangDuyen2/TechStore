@@ -4,6 +4,7 @@ import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.exception.DataNotFoundException;
+import hcmute.edu.vn.techstore.model.request.UserRequest;
 import hcmute.edu.vn.techstore.model.response.UserResponse;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import jakarta.annotation.PostConstruct;
@@ -39,5 +40,29 @@ public class UserResponseConverter {
         }
 
         return userResponse;
+    }
+
+    public UserRequest toUserRequest (UserEntity userEntity) {
+        UserRequest userRequest = modelMapper.map(userEntity, UserRequest.class);
+        userRequest.setUserId(userEntity.getId());
+        userRequest.setPassword(userEntity.getAccount().getPassword());
+        userRequest.setConfirmPassword(userEntity.getAccount().getPassword());
+        if (userEntity.getAccount() != null) {
+            userRequest.setEmail(userEntity.getAccount().getEmail());
+        }
+
+        if (userEntity.getRole() != null) {
+            userRequest.setRoleName(userEntity.getRole().getName().toString());
+        }
+
+        return userRequest;
+    }
+
+    public UserEntity toUserEntity (UserRequest userRequest) {
+        UserEntity userEntity = modelMapper.map(userRequest, UserEntity.class);
+        userEntity.setId(userRequest.getUserId());
+        RoleEntity role = roleRepository.findByName(ERole.valueOf(userRequest.getRoleName())).orElse(null);
+        userEntity.setRole(role);
+        return userEntity;
     }
 }

@@ -37,13 +37,13 @@
                                     <h3>All User</h3>
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
-                                            <a href="../index.html"><div class="text-tiny">Dashboard</div></a>
+                                            <a th:href="@{/admin/dashboard}"><div class="text-tiny">Dashboard</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">User</div></a>
+                                            <a th:href="@{/admin/users}"><div class="text-tiny">User</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -97,8 +97,8 @@
                                                          alt="Ảnh người dùng mặc định">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
-                                                    <div class="name" style="width: 10%; min-width: 100px;">
-                                                        <a href="#" class="body-title-2" th:text="${eachUser.getFullName()}"></a>
+                                                    <div class="name" style="width: 10%; min-width: 110px;">
+                                                        <a th:href="@{/admin/users/{id}(id=${eachUser.userId})}" class="body-title-2" th:text="${eachUser.getFullName()}"></a>
                                                         <div class="text-tiny mt-3" th:text="${eachUser.getRoleName()}"></div>
                                                     </div>
                                                     <div class="body-text" style="width: 8%; min-width: 50px" th:text="${eachUser.getPhoneNumber()}"></div>
@@ -107,10 +107,10 @@
                                                     </div>
                                                     <div class="list-icon-function" style="width: 11%">
                                                         <div class="item eye">
-                                                            <i class="icon-eye"></i>
+                                                            <a class="icon-eye" th:href="@{/admin/users/{id}(id=${eachUser.userId})}"></a>
                                                         </div>
                                                         <div class="item edit">
-                                                            <i class="icon-edit"></i>
+                                                            <a class="icon-edit" th:href="@{'/admin/users/' + ${eachUser.userId} + '?status=true'}"></a>
                                                         </div>
                                                     </div>
                                                 </div>

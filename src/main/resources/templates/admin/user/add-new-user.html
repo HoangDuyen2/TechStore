@@ -38,13 +38,13 @@
                                     <h3>Add New User</h3>
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
-                                            <a href="../index.html"><div class="text-tiny">Dashboard</div></a>
+                                            <a th:href="@{/admin/dashboard}"><div class="text-tiny">Dashboard</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a href="#"><div class="text-tiny">User</div></a>
+                                            <a th:href="@{/admin/users}"><div class="text-tiny">User</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -55,13 +55,16 @@
                                     </ul>
                                 </div>
                                 <!-- add-new-user -->
-                                <form class="form-add-new-user form-style-2" th:action="@{/admin/users/add-user}" method="post" th:object="${new_user}" enctype="multipart/form-data">
+                                <form class="form-add-new-user form-style-2"
+                                      th:action="@{/admin/users/add-user}"
+                                      method="post" th:object="${new_user}" enctype="multipart/form-data">
                                     <div class="wg-box">
                                         <div class="left">
                                             <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
-                                            <h5 class="mb-4" th:if="${new_user.userId} != null">Edit Account</h5>
-                                            <h5 class="mb-4" th:unless="${new_user.userId} != null">New Account</h5>
-                                            <div class="body-text">Fill in the information below to add a new account</div>
+                                            <h5 class="mb-4" th:if="${new_user.userId != null and status == true}">Edit Account</h5>
+                                            <h5 class="mb-4" th:if="${new_user.userId == null and status == true}">New Account</h5>
+                                            <h5 class="mb-4" th:if="${status} != true">Show Account</h5>
+                                            <div class="body-text" th:if="${status} == true">Fill in the information below to add/edit a new account</div>
                                             <div style="margin-top: 40px;">
                                                 <label for="imageUpload" style="font-weight: bold; margin-bottom: 8px; display: block;font-size: 15px">📷 Profile Image</label>
 
@@ -70,7 +73,8 @@
                                                        th:field="*{image}"
                                                        accept="image/*"
                                                        class="form-control"
-                                                       style="margin-bottom: 8px;font-size: 12px">
+                                                       style="margin-bottom: 8px;font-size: 12px"
+                                                       th:disabled="${status != true}">
 
                                                 <span class="text-danger"
                                                       th:if="${#fields.hasErrors('image')}"
@@ -90,12 +94,12 @@
                                             <div class="gap22 cols mb-24">
                                                 <fieldset class="first-name">
                                                     <div class="body-title mb-10">First Name <span class="tf-color-1">*</span></div>
-                                                    <input type="text" placeholder="Văn A" name="firstName"  th:field="*{firstName}">
+                                                    <input type="text" placeholder="Văn A" name="firstName"  th:field="*{firstName}" th:disabled="${status != true}">
                                                     <div class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
                                                 </fieldset>
                                                 <fieldset class="last-name">
                                                     <div class="body-title mb-10">Last Name <span class="tf-color-1">*</span></div>
-                                                    <input type="text" placeholder="Nguyễn" name="lastName"  th:field="*{lastName}">
+                                                    <input type="text" placeholder="Nguyễn" name="lastName"  th:field="*{lastName}" th:disabled="${status != true}">
                                                     <div class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
                                                 </fieldset>
                                             </div>
@@ -103,7 +107,7 @@
                                             <div class="gap22 cols mb-24">
                                                 <fieldset class="gender">
                                                     <div class="body-title mb-10">Gender <span class="tf-color-1"></span></div>
-                                                    <select name="gender" required th:field="*{gender}" id="genderSelect" onchange="toggleExtraFields()">
+                                                    <select name="gender" required th:field="*{gender}" id="genderSelect" onchange="toggleExtraFields()" th:disabled="${status != true}">
                                                         <option th:each="gender : ${T(hcmute.edu.vn.techstore.Enum.EGender).values()}"
                                                                 th:value="${gender}"
                                                                 th:text="${gender}"></option>
@@ -114,18 +118,18 @@
                                             <div class="gap22 cols mb-24">
                                                 <fieldset class="address">
                                                     <div class="body-title mb-10">Address <span class="tf-color-1"></span></div>
-                                                    <input type="text" placeholder="Tổ 11, khu vực 5, phường Đa Lợi, tỉnh Phú Yên" name="address" tabindex="0"  th:field="*{address}">
+                                                    <input type="text" placeholder="Tổ 11, khu vực 5, phường Đa Lợi, tỉnh Phú Yên" name="address" tabindex="0"  th:field="*{address}" th:disabled="${status != true}">
                                                 </fieldset>
                                             </div>
 
                                             <div class="gap22 cols mb-24">
                                                 <fieldset class="email">
                                                     <div class="body-title mb-10">Email <span class="tf-color-1">*</span></div>
-                                                    <input type="email" placeholder="nva@gmail.com" name="email"  th:field="*{email}">
+                                                    <input type="email" placeholder="nva@gmail.com" name="email" th:field="*{email}" th:disabled="${status != true}">
                                                 </fieldset>
                                                 <fieldset class="fa-birthday-cake">
                                                     <div class="body-title mb-10">Date of birth <span class="tf-color-1"></span></div>
-                                                    <input type="date" placeholder="Date of birth" name="dob"  th:field="*{dateOfBirth}">
+                                                    <input type="date" placeholder="Date of birth" name="dob" th:field="*{dateOfBirth}" th:disabled="${status != true}">
                                                 </fieldset>
                                             </div>
 
@@ -135,7 +139,7 @@
                                                     <div class="body-title mb-10">Password <span class="tf-color-1">*</span></div>
                                                     <input class="password-input" type="password" placeholder="Enter password"
                                                            name="password" tabindex="0" value=""
-                                                           th:field="*{password}">
+                                                           th:field="*{password}" th:disabled="${new_user.userId != null}">
                                                     <span class="show-pass">
                                                         <i class="icon-eye view"></i>
                                                         <i class="icon-eye-off hide"></i>
@@ -148,25 +152,26 @@
                                                     <div class="body-title mb-10">Confirm password<span class="tf-color-1">*</span></div>
                                                     <input class="password-input" type="password" placeholder="Confirm password"
                                                            name="confirmPassword" tabindex="0" value=""
-                                                           th:field="*{confirmPassword}">
+                                                           th:field="*{confirmPassword}" th:disabled="${new_user.userId != null}">
                                                     <span class="show-pass">
                                                         <i class="icon-eye view"></i>
                                                         <i class="icon-eye-off hide"></i>
                                                     </span>
+                                                    <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
                                                 </fieldset>
                                             </div>
                                             <label style="font-size: 15px; margin-bottom: 20px">Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 special character and be 8-20 characters long.</label>
                                             <div class="gap22 cols mb-24">
                                                 <fieldset class="phone">
                                                     <div class="body-title mb-10">Phone <span class="tf-color-1">*</span></div>
-                                                    <input type="text" placeholder="Phone" name="phone" th:field="*{phoneNumber}">
+                                                    <input type="text" placeholder="Phone" name="phone" th:field="*{phoneNumber}" th:disabled="${status != true}">
                                                     <div class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
                                                 </fieldset>
 
                                                 <fieldset class="role">
                                                     <div class="body-title mb-10">Role <span class="tf-color-1">*</span></div>
                                                     <div class="select">
-                                                        <select name="role" required th:field="*{roleName}" id="roleSelect" onchange="toggleExtraFields()">
+                                                        <select name="role" required th:field="*{roleName}" id="roleSelect" onchange="toggleExtraFields()" th:disabled="${status != true}">
                                                             <option th:each="role : ${T(hcmute.edu.vn.techstore.Enum.ERole).values()}"
                                                                     th:value="${role}"
                                                                     th:text="${role}"></option>
@@ -181,7 +186,7 @@
                                                 <div class="mb-24">
                                                     <fieldset style="width: 100%;">
                                                         <div class="body-title">CCCD <span class="tf-color-1">*</span></div>
-                                                        <input type="text" name="cccd" placeholder="CCCD" th:field="*{cccd}">
+                                                        <input type="text" name="cccd" placeholder="CCCD" th:field="*{cccd}" th:disabled="${status != true}">
                                                     </fieldset>
                                                 </div>
                                                 <label style="font-size: 15px; margin-bottom: 20px">CCCD must have 12-digit numbers.</label>
@@ -190,11 +195,11 @@
                                                 <div class="mb-24 gap22" style="display: flex;">
                                                     <fieldset style="flex: 1;">
                                                         <div class="body-title mb-10">Relative Phone Number</div>
-                                                        <input type="text" name="relativePhone" placeholder="0563436253" th:field="*{relativePhoneNumber}">
+                                                        <input type="text" name="relativePhone" placeholder="0563436253" th:field="*{relativePhoneNumber}" th:disabled="${status != true}">
                                                     </fieldset>
                                                     <fieldset style="flex: 1;">
                                                         <div class="body-title mb-10">Relative Name</div>
-                                                        <input  type="text" name="relativeName" placeholder="Nguyễn Văn B" th:field="*{relativeName}">
+                                                        <input  type="text" name="relativeName" placeholder="Nguyễn Văn B" th:field="*{relativeName}" th:disabled="${status != true}">
                                                     </fieldset>
                                                 </div>
                                             </div>
@@ -202,11 +207,14 @@
                                         </div>
                                     </div>
                                     <div class="bot">
-                                        <div th:if="${new_user.userId != null}">
+                                        <div th:if="${new_user.userId != null and status == true}">
                                             <button class="tf-button w180" type="submit">Save</button>
                                         </div>
-                                        <div th:unless="${new_user.userId != null}">
+                                        <div th:if="${new_user.userId == null and status == true}">
                                             <button class="tf-button w180" type="submit">Add</button>
+                                        </div>
+                                        <div th:if="${status} != true">
+                                            <a th:href="@{'/admin/users/' + ${new_user.userId} + '?status=true'}" class="tf-button w180">Edit</a>
                                         </div>
                                     </div>
                                 </form>
