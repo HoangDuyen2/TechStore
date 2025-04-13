@@ -12,11 +12,10 @@ public interface IUserService {
     boolean updateAdmin(AdminProfileRequest adminProfileRequest);
 
     boolean updateAdmin(AdminProfileRequest adminProfileRequest, MultipartFile file);
-
-    boolean register(hcmute.edu.vn.techstore.model.request.UserRequest user) throws IOException;
-    List<hcmute.edu.vn.techstore.model.response.UserResponse> getAllUsers();
-    hcmute.edu.vn.techstore.model.response.UserResponse getUserByEmail(String email);
-    hcmute.edu.vn.techstore.model.request.UserRequest getUserById(Long id);
-    boolean updateUser(hcmute.edu.vn.techstore.model.request.UserRequest user) throws IOException;
+    boolean register(UserRequest user) throws IOException;
+    List<UserResponse> getAllUsers();
+    UserResponse getUserByEmail(String email);
+    UserRequest getUserById(Long id);
+    boolean updateUser(UserRequest user) throws IOException;
     boolean updateActived(Long id, boolean actived);
 }

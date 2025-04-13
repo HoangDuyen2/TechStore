@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.configuration;
+package hcmute.edu.vn.techstore.config;
 
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;

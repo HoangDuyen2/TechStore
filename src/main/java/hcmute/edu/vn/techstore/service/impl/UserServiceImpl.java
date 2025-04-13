@@ -1,6 +1,21 @@
 package hcmute.edu.vn.techstore.service.impl;
 
+import hcmute.edu.vn.techstore.Enum.EGender;
+import hcmute.edu.vn.techstore.Enum.ERole;
+import hcmute.edu.vn.techstore.convert.UserResponseConverter;
+import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
+import hcmute.edu.vn.techstore.dto.request.UserRequest;
+import hcmute.edu.vn.techstore.dto.response.UserResponse;
+import hcmute.edu.vn.techstore.entity.AccountEntity;
+import hcmute.edu.vn.techstore.entity.RoleEntity;
+import hcmute.edu.vn.techstore.entity.UserEntity;
+import hcmute.edu.vn.techstore.exception.DateOfBirthException;
+import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
+import hcmute.edu.vn.techstore.service.interfaces.IImageService;
+import hcmute.edu.vn.techstore.service.interfaces.IUserService;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,36 +23,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    UserResponseConverter userResponseConverter;
-
-    @Autowired
-    private IImageService imageService;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final UserResponseConverter userResponseConverter;
+    private final IImageService imageService;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
+    @Override
     public boolean register(UserRequest userRequest) throws IOException {
         if (isExists(userRequest))
             return false;
@@ -63,7 +65,9 @@ public class UserServiceImpl implements IUserService {
                     .lastName(userRequest.getLastName())
                     .phoneNumber(userRequest.getPhoneNumber())
                     .dateOfBirth(userRequest.getDateOfBirth())
+                    .address(userRequest.getAddress())
                     .gender(userRequest.getGender())
+                    .image(imageService.saveImage(userRequest.getImage()))
                     .isActived(true)
                     .role(role)
                     .build();
@@ -119,13 +123,13 @@ public class UserServiceImpl implements IUserService {
         if (!checkPassword(userRequest.getPassword(), userRequest.getConfirmPassword())) {
             throw new BadCredentialsException("Password not match");
         }
-        if (!userRequest.getRelativePhoneNumber().equals("")){
-            if (!validateTenDigitsNumber(userRequest.getRelativePhoneNumber())){
+        if (userRequest.getRelativePhoneNumber() != null){
+            if (!userRequest.getRelativePhoneNumber().equals("")){
                 throw new BadCredentialsException("Invalid relative phone number");
             }
         }
-        if (!userRequest.getCccd().equals("")){
-            if (!validateTwelveDigitsNumber(userRequest.getCccd())){
+        if (userRequest.getCccd()!= null){
+            if (!validateTwelveDigitsNumber(userRequest.getCccd())&&!userRequest.getCccd().equals("")){
                 throw new BadCredentialsException("Invalid cccd number");
             }
         }
@@ -235,7 +239,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public AdminProfileRequest findByAccount_Email(String accountEmail) {
-        UserEntity userEntity = userRepository.findByAccount_Email(accountEmail);
+        UserEntity userEntity = userRepository.findByAccount_Email(accountEmail).orElse(null);
         return AdminProfileRequest.builder()
                 .firstName(userEntity.getFirstName())
                 .lastName(userEntity.getLastName())
@@ -243,7 +247,7 @@ public class UserServiceImpl implements IUserService {
                 .dateOfBirth(userEntity.getDateOfBirth())
                 .gender(userEntity.getGender().name())
                 .address(userEntity.getAddress())
-                .image(userEntity.getImage().getImagePath())
+                .image(userEntity.getImage())
                 .email(userEntity.getAccount().getEmail())
                 .password(userEntity.getAccount().getPassword())
                 .confirmPassword(userEntity.getAccount().getPassword())
@@ -290,5 +294,4 @@ public class UserServiceImpl implements IUserService {
         }
         return false;
     }
-
 }
