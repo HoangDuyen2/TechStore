@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.service;
 
+import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
 import hcmute.edu.vn.techstore.model.request.UserRequest;
 import hcmute.edu.vn.techstore.model.response.UserResponse;
 import org.springframework.data.domain.Page;
@@ -15,4 +16,5 @@ public interface IUserService {
     UserRequest getUserById(Long id);
     boolean updateUser(UserRequest user) throws IOException;
     boolean updateActived(Long id, boolean actived);
+    AdminProfileRequest findByAccount_Email(String email);
 }
