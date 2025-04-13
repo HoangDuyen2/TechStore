@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.configuration;
+package hcmute.edu.vn.techstore.config;
 
 import hcmute.edu.vn.techstore.entity.RoleEntity;
 import jakarta.servlet.FilterChain;

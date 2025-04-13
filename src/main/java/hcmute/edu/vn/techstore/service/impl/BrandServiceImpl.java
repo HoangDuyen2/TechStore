@@ -9,6 +9,7 @@ import hcmute.edu.vn.techstore.repository.OrderDetailRepository;
 import hcmute.edu.vn.techstore.repository.ProductRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IBrandService;
 import hcmute.edu.vn.techstore.service.interfaces.IImageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,15 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BrandServiceImpl implements IBrandService {
-    @Autowired
-    private BrandRepository brandRepository;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private OrderDetailRepository orderDetailRepository;
-    @Autowired
-    private IImageService imageService;
+    private final BrandRepository brandRepository;
+    private final ProductRepository productRepository;
+    private final OrderDetailRepository orderDetailRepository;
+    private final IImageService imageService;
 
     @Override
     public Page<BrandResponse> findAll(Pageable pageable) {

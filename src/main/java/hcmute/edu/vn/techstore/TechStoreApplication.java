@@ -12,7 +12,8 @@ import hcmute.edu.vn.techstore.repository.AccountRepository;
 import hcmute.edu.vn.techstore.repository.ImageRepository;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
-import hcmute.edu.vn.techstore.service.IImageService;
+import hcmute.edu.vn.techstore.service.interfaces.IImageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,22 +26,14 @@ import java.time.LocalDate;
 import java.math.BigDecimal;
 
 @SpringBootApplication
+@RequiredArgsConstructor
 public class TechStoreApplication {
 
-	@Autowired
-	private RoleRepository roleRepository;
-
-	@Autowired
-	private AccountRepository accountRepository;
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private IImageService imageService;
+	private final RoleRepository roleRepository;
+	private final AccountRepository accountRepository;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final hcmute.edu.vn.techstore.service.interfaces.IImageService imageService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TechStoreApplication.class, args);

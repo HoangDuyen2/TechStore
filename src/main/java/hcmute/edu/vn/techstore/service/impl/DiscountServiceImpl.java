@@ -6,17 +6,17 @@ import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
 import hcmute.edu.vn.techstore.repository.DiscountRepository;
 import hcmute.edu.vn.techstore.repository.OrderRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IDiscountService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class DiscountServiceImpl implements IDiscountService {
-    @Autowired
-    private DiscountRepository discountRepository;
-    @Autowired
-    private OrderRepository orderRepository;
+    private final DiscountRepository discountRepository;
+    private final OrderRepository orderRepository;
 
     @Override
     public Page<DiscountResponse> findAll(Pageable pageable) {

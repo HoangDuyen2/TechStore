@@ -1,15 +1,10 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
-import hcmute.edu.vn.techstore.entity.UserEntity;
-import hcmute.edu.vn.techstore.model.request.UserRequest;
-import hcmute.edu.vn.techstore.model.response.UserResponse;
-import hcmute.edu.vn.techstore.service.IAccountService;
-import hcmute.edu.vn.techstore.service.IRoleService;
-import hcmute.edu.vn.techstore.service.IUserService;
-import hcmute.edu.vn.techstore.utils.SecurityUtils;
+import hcmute.edu.vn.techstore.dto.request.UserRequest;
+import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,15 +12,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller("userAdminController")
 @RequestMapping("/admin/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
 
     @GetMapping("")
     public String userList(Model model) {

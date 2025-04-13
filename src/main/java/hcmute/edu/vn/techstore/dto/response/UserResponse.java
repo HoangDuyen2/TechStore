@@ -1,4 +1,4 @@
-package hcmute.edu.vn.techstore.model.response;
+package hcmute.edu.vn.techstore.dto.response;
 
 import hcmute.edu.vn.techstore.Enum.EGender;
 import jakarta.validation.constraints.Email;

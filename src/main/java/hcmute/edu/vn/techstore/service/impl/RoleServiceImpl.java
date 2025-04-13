@@ -1,6 +1,6 @@
 package hcmute.edu.vn.techstore.service.impl;
 
-import hcmute.edu.vn.techstore.service.IRoleService;
+import hcmute.edu.vn.techstore.service.interfaces.IRoleService;
 import org.springframework.stereotype.Service;
 
 @Service
