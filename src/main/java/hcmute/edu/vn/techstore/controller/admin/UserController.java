@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
+import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import jakarta.validation.Valid;
@@ -23,7 +24,7 @@ public class UserController {
 
     @GetMapping("")
     public String userList(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("users", userService.getAllUsersNotContains(ERole.ROLE_ADMIN));
         return "admin/user/all-user";
     }
 

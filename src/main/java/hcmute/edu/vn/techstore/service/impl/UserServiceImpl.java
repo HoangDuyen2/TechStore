@@ -237,6 +237,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public List<UserResponse> getAllUsersNotContains(ERole role) {
+        List<UserEntity> userEntities = userRepository.findByRoleNotContains(role);
+        return userEntities.stream().map(userResponseConverter::toUserResponse).toList();
+    }
+
+    @Override
     public AdminProfileRequest findByAccount_Email(String accountEmail) {
         UserEntity userEntity = userRepository.findByAccount_Email(accountEmail).orElse(null);
         return AdminProfileRequest.builder()

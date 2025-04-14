@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.service.interfaces;
 
+import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
@@ -18,4 +19,5 @@ public interface IUserService {
     UserRequest getUserById(Long id);
     boolean updateUser(UserRequest user) throws IOException;
     boolean updateActived(Long id, boolean actived);
+    List<UserResponse> getAllUsersNotContains(ERole role);
 }
