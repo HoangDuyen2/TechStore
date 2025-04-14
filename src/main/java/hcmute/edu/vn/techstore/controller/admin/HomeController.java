@@ -3,6 +3,7 @@ package hcmute.edu.vn.techstore.controller.admin;
 import hcmute.edu.vn.techstore.Enum.EGender;
 import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
+import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,8 +28,7 @@ public class HomeController {
 
     @GetMapping("/profile")
     public String adminProfile(Model model) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        AdminProfileRequest adminProfileRequest = userService.findByAccount_Email("nguyenhahongtuan@gmail.com");
+        AdminProfileRequest adminProfileRequest = userService.findByAccount_Email(SecurityUtils.getCurrentUsername());
         model.addAttribute("adminProfile", adminProfileRequest);
         model.addAttribute("genders", EGender.values());
         return "admin/profile";

@@ -147,6 +147,8 @@
     <!-- Javascript -->
     <div th:insert="~{admin/fragments/script::script}"></div>
     <script th:src="@{/admin/plugins/sweetalert/sweetalert2.all.min.js}"></script>
+    <script th:src="@{/admin/js/pagination.js}"></script>
+    <script th:src="@{/admin/js/search.js}"></script>
     <script>
         $(document).ready(function () {
             $(".toggle-switch").on("click", function () {
