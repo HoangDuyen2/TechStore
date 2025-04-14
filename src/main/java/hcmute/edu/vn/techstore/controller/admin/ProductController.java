@@ -25,7 +25,9 @@ public class ProductController {
     private final IProductService productService;
 
     @RequestMapping("")
-    public String index() {
+    public String listUser(Model model) {
+        List<ProductDTO> products = productService.findAllProduct();
+        model.addAttribute("products", products);
         return "admin/product/product-list";
     }
 
