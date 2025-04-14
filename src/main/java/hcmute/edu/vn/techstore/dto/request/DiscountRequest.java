@@ -1,8 +1,10 @@
 package hcmute.edu.vn.techstore.dto.request;
 
+import hcmute.edu.vn.techstore.Enum.EDiscountType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -18,10 +20,11 @@ public class DiscountRequest {
     @NotBlank(message = "Code cannot be blank")
     private String code;
 
+    private String type;
+
     @NotNull(message = "Value cannot be null")
-    @Min(value = 1, message = "Value must be at least 1")
-    @Max(value = 100, message = "Value must be at most 100")
-    private Integer discountPercent;
+    @Min(value = 1, message = "Amount must be greater than 0")
+    private Long amount;
 
     @NotNull(message = "Expired date cannot be null")
     @Future(message = "Expired date must be in the future")

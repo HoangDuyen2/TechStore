@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
+import hcmute.edu.vn.techstore.Enum.EDiscountType;
 import hcmute.edu.vn.techstore.entity.DiscountEntity;
 import hcmute.edu.vn.techstore.dto.request.DiscountRequest;
 import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
@@ -40,6 +41,7 @@ public class DiscountController {
     public String addDiscount(Model model) {
         DiscountRequest discountRequest = new DiscountRequest();
         model.addAttribute("discount", discountRequest);
+        model.addAttribute("discountTypes", EDiscountType.values());
         return "admin/discount/new-discount";
     }
 
@@ -73,6 +75,7 @@ public class DiscountController {
         DiscountRequest discountRequest = discountService.findByIdRequest(id);
         model.addAttribute("discount", discountRequest);
         model.addAttribute("discountId", id);
+        model.addAttribute("discountTypes", EDiscountType.values());
         return "admin/discount/update-discount";
     }
 

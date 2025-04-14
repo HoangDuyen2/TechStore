@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.service.impl;
 
+import hcmute.edu.vn.techstore.Enum.EDiscountType;
 import hcmute.edu.vn.techstore.entity.DiscountEntity;
 import hcmute.edu.vn.techstore.dto.request.DiscountRequest;
 import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
@@ -7,7 +8,6 @@ import hcmute.edu.vn.techstore.repository.DiscountRepository;
 import hcmute.edu.vn.techstore.repository.OrderRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IDiscountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,8 @@ public class DiscountServiceImpl implements IDiscountService {
                 .id(discount.getId())
                 .name(discount.getName())
                 .code(discount.getCode())
-                .discountPercent(discount.getDiscountPercent())
+                .type(discount.getDiscountType().name())
+                .amount(discount.getAmount())
                 .expiredDate(discount.getExpiredDate())
                 .quantity(discount.getQuantity())
                 .usedQuantity(orderRepository.countAllByDiscount_Code(discount.getCode()))
@@ -48,7 +49,8 @@ public class DiscountServiceImpl implements IDiscountService {
             return DiscountRequest.builder()
                     .name(discount.getName())
                     .code(discount.getCode())
-                    .discountPercent(discount.getDiscountPercent())
+                    .type(discount.getDiscountType().name())
+                    .amount(discount.getAmount())
                     .expiredDate(discount.getExpiredDate())
                     .quantity(discount.getQuantity())
                     .build();
@@ -61,7 +63,8 @@ public class DiscountServiceImpl implements IDiscountService {
         DiscountEntity discount = new DiscountEntity();
         discount.setName(discountRequest.getName());
         discount.setCode(discountRequest.getCode());
-        discount.setDiscountPercent(discountRequest.getDiscountPercent());
+        discount.setDiscountType(EDiscountType.valueOf(discountRequest.getType()));
+        discount.setAmount(discountRequest.getAmount());
         discount.setExpiredDate(discountRequest.getExpiredDate());
         discount.setQuantity(discountRequest.getQuantity());
         discountRepository.save(discount);
@@ -74,7 +77,8 @@ public class DiscountServiceImpl implements IDiscountService {
         if (discount != null) {
             discount.setName(discountRequest.getName());
             discount.setCode(discountRequest.getCode());
-            discount.setDiscountPercent(discountRequest.getDiscountPercent());
+            discount.setDiscountType(EDiscountType.valueOf(discountRequest.getType()));
+            discount.setAmount(discountRequest.getAmount());
             discount.setExpiredDate(discountRequest.getExpiredDate());
             discount.setQuantity(discountRequest.getQuantity());
             discountRepository.save(discount);

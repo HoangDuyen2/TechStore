@@ -14,7 +14,8 @@ public class DiscountResponse {
     private Long id;
     private String name;
     private String code;
-    private int discountPercent;
+    private String type;
+    private Long amount;
     private LocalDate expiredDate;
     private int quantity;
     private int usedQuantity;

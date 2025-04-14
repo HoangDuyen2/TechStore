@@ -95,7 +95,10 @@
                                             <div class="body-title">Code</div>
                                         </li>
                                         <li>
-                                            <div class="body-title">Percent</div>
+                                            <div class="body-title">Type</div>
+                                        </li>
+                                        <li>
+                                            <div class="body-title">Amount</div>
                                         </li>
                                         <li>
                                             <div class="body-title">Expired</div>
@@ -115,7 +118,8 @@
                                             <div class="flex items-center justify-between gap20 mb-14 flex-grow">
                                                 <div class="body-text" th:text="${discount.name}"></div>
                                                 <div class="body-text" th:text="${discount.code}"></div>
-                                                <div class="body-text" th:text="${discount.discountPercent}"></div>
+                                                <div class="body-text" th:text="${discount.type}"></div>
+                                                <div class="body-text" th:text="${discount.amount}"></div>
                                                 <div class="body-text" th:text="${discount.expiredDate}"></div>
                                                 <div class="body-text" th:text="${discount.quantity}"></div>
                                                 <div class="body-text" th:text="${discount.usedQuantity}"></div>

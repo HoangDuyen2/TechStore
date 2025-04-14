@@ -63,7 +63,7 @@
                                     <i class="icon-alert-octagon"></i>
                                     <div class="body-title-2" th:text="${error}"></div>
                                 </div>
-                                <form th:action="@{/admin/discounts/update/{id}(id=${discountId})}" method="post"
+                                <form th:action="@{/admin/discounts/update/{id}(id=${discountId})}" method="post" onsubmit="return validateAmount()"
                                       class="form-new-product form-style-1" th:object="${discount}">
                                     <fieldset class="name">
                                         <div class="body-title">Discount name <span class="tf-color-1">*</span></div>
@@ -86,14 +86,20 @@
                                         </div>
                                     </fieldset>
                                     <fieldset class="name">
-                                        <div class="body-title">Discount percent <span class="tf-color-1">*</span></div>
-                                        <input class="flex-grow" type="number" name="discountPercent"
+                                        <div class="body-title">Discount type <span class="tf-color-1">*</span></div>
+                                        <input class="flex-grow" type="text" name="type"
                                                tabindex="0" aria-required="true" required="required"
-                                               th:field="*{discountPercent}" step="1"
-                                               oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                                        <div class="block-warning" th:if="${#fields.hasErrors('discountPercent')}">
+                                               th:field="*{type}" readonly>
+                                    </fieldset>
+                                    <fieldset class="name">
+                                        <div class="body-title">Discount amount <span class="tf-color-1">*</span></div>
+                                        <input class="flex-grow" type="number" name="amount"
+                                               tabindex="0" aria-required="true" required="required"
+                                               th:field="*{amount}" step="1"
+                                               oninput="handleAmountInput(this)">
+                                        <div class="block-warning" th:if="${#fields.hasErrors('amount')}">
                                             <i class="icon-alert-octagon"></i>
-                                            <div class="body-title-2" th:errors="*{discountPercent}"></div>
+                                            <div class="body-title-2" th:errors="*{amount}"></div>
                                         </div>
                                     </fieldset>
                                     <fieldset class="name">
@@ -145,6 +151,73 @@
 
 <!-- Javascript -->
 <div th:insert="~{admin/fragments/script::script}"></div>
+
+<script>
+    function handleTypeChange() {
+        const type = document.querySelector('select[name=type]').value;
+        const amountInput = document.getElementById('amount');
+
+        if (type === 'VOUCHER') {
+            // When VOUCHER is selected, ensure only integers are allowed
+            amountInput.setAttribute("pattern", "^[0-9]+$");
+            document.getElementById('amount-error').style.display = 'none';
+        } else if (type === 'COUPON') {
+            // For COUPON, we allow integers between 2 and 100
+            amountInput.setAttribute("pattern", "^[0-9]+$");
+            document.getElementById('amount-error').style.display = 'none';
+        }
+    }
+
+    function handleAmountInput(input) {
+        const type = document.querySelector('input[name=type]').value;
+        let val = input.value;
+
+        // Only allow integers
+        val = val.replace(/[^0-9]/g, '');
+
+        if (type === 'COUPON') {
+            // COUPON: between 2 and 100
+            if (val !== '') {
+                let num = parseInt(val);
+                if (num < 2) num = 2;
+                if (num > 100) num = 100;
+                val = num;
+            }
+        }
+
+        if (type === 'VOUCHER') {
+            // VOUCHER: allow only integers
+            val = val.replace(/[^0-9]/g, '');
+        }
+
+        input.value = val;
+    }
+
+    function validateAmount() {
+        const amountInput = document.getElementById('amount');
+        let amount = parseInt(amountInput.value, 10);
+        const type = document.querySelector('input[name=type]').value;
+
+        if (type === 'VOUCHER') {
+            // Check if the value is divisible by 1000 for VOUCHER
+            if (isNaN(amount) || amount < 1000 || amount % 1000 !== 0) {
+                alert("Amount must be at least 1000 and divisible by 1000. Adjusting value...");
+
+                // Automatically multiply by 1000 if not divisible by 1000
+                if (amount < 1000) {
+                    amount = amount * 1000;
+                } else if (amount % 1000 !== 0) {
+                    amount = amount * 1000;  // Multiply by 1000 to make it divisible
+                }
+
+                amountInput.value = amount;  // Set the new value
+            }
+        }
+
+        // Allow the form to submit if all validations pass
+        return true;
+    }
+</script>
 
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
