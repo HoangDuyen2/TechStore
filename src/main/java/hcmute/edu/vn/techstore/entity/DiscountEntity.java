@@ -1,8 +1,10 @@
 package hcmute.edu.vn.techstore.entity;
 
+import hcmute.edu.vn.techstore.Enum.EDiscountType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,8 +28,11 @@ public class DiscountEntity {
     @Column(name = "code", nullable = false)
     private String code;
 
-    @Column(name = "discountPercent")
-    private int discountPercent;
+    @Column(name = "discountType", nullable = false)
+    private EDiscountType discountType;
+
+    @Column(name = "amount", columnDefinition = "DECIMAL(10, 2) DEFAULT 0")
+    private BigDecimal amount;
 
     @Column(name = "expiriedDate")
     private LocalDate expiredDate;
