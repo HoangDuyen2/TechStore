@@ -28,6 +28,7 @@ public class DiscountEntity {
     @Column(name = "code", nullable = false)
     private String code;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "discountType", nullable = false)
     private EDiscountType discountType;
 
