@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -103,6 +104,11 @@ public class BrandServiceImpl implements IBrandService {
     @Override
     public BrandEntity findByName(String name) {
         return brandRepository.findByName(name);
+    }
+
+    @Override
+    public List<BrandEntity> findAll() {
+        return brandRepository.findAll();
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface IBrandService {
@@ -21,6 +22,8 @@ public interface IBrandService {
     boolean deleteBrand(Long brandId);
 
     BrandEntity findByName(String name);
+
+    List<BrandEntity> findAll();
 
     Optional<BrandEntity> findById(Long id);
 
