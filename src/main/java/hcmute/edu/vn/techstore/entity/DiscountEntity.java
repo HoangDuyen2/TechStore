@@ -32,8 +32,8 @@ public class DiscountEntity {
     @Column(name = "discountType", nullable = false)
     private EDiscountType discountType;
 
-    @Column(name = "amount", columnDefinition = "DECIMAL(10, 2) DEFAULT 0")
-    private BigDecimal amount;
+    @Column(name = "amount")
+    private Long amount;
 
     @Column(name = "expiriedDate")
     private LocalDate expiredDate;
