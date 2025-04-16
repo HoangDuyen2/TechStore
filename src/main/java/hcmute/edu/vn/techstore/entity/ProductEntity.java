@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Table(name = "products")
-public class ProductEntity {
+public class ProductEntity extends TrackingDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
