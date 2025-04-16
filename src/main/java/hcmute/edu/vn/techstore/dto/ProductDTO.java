@@ -55,6 +55,8 @@ public class ProductDTO {
 
     private String thumbnail;
 
+    private boolean actived;
+
     @NotNull(message = "Brand ID cannot be null")
     private Long brandId;
 }

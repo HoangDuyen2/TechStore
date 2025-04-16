@@ -10,7 +10,9 @@ import org.mapstruct.Mapping;
 public interface ProductMapper {
 
     @Mapping(target = "brand", ignore = true)
+    @Mapping(source = "actived", target = "actived")
     ProductEntity toEntity(ProductDTO dto);
 
+    @Mapping(source = "actived", target = "actived")
     ProductDTO toDTO(ProductEntity entity);
 }

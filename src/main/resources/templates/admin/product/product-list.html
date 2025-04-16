@@ -93,6 +93,9 @@
                                                 <div class="body-title">Sale</div>
                                             </li>
                                             <li>
+                                                <div class="body-title">Status</div>
+                                            </li>
+                                            <li>
                                                 <div class="body-title">Action</div>
                                             </li>
                                         </ul>
@@ -108,6 +111,10 @@
                                                     <div class="body-text" th:text="${product.price}"></div>
                                                     <div class="body-text" th:text="${product.stockQuantity}"></div>
                                                     <div class="body-text" >0</div>
+                                                    <div>
+                                                        <div class="block-available" th:if="${product.actived}">Active</div>
+                                                        <div class="block-not-available" th:if="${!product.actived}">Inactive</div>
+                                                    </div>
                                                     <div class="list-icon-function">
                                                         <div class="item eye">
                                                             <i class="icon-eye"></i>

@@ -60,7 +60,7 @@ public class ProductEntity extends TrackingDate {
     private String thumbnail;
 
     @Column(name = "isActived")
-    private boolean isActived = true;
+    private boolean actived;
 
     @ManyToOne
     @JoinColumn(name = "brandId", referencedColumnName = "id")
