@@ -57,6 +57,13 @@ public class TechStoreApplication {
 					return roleRepository.save(role);
 				});
 
+			RoleEntity customerRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+					.orElseGet(() -> {
+						RoleEntity role = new RoleEntity();
+						role.setName(ERole.ROLE_CUSTOMER);
+						return roleRepository.save(role);
+					});
+
 			// Create admin account if it doesn't exist
 			if (accountRepository.findByEmail("admin@techstore.com").isEmpty()) {
 				// Create cart for admin
