@@ -1,9 +1,15 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
 import hcmute.edu.vn.techstore.Enum.ERole;
+import hcmute.edu.vn.techstore.dto.interfaces.OnCreate;
+import hcmute.edu.vn.techstore.dto.interfaces.OnUpdate;
+import hcmute.edu.vn.techstore.dto.interfaces.StaffGroup;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +21,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Controller("userAdminController")
 @RequestMapping("/admin/users")
 @RequiredArgsConstructor
 public class UserController {
     private final IUserService userService;
+    private final Validator validator;
 
     @GetMapping("")
     public String userList(Model model) {
@@ -45,32 +53,40 @@ public class UserController {
     }
 
     @PostMapping("/add-user")
-    public String addNewUser(@Valid @ModelAttribute("new_user") UserRequest userRequest, BindingResult result, Model model) {
+    public String addNewUser(@ModelAttribute("new_user") UserRequest userRequest, BindingResult result, Model model) {
+        result = checkBindingResult(result, userRequest, OnCreate.class);
+
         if(result.hasErrors()) {
             model.addAttribute("status",true);
             model.addAttribute("new_user", userRequest);
             return "admin/user/add-new-user";
         }
-        if(userRequest.getUserId() != null){
             try {
-                if(userService.updateUser(userRequest)){
+                if (userService.register(userRequest)){
                     return "redirect:/admin/users";
                 }
             } catch (Exception e) {
                 model.addAttribute("error", e.getMessage());
             }
+
+        model.addAttribute("status",true);
+        model.addAttribute("new_user", userRequest);
+        return "admin/user/add-new-user";
+    }
+
+    @PostMapping("/update-user")
+    public String updateUser(@ModelAttribute("new_user") UserRequest userRequest, BindingResult result, Model model) {
+        result = checkBindingResult(result, userRequest, OnUpdate.class);
+
+        if(result.hasErrors()) {
+            model.addAttribute("status",true);
+            model.addAttribute("new_user", userRequest);
+            return "admin/user/add-new-user";
         }
-        else {
-            if (userRequest.getPassword() == null||userRequest.getPassword().equals("")) {
-                model.addAttribute("error","Please enter password");
-                return "admin/user/add-new-user";
-            }
-            if (userRequest.getConfirmPassword() == null||userRequest.getConfirmPassword().equals("")) {
-                model.addAttribute("error","Please enter confirm password");
-                return "admin/user/add-new-user";
-            }
+
+        if(userRequest.getUserId() != null){
             try {
-                if (userService.register(userRequest)){
+                if(userService.updateUser(userRequest)){
                     return "redirect:/admin/users";
                 }
             } catch (Exception e) {
@@ -109,4 +125,21 @@ public class UserController {
         }
     }
 
+    BindingResult checkBindingResult(BindingResult result, UserRequest userRequest, Class type) {
+        Class<?>[] groups;
+
+        if ("ROLE_STAFF".equalsIgnoreCase(userRequest.getRoleName())){
+            groups = new Class[]{type, Default.class, StaffGroup.class};
+        }else {
+            groups = new Class[]{type, Default.class};
+        }
+
+        Set<ConstraintViolation<UserRequest>> violations = validator.validate(userRequest, groups);
+
+        for (ConstraintViolation<UserRequest> violation : violations) {
+            result.rejectValue(violation.getPropertyPath().toString(), " ",violation.getMessage());
+        }
+
+        return result;
+    }
 }

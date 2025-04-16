@@ -85,7 +85,7 @@ public class TechStoreApplication {
 				adminUser.setLastName("User");
 				adminUser.setPhoneNumber("0123456789");
 				adminUser.setGender(EGender.MALE);
-				adminUser.setImage(imageService.addImage(null));
+				adminUser.setImage("default.png");
 				adminUser.setRole(adminRole);
 				adminUser.setCart(adminCart);
 				adminUser.setActived(true);
@@ -118,7 +118,7 @@ public class TechStoreApplication {
 				staffUser.setLastName("User");
 				staffUser.setPhoneNumber("0987654321");
 				staffUser.setGender(EGender.MALE);
-				staffUser.setImage(imageService.addImage(null));
+				staffUser.setImage("default.png");
 				staffUser.setActived(true);
 				staffUser.setRole(staffRole);
 				staffUser.setCart(staffCart);
@@ -128,6 +128,39 @@ public class TechStoreApplication {
 
 				// Save the user (which will cascade to account, cart, and wallet)
 				userRepository.save(staffUser);
+			}
+
+			// Create admin account if it doesn't exist
+			if (accountRepository.findByEmail("customer@techstore.com").isEmpty()) {
+				// Create cart for admin
+				CartEntity customerCart = new CartEntity();
+				customerCart.setTotalPrice(BigDecimal.ZERO);
+
+				// Create wallet for admin
+				WalletEntity customerWallet = new WalletEntity();
+				customerWallet.setBalance(BigDecimal.ZERO);
+
+				// Create admin account
+				AccountEntity customerAccount = new AccountEntity();
+				customerAccount.setEmail("customer@techstore.com");
+				customerAccount.setPassword(passwordEncoder.encode("customer123"));
+
+				// Create admin user
+				UserEntity customerUser = new UserEntity();
+				customerUser.setFirstName("Customer");
+				customerUser.setLastName("User");
+				customerUser.setPhoneNumber("0363257425");
+				customerUser.setGender(EGender.FEMALE);
+				customerUser.setImage("default.png");
+				customerUser.setRole(customerRole);
+				customerUser.setCart(customerCart);
+				customerUser.setActived(true);
+				customerUser.setWallet(customerWallet);
+				customerUser.setAccount(customerAccount);
+				customerAccount.setUser(customerUser);
+
+				// Save the user (which will cascade to account, cart, and wallet)
+				userRepository.save(customerUser);
 			}
 		};
 	}

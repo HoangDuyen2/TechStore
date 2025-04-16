@@ -14,7 +14,6 @@ public interface IUserService {
     boolean updateAdmin(AdminProfileRequest adminProfileRequest);
     boolean updateAdmin(AdminProfileRequest adminProfileRequest, MultipartFile file);
     boolean register(UserRequest user) throws IOException;
-    List<UserResponse> getAllUsers();
     UserResponse getUserByEmail(String email);
     UserRequest getUserById(Long id);
     boolean updateUser(UserRequest user) throws IOException;
