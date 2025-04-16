@@ -59,6 +59,9 @@ public class ProductEntity {
     @Column(name = "thumbnail")
     private String thumbnail;
 
+    @Column(name = "isActived")
+    private boolean isActived = true;
+
     @ManyToOne
     @JoinColumn(name = "brandId", referencedColumnName = "id")
     private BrandEntity brand;
