@@ -41,13 +41,14 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean register(UserRequest userRequest) throws IOException {
-        if (isExists(userRequest))
-            return false;
-        if (isValidation(userRequest))
-            return false;
+        validateExists(userRequest);
+
+        if (!checkPassword(userRequest.getPassword(), userRequest.getConfirmPassword())) {
+            throw new BadCredentialsException("Password not match");
+        }
+
         if (userRequest.getDateOfBirth() != null) {
-            if (!validateDateOfBirth(userRequest.getDateOfBirth()))
-                return false;
+            validateDateOfBirth(userRequest.getDateOfBirth());
         }
 
         AccountEntity accountEntity = AccountEntity
@@ -94,7 +95,7 @@ public class UserServiceImpl implements IUserService {
         userRepository.save(user);
     }
 
-    public boolean isExists(UserRequest userRequest) {
+    public void validateExists(UserRequest userRequest) {
         UserEntity user = emailExists(userRequest.getEmail());
         if ((user != null && userRequest.getUserId() == null)||
                 (user != null&& !userRequest.getUserId().equals(user.getId()))) {
@@ -105,34 +106,6 @@ public class UserServiceImpl implements IUserService {
                 (phone != null&& !userRequest.getUserId().equals(phone.getId()))) {
             throw new BadCredentialsException("Phone number is exists");
         }
-        return false;
-    }
-
-    public boolean isValidation(UserRequest userRequest) {
-        if (!EmailValidator.getInstance().isValid(userRequest.getEmail())) {
-            throw new BadCredentialsException("Email is not valid");
-        }
-        if (!validateTenDigitsNumber(userRequest.getPhoneNumber()))
-        {
-            throw new BadCredentialsException("Invalid phone number");
-        }
-        if (!validatePassword(userRequest.getPassword())){
-            throw new BadCredentialsException("Invalid password");
-        }
-        if (!checkPassword(userRequest.getPassword(), userRequest.getConfirmPassword())) {
-            throw new BadCredentialsException("Password not match");
-        }
-        if (userRequest.getRelativePhoneNumber() != null){
-            if (!userRequest.getRelativePhoneNumber().equals("")&&!validateTenDigitsNumber(userRequest.getPhoneNumber())){
-                throw new BadCredentialsException("Invalid relative phone number");
-            }
-        }
-        if (userRequest.getCccd()!= null){
-            if (!validateTwelveDigitsNumber(userRequest.getCccd())&&!userRequest.getCccd().equals("")){
-                throw new BadCredentialsException("Invalid cccd number");
-            }
-        }
-        return false;
     }
 
     public UserEntity emailExists(String email) {
@@ -143,20 +116,7 @@ public class UserServiceImpl implements IUserService {
         return userRepository.findByPhoneNumber(phoneNumber).orElse(null);
     }
 
-    public boolean validateTwelveDigitsNumber(String cccd) {
-        // Regex kiểm tra chuỗi gồm đúng 12 chữ số
-        Pattern pattern = Pattern.compile("^\\d{12}$");
-        Matcher matcher = pattern.matcher(cccd);
-        return matcher.matches();
-    }
-
-    public boolean validateTenDigitsNumber(String phoneNumber) {
-        Pattern pattern = Pattern.compile(("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$"));
-        Matcher matcher = pattern.matcher(phoneNumber);
-        return matcher.matches();
-    }
-
-    public boolean validateDateOfBirth(LocalDate dateOfBirth) {
+    public void validateDateOfBirth(LocalDate dateOfBirth) {
         // Kiểm tra nếu ngày sinh trong tương lai
         if (dateOfBirth.isAfter(LocalDate.now())) {
             throw new DateOfBirthException("Date of birth is not valid");
@@ -167,27 +127,11 @@ public class UserServiceImpl implements IUserService {
         if (age < 18 || age > 100) {
             throw new DateOfBirthException("You must be between 18 and 100 years old");
         }
-
-        return true; // Hợp lệ
-    }
-
-    public boolean validatePassword(String password) {
-        String regExpn = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[.@#$%^&+=])(?=\\S+$).{8,20}$";
-        Pattern pattern = Pattern.compile(regExpn);
-        Matcher matcher = pattern.matcher(password);
-        return matcher.matches();
     }
 
     public boolean checkPassword(String password, String confirmPassword) {
         return password.equals(confirmPassword);
     }
-
-    @Override
-    public List<UserResponse> getAllUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        return userEntities.stream().map(userResponseConverter::toUserResponse).toList();
-    }
-
     @Override
     public UserResponse getUserByEmail(String email) {
         UserEntity userEntity = userRepository.findByAccount_Email(email).orElse(null);
@@ -202,26 +146,25 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean updateUser(UserRequest user) throws IOException {
-        try {
-            UserEntity oldEntity = userRepository.findById(user.getUserId()).orElseThrow(null);
-            UserEntity newEntity = userResponseConverter.toUserEntity(user);
+        UserEntity oldEntity = userRepository.findById(user.getUserId()).orElseThrow(null);
+        UserEntity newEntity = userResponseConverter.toUserEntity(user);
+        if (oldEntity != null) {
+            validateExists(user);
 
-            if (oldEntity != null) {
-                AccountEntity accountEntity = oldEntity.getAccount();
-                accountEntity.setEmail(user.getEmail());
-                newEntity.setAccount(accountEntity);
-
-                if ((user.getImage() != null && !user.getImage().isEmpty())) {
-                    newEntity.setImage(imageService.saveImage(user.getImage()));
-                }
-                else newEntity.setImage(oldEntity.getImage());
-                newEntity.setActived(oldEntity.isActived());
-                userRepository.save(newEntity);
-                return true;
+            if (user.getDateOfBirth() != null) {
+                validateDateOfBirth(user.getDateOfBirth());
             }
-            userResponseConverter.toUserEntity(user);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            AccountEntity accountEntity = oldEntity.getAccount();
+            accountEntity.setEmail(user.getEmail());
+            newEntity.setAccount(accountEntity);
+
+            if ((user.getImage() != null && !user.getImage().isEmpty())) {
+                newEntity.setImage(imageService.saveImage(user.getImage()));
+            } else newEntity.setImage(oldEntity.getImage());
+            newEntity.setActived(oldEntity.isActived());
+            userRepository.save(newEntity);
+            return true;
         }
         return false;
     }

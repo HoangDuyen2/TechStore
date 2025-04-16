@@ -1,10 +1,12 @@
 package hcmute.edu.vn.techstore.dto.request;
 
 import hcmute.edu.vn.techstore.Enum.EGender;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import hcmute.edu.vn.techstore.dto.interfaces.OnCreate;
+import hcmute.edu.vn.techstore.dto.interfaces.OnUpdate;
+import hcmute.edu.vn.techstore.dto.interfaces.StaffGroup;
+import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Transient;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,14 +22,20 @@ public class UserRequest {
     private Long userId;
 
     @NotBlank(message = "Please enter your email!")
-    @Email(message = "Email bắt buộc chứa kí tự @.\n Ex: name@gmail.com")
+    @Pattern(regexp = "(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}", message = "Email must have @ and .")
     private String email;
 
+    @NotBlank(groups = OnCreate.class, message = "Please enter your password")
+    @Null(groups = OnUpdate.class)
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[.@#$%^&+=])(?=\\S+$).{8,20}$", message = "Invalid password")
     private String password;
 
+    @NotBlank(groups = OnCreate.class, message = "Please enter your confirm password")
+    @Null(groups = OnUpdate.class)
     private String confirmPassword;
 
     @NotBlank(message = "Please enter your Phone number!")
+    @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$", message = "Phone number should be in format like '0437463847' or '034-937-9472' or '042 483 4837'")
     private String phoneNumber;
 
     @NotBlank(message = "Please enter your firstname!")
@@ -47,9 +55,16 @@ public class UserRequest {
 
     private String roleName;
 
+    @Pattern(regexp = "^\\d{12}$", message = "CCCD must have 12-digit numbers", groups = StaffGroup.class)
     private String cccd;
 
+    @Length(max = 500, groups = StaffGroup.class)
     private String relativeName;
 
+    @Pattern(
+            regexp = "^$|^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$",
+            message = "Relative number should be in format like '0437463847' or '034-937-9472'",
+            groups = StaffGroup.class
+    )
     private String relativePhoneNumber;
 }

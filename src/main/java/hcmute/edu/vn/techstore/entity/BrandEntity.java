@@ -27,4 +27,7 @@ public class BrandEntity {
 
     @OneToMany(mappedBy = "brand")
     private List<ProductEntity> products;
+
+    @Column(name = "isActived")
+    private boolean isActived;
 }
