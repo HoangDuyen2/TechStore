@@ -212,6 +212,20 @@
 
                                         </div>
 
+                                        <div class="gap22 cols">
+                                            <fieldset class="active">
+                                                <div class="body-title mb-10">Status <span class="tf-color-1">*</span></div>
+                                                <select th:field="*{actived}" class="custom-select">
+                                                    <option th:value="true" selected th:selected="${product.actived == true}">Active</option>
+                                                    <option th:value="false" th:selected="${product.actived == false}">Inactive</option>
+                                                </select>
+                                                <div th:if="${#fields.hasErrors('actived')}" th:errors="*{actived}" class="error-message"></div>
+                                            </fieldset>
+
+
+                                        </div>
+
+
                                         <!-- Description -->
                                         <fieldset class="description">
                                             <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
