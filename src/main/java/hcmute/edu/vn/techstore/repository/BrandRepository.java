@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface BrandRepository extends JpaRepository<BrandEntity, Long> {
     BrandEntity findByName(String name);
-    List<BrandEntity> findAllByIsActivedTrue();
+
+    List<BrandEntity> findAllByIsActived(Boolean isActived);
 }

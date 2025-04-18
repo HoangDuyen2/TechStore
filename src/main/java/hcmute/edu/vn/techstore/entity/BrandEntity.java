@@ -29,5 +29,5 @@ public class BrandEntity {
     private List<ProductEntity> products;
 
     @Column(name = "isActived")
-    private boolean isActived;
+    private Boolean isActived;
 }

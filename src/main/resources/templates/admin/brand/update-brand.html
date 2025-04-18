@@ -72,6 +72,15 @@
                                                tabindex="0" aria-required="true" required="required"
                                                th:field="*{brandName}">
                                     </fieldset>
+                                    <fieldset class="name">
+                                        <div class="body-title">Active <span class="tf-color-1">*</span></div>
+                                        <div class="select">
+                                            <select class="" th:field="*{active}">
+                                                <option th:value="true" th:text="'Active'"></option>
+                                                <option th:value="false" th:text="'Inactive'"></option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
                                     <fieldset>
                                         <div class="body-title">Upload image <span class="tf-color-1">*</span></div>
                                         <div class="upload-image flex-grow">

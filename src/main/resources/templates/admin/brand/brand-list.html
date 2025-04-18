@@ -98,6 +98,9 @@
                                             <div class="body-title">Sale</div>
                                         </li>
                                         <li>
+                                            <div class="body-title">Status</div>
+                                        </li>
+                                        <li>
                                             <div class="body-title">Action</div>
                                         </li>
                                     </ul>
@@ -115,11 +118,20 @@
                                             </div>
                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                 <div class="name">
-                                                    <a th:href="@{/admin/brands/edit/{id}(id=${brand.id})}" class="body-title-2"
+                                                    <a th:href="@{/admin/brands/edit/{id}(id=${brand.id})}"
+                                                       class="body-title-2"
                                                        th:text="${brand.name}"></a>
                                                 </div>
                                                 <div class="body-text" th:text="${brand.quantity}"></div>
                                                 <div class="body-text" th:text="${brand.sale}"></div>
+                                                <div>
+                                                    <div th:if="${brand.isActive()}" class="block-available">
+                                                        Active
+                                                    </div>
+                                                    <div th:unless="${brand.isActive()}" class="block-not-available">
+                                                        Inactive
+                                                    </div>
+                                                </div>
                                                 <input type="hidden" class="brand-id" th:value="${brand.id}">
                                                 <div class="list-icon-function">
                                                     <a class="item edit"
@@ -194,7 +206,7 @@
                 cancelButtonClass: "btn btn-danger ml-1",
                 buttonsStyling: false
             }).then(function (t) {
-                if(t.value){
+                if (t.value) {
                     $.ajax({
                         url: `/admin/brands/delete/${brandId}`,
                         method: "GET",

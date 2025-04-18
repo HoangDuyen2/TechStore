@@ -111,14 +111,8 @@ public class BrandController {
             model.addAttribute("brand", brandRequest);
             return "admin/brand/update-brand";
         }
-        if (file == null || file.isEmpty()) {
-            if (brandService.updateBrand(brandRequest, id)) {
-                return "redirect:/admin/brands";
-            }
-        } else if (!file.isEmpty()) {
-            if (brandService.updateBrand(brandRequest, id, file)) {
-                return "redirect:/admin/brands";
-            }
+        if (brandService.updateBrand(brandRequest, id, file)) {
+            return "redirect:/admin/brands";
         } else {
             msg = "Something went wrong";
             model.addAttribute("error", msg);

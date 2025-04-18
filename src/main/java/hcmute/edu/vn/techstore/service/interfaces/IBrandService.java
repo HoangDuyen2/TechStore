@@ -15,8 +15,6 @@ public interface IBrandService {
 
     boolean addBrand(BrandRequest brandRequest, MultipartFile file);
 
-    boolean updateBrand(BrandRequest brandRequest, Long id);
-
     boolean updateBrand(BrandRequest brandRequest, Long id, MultipartFile file);
 
     boolean deleteBrand(Long brandId);

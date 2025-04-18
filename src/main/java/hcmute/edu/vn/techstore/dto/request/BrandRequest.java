@@ -11,4 +11,5 @@ import lombok.*;
 public class BrandRequest {
     private String brandName;
     private String brandImage;
+    private boolean isActive;
 }

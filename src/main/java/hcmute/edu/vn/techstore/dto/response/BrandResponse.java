@@ -14,4 +14,5 @@ public class BrandResponse {
     private int quantity;
     private int sale;
     private String image;
+    private boolean isActive;
 }

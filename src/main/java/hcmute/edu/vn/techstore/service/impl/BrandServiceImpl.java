@@ -35,6 +35,7 @@ public class BrandServiceImpl implements IBrandService {
                 .quantity(productRepository.countByBrand_Id(brand.getId()))
                 .sale(orderDetailRepository.countAllByOrder_OrderStatusAndProduct_Brand_Id(EOrderStatus.DELIVERED_SUCCESSFULLY, brand.getId()))
                 .image(brand.getImage())
+                .isActive(brand.getIsActived())
                 .build());
     }
 
@@ -44,20 +45,7 @@ public class BrandServiceImpl implements IBrandService {
             BrandEntity brand = new BrandEntity();
             brand.setName(brandRequest.getBrandName());
             brand.setImage(imageService.saveImage(file));
-            brandRepository.save(brand);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean updateBrand(BrandRequest brandRequest, Long id) {
-        try {
-            BrandEntity brand = brandRepository.findById(id).get();
-            brand.setName(brandRequest.getBrandName());
-            brand.setImage(brandRequest.getBrandImage());
+            brand.setIsActived(true);
             brandRepository.save(brand);
             return true;
         } catch (Exception e) {
@@ -71,7 +59,12 @@ public class BrandServiceImpl implements IBrandService {
         try {
             BrandEntity brand = brandRepository.findById(id).get();
             brand.setName(brandRequest.getBrandName());
-            brand.setImage(imageService.updateImage(file, brand.getImage()));
+            brand.setIsActived(brandRequest.isActive());
+            if (file != null && !file.isEmpty()) {
+                brand.setImage(imageService.updateImage(file, brand.getImage()));
+            } else {
+                brand.setImage(brand.getImage());
+            }
             brandRepository.save(brand);
             return true;
         } catch (Exception e) {
@@ -81,21 +74,13 @@ public class BrandServiceImpl implements IBrandService {
     }
 
     @Override
-    public boolean deleteBrand(Long brandId){
+    public boolean deleteBrand(Long brandId) {
         try {
             BrandEntity brand = brandRepository.findById(brandId).get();
-//            if(!productRepository.findByBrandName(brand.getName()).isEmpty()){
-//                brand.setActive(false);
-//                brandRepository.save(brand);
-//            }
-//            else {
-//                deleteImage(brand.getBrandImg());
-//                brandRepository.delete(brand);
-//            }
-            imageService.deleteImage(brand.getImage());
-            brandRepository.delete(brand);
+            brand.setIsActived(false);
+            brandRepository.save(brand);
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -108,7 +93,7 @@ public class BrandServiceImpl implements IBrandService {
 
     @Override
     public List<BrandEntity> findAllByIsActivedTrue() {
-        return brandRepository.findAllByIsActivedTrue();
+        return brandRepository.findAllByIsActived(true);
     }
 
     @Override
@@ -124,6 +109,7 @@ public class BrandServiceImpl implements IBrandService {
                 .quantity(productRepository.countByBrand_Id(brand.getId()))
                 .sale(orderDetailRepository.countAllByOrder_OrderStatusAndProduct_Brand_Id(EOrderStatus.DELIVERED_SUCCESSFULLY, brand.getId()))
                 .image(brand.getImage())
+                .isActive(brand.getIsActived())
                 .build());
     }
 
@@ -132,6 +118,7 @@ public class BrandServiceImpl implements IBrandService {
         return brandRepository.findById(aLong).map(brand -> BrandRequest.builder()
                 .brandName(brand.getName())
                 .brandImage(brand.getImage())
+                .isActive(brand.getIsActived())
                 .build());
     }
 }
