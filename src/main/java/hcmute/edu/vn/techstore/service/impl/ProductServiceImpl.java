@@ -1,11 +1,14 @@
 package hcmute.edu.vn.techstore.service.impl;
 
+import hcmute.edu.vn.techstore.builder.ProductFilterBuilder;
+import hcmute.edu.vn.techstore.convert.ProductFilterBuilderConverter;
 import hcmute.edu.vn.techstore.convert.ProductMapper;
 import hcmute.edu.vn.techstore.dto.ProductDTO;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
 import hcmute.edu.vn.techstore.repository.BrandRepository;
 import hcmute.edu.vn.techstore.repository.ProductRepository;
+import hcmute.edu.vn.techstore.repository.custome.ProductRepositoryCustom;
 import hcmute.edu.vn.techstore.service.interfaces.IProductService;
 import hcmute.edu.vn.techstore.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final ProductMapper productDTOConverter;
+    private final ProductFilterBuilderConverter productFilterBuilderConverter;
 
     @Override
     public void saveProduct(ProductDTO product, MultipartFile file, String existingImagePath) {
@@ -92,7 +96,13 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Page<ProductEntity> findAllProductActive( Pageable pageable) {
-        return productRepository.findAllByActivedTrueAndBrand_IsActivedTrue(pageable);
+    public Page<ProductEntity> filterProducts(Map<String, Object> params, Pageable pageable) {
+        ProductFilterBuilder builder = ProductFilterBuilderConverter.toProductFilterBuilder(params);
+
+        Page<ProductEntity> productPage = productRepository.findAll(
+                ProductRepositoryCustom.filter(builder), pageable);
+        return productPage;
     }
+
+
 }

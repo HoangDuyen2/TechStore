@@ -11,7 +11,10 @@ import java.util.Map;
 
 public interface IProductService {
     void saveProduct(ProductDTO product, MultipartFile file, String existingImagePath);
+
     ProductDTO findProductById(Long id);
+
     List<ProductDTO> findAllProduct();
-    Page<ProductEntity> findAllProductActive(Pageable pageable);
+
+    Page<ProductEntity> filterProducts(Map<String, Object> params, Pageable pageable);
 }

@@ -37,9 +37,9 @@ public class HomeController {
 
         Sort sort = sortOrder.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-
-        Page<ProductEntity> productPage = productService.findAllProductActive(pageable);
+        Page<ProductEntity> productPage = productService.filterProducts(params, pageable);
         model.addAttribute("products", productPage.getContent());
+
         return "web/collection";
     }
 }
