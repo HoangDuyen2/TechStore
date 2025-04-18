@@ -1,9 +1,11 @@
 package hcmute.edu.vn.techstore.dto.request;
 
 import hcmute.edu.vn.techstore.Enum.EGender;
+import hcmute.edu.vn.techstore.dto.interfaces.ChangePassword;
 import hcmute.edu.vn.techstore.dto.interfaces.OnCreate;
 import hcmute.edu.vn.techstore.dto.interfaces.OnUpdate;
 import hcmute.edu.vn.techstore.dto.interfaces.StaffGroup;
+import hcmute.edu.vn.techstore.validation.ValidDateOfBirth;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -21,16 +23,16 @@ import java.time.LocalDate;
 public class UserRequest {
     private Long userId;
 
-    @NotBlank(message = "Please enter your email!")
+    @NotBlank(message = "Please enter your email!", groups = ChangePassword.class)
     @Pattern(regexp = "(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}", message = "Email must have @ and .")
     private String email;
 
-    @NotBlank(groups = OnCreate.class, message = "Please enter your password")
+    @NotBlank(groups = {OnCreate.class, ChangePassword.class}, message = "Please enter your password")
     @Null(groups = OnUpdate.class)
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[.@#$%^&+=])(?=\\S+$).{8,20}$", message = "Invalid password")
     private String password;
 
-    @NotBlank(groups = OnCreate.class, message = "Please enter your confirm password")
+    @NotBlank(groups = {OnCreate.class, ChangePassword.class}, message = "Please enter your confirm password")
     @Null(groups = OnUpdate.class)
     private String confirmPassword;
 
@@ -48,6 +50,7 @@ public class UserRequest {
 
     private EGender gender;
 
+    @ValidDateOfBirth(message = "Date of birth must be in the past and age must be between 18 and 100")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 

@@ -41,14 +41,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean register(UserRequest userRequest) throws IOException {
-        validateExists(userRequest);
+        validateEmailAndPhoneUniqueness(userRequest);
 
-        if (!checkPassword(userRequest.getPassword(), userRequest.getConfirmPassword())) {
+        if (!isPasswordConfirmed(userRequest.getPassword(), userRequest.getConfirmPassword())) {
             throw new BadCredentialsException("Password not match");
-        }
-
-        if (userRequest.getDateOfBirth() != null) {
-            validateDateOfBirth(userRequest.getDateOfBirth());
         }
 
         AccountEntity accountEntity = AccountEntity
@@ -59,52 +55,56 @@ public class UserServiceImpl implements IUserService {
 
         RoleEntity role = roleRepository.findByName(ERole.valueOf(userRequest.getRoleName()))
                 .orElseThrow(() -> new RuntimeException("Role not found"));
-        UserEntity user = UserEntity
-                    .builder()
-                    .account(accountEntity)
-                    .firstName(userRequest.getFirstName())
-                    .lastName(userRequest.getLastName())
-                    .phoneNumber(userRequest.getPhoneNumber())
-                    .dateOfBirth(userRequest.getDateOfBirth())
-                    .address(userRequest.getAddress())
-                    .gender(userRequest.getGender())
-                    .isActived(true)
-                    .role(role)
-                    .build();
 
-        if ((user.getImage() != null && !user.getImage().isEmpty())) {
-            user.setImage(imageService.saveImage(userRequest.getImage()));
-        }
-        else user.setImage("default.png");
+        UserEntity user = createUser(userRequest, accountEntity, role);
 
-        if (userRequest.getRoleName().contains("CUSTOMER")){
-            addUser(user);
+        if (userRequest.getRoleName().contains("STAFF")){
+            addStaff(user, userRequest);
         }
-        else addStaffOrAdmin(user, userRequest);
+
+        userRepository.save(user);
         return true;
     }
 
-    public void addUser(UserEntity user) {
-        userRepository.save(user);
+    public UserEntity createUser(UserRequest userRequest, AccountEntity accountEntity, RoleEntity roleEntity) throws IOException {
+        UserEntity user = UserEntity.builder()
+                .account(accountEntity)
+                .firstName(userRequest.getFirstName())
+                .lastName(userRequest.getLastName())
+                .phoneNumber(userRequest.getPhoneNumber())
+                .dateOfBirth(userRequest.getDateOfBirth())
+                .address(userRequest.getAddress())
+                .gender(userRequest.getGender())
+                .isActived(true)
+                .role(roleEntity)
+                .build();
+
+        if ((userRequest.getImage() != null && !userRequest.getImage().isEmpty())) {
+            user.setImage(imageService.saveImage(userRequest.getImage()));
+        }
+        else user.setImage("default.png");
+        return user;
     }
 
-    public void addStaffOrAdmin(UserEntity user, UserRequest userRequest) {
+    public void addStaff(UserEntity user, UserRequest userRequest) {
         user.setAddress(userRequest.getAddress());
         user.setCccd(userRequest.getCccd());
         user.setRelativeName(userRequest.getRelativeName());
-        userRepository.save(user);
     }
 
-    public void validateExists(UserRequest userRequest) {
-        UserEntity user = emailExists(userRequest.getEmail());
-        if ((user != null && userRequest.getUserId() == null)||
-                (user != null&& !userRequest.getUserId().equals(user.getId()))) {
-            throw new BadCredentialsException("Email is exists");
+    public void validateEmailAndPhoneUniqueness(UserRequest userRequest) {
+        boolean isNewUser = userRequest.getUserId() == null;
+
+        UserEntity existingUserByEmail = emailExists(userRequest.getEmail());
+        if (existingUserByEmail != null &&
+                (isNewUser || !userRequest.getUserId().equals(existingUserByEmail.getId()))) {
+            throw new BadCredentialsException("Email already exists");
         }
-        UserEntity phone = phoneNumberExists(userRequest.getPhoneNumber());
-        if ((phone != null && userRequest.getUserId() == null)||
-                (phone != null&& !userRequest.getUserId().equals(phone.getId()))) {
-            throw new BadCredentialsException("Phone number is exists");
+
+        UserEntity existingUserByPhone = phoneNumberExists(userRequest.getPhoneNumber());
+        if (existingUserByPhone != null &&
+                (isNewUser || !userRequest.getUserId().equals(existingUserByPhone.getId()))) {
+            throw new BadCredentialsException("Phone number already exists");
         }
     }
 
@@ -116,22 +116,10 @@ public class UserServiceImpl implements IUserService {
         return userRepository.findByPhoneNumber(phoneNumber).orElse(null);
     }
 
-    public void validateDateOfBirth(LocalDate dateOfBirth) {
-        // Kiểm tra nếu ngày sinh trong tương lai
-        if (dateOfBirth.isAfter(LocalDate.now())) {
-            throw new DateOfBirthException("Date of birth is not valid");
-        }
-
-        // Kiểm tra tuổi: ít nhất 18 tuổi và không quá 100 tuổi
-        int age = Period.between(dateOfBirth, LocalDate.now()).getYears();
-        if (age < 18 || age > 100) {
-            throw new DateOfBirthException("You must be between 18 and 100 years old");
-        }
+    public boolean isPasswordConfirmed(String password, String confirmPassword) {
+        return password != null && password.equals(confirmPassword);
     }
 
-    public boolean checkPassword(String password, String confirmPassword) {
-        return password.equals(confirmPassword);
-    }
     @Override
     public UserResponse getUserByEmail(String email) {
         UserEntity userEntity = userRepository.findByAccount_Email(email).orElse(null);
@@ -149,11 +137,7 @@ public class UserServiceImpl implements IUserService {
         UserEntity oldEntity = userRepository.findById(user.getUserId()).orElseThrow(null);
         UserEntity newEntity = userResponseConverter.toUserEntity(user);
         if (oldEntity != null) {
-            validateExists(user);
-
-            if (user.getDateOfBirth() != null) {
-                validateDateOfBirth(user.getDateOfBirth());
-            }
+            validateEmailAndPhoneUniqueness(user);
 
             AccountEntity accountEntity = oldEntity.getAccount();
             accountEntity.setEmail(user.getEmail());
@@ -183,6 +167,22 @@ public class UserServiceImpl implements IUserService {
     public List<UserResponse> getAllUsersNotContains(ERole role) {
         List<UserEntity> userEntities = userRepository.findByRoleNotContains(role);
         return userEntities.stream().map(userResponseConverter::toUserResponse).toList();
+    }
+
+    public boolean updatePassword(UserRequest userRequest) {
+        UserEntity userEntity = emailExists(userRequest.getEmail());
+
+        if (userEntity == null) {
+            throw new BadCredentialsException("Email does not exist");
+        }
+
+        if (!isPasswordConfirmed(userRequest.getPassword(), userRequest.getConfirmPassword())) {
+            throw new BadCredentialsException("Password not match");
+        }
+
+        userEntity.getAccount().setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
+        userRepository.save(userEntity);
+        return true;
     }
 
     @Override

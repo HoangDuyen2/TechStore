@@ -19,4 +19,5 @@ public interface IUserService {
     boolean updateUser(UserRequest user) throws IOException;
     boolean updateActived(Long id, boolean actived);
     List<UserResponse> getAllUsersNotContains(ERole role);
+    boolean updatePassword(UserRequest userRequest);
 }

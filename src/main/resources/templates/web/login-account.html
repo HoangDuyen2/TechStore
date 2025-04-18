@@ -1125,7 +1125,7 @@
                                             </ul>
                                             <div class="form-action-button" data-animate="animate__fadeInUp">
                                                 <button type="submit" class="btn btn-style2">Sign In</button>
-                                                <a href="javascript:void(0)" onclick="myFunction()">Forgot your password?</a>
+                                                <a th:href="@{/forgot-password}">Forgot your password?</a>
                                             </div>
                                         </div>
                                     </form>
@@ -2139,24 +2139,6 @@
 <script th:src="@{/web/assert/js/plugin.js}"></script>
 <!-- theme js -->
 <script th:src="@{/web/assert/js/main.js}"></script>
-<script type="text/javascript">
-    function myFunction() {
-        var x = document.getElementById("RecoverPasswordForm");
-        var y= document.getElementById("CustomerLoginForm");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        }
-        else {
-            x.style.display = "none";
-        }
-        if (y.style.display === "none") {
-            y.style.display = "block";
-        }
-        else {
-            y.style.display = "none";
-        }
-    }
-</script>
 </body>
 
 <!-- Mirrored from spacingtech.com/html/etro/etro/login-account.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Mar 2025 13:01:07 GMT -->
