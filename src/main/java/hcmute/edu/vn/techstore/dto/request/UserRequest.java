@@ -70,4 +70,5 @@ public class UserRequest {
             groups = StaffGroup.class
     )
     private String relativePhoneNumber;
+    private String oldImage;
 }

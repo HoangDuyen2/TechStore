@@ -10,9 +10,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IUserService {
-    AdminProfileRequest findByAccount_Email(String accountEmail);
-    boolean updateAdmin(AdminProfileRequest adminProfileRequest);
-    boolean updateAdmin(AdminProfileRequest adminProfileRequest, MultipartFile file);
     boolean register(UserRequest user) throws IOException;
     UserResponse getUserByEmail(String email);
     UserRequest getUserById(Long id);

@@ -45,6 +45,8 @@ public class UserResponseConverter {
         userRequest.setUserId(userEntity.getId());
         userRequest.setPassword(userEntity.getAccount().getPassword());
         userRequest.setConfirmPassword(userEntity.getAccount().getPassword());
+        userRequest.setOldImage(String.valueOf(userEntity.getImage()));
+
         if (userEntity.getAccount() != null) {
             userRequest.setEmail(userEntity.getAccount().getEmail());
         }
