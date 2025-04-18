@@ -131,6 +131,7 @@
                                                 <fieldset class="fa-birthday-cake">
                                                     <div class="body-title mb-10">Date of birth <span class="tf-color-1"></span></div>
                                                     <input type="date" placeholder="Date of birth" name="dob" th:field="*{dateOfBirth}" th:disabled="${status != true}">
+                                                    <div class="text-danger" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
                                                 </fieldset>
                                             </div>
 
