@@ -60,7 +60,7 @@
         },
         quickView: function() {
             var galleryThumbs = new Swiper(".gallery-thumbs", {
-                loop: true,
+                loop: false,
                 spaceBetween: 15,
                 slidesPerView: 4,
                 thumbs: {
