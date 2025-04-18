@@ -17,23 +17,21 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Autowired
-    UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    @Autowired
-    CustomSuccessHandle customSuccessHandle;
+    private final CustomSuccessHandle customSuccessHandle;
 
-    @Autowired
-    UserDetailServiceImpl userDetailServiceImpl;
+    private final UserDetailServiceImpl userDetailServiceImpl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(user -> user.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/register","/uploads/**","/web/assert/**","/products")
+                        .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products", "/forgot-password")
                         .permitAll()
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
@@ -50,7 +48,7 @@ public class SecurityConfig {
                         .usernameParameter("email")
                         .passwordParameter("password")
                         .successHandler(customSuccessHandle)
-                        .failureUrl("/login?error=true")
+                        .failureUrl("/login?error")
                         .permitAll()
                 )
                 .logout(logout -> logout

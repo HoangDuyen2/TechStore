@@ -1,14 +1,19 @@
 package hcmute.edu.vn.techstore.controller;
 
+import hcmute.edu.vn.techstore.dto.interfaces.ChangePassword;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
-import hcmute.edu.vn.techstore.service.impl.UserServiceImpl;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,35 +30,63 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String postRegisterPage(@Valid @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) {
+    public String postRegisterPage(@Validated @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "web/create-account";
         }
         try {
-            if (userRequest.getPassword() == null||userRequest.getPassword().equals("")) {
-                model.addAttribute("error","Please enter a password");
-            }
-            if (userRequest.getConfirmPassword() == null||userRequest.getConfirmPassword().equals("")) {
-                model.addAttribute("error","Please enter confirm password");
-            }
             userRequest.setRoleName("ROLE_CUSTOMER");
             if (userService.register(userRequest)) {
-                System.out.println("Registration successful for user: " + userRequest.getEmail());
                 return "redirect:/login";
             }
         } catch (Exception e) {
-            System.out.println("Registration failed: " + e.getMessage());
             model.addAttribute("error", e.getMessage());
         }
         return "web/create-account";
     }
 
     @GetMapping("/login")
-    public String getLoginPage(Model model, @RequestParam(value = "error", required = false) String error) {
+    public String getLoginPage(Model model,
+                               @RequestParam(value = "error", required = false) String error,
+                               HttpSession session) {
         UserRequest userRequest = new UserRequest();
         model.addAttribute("userRequest", userRequest);
+
         if (error != null) {
-            model.addAttribute("error", "Invalid username or password");
+            String errorMessage = (String) session.getAttribute("LOGIN_ERROR");
+            session.removeAttribute("LOGIN_ERROR"); // tránh lặp lại
+            if (errorMessage != null && errorMessage.contains("Account is locked")) {
+                model.addAttribute("error", "Account is locked. Please contact administrator.");
+            } else {
+                model.addAttribute("error", "Invalid username or password");
+            }
+        }
+
+        return "web/login-account";
+    }
+
+
+
+    @GetMapping("/forgot-password")
+    public String getForgotPasswordPage(Model model) {
+        UserRequest userRequest = new UserRequest();
+        model.addAttribute("userRequest", userRequest);
+        return "web/change-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String postForgotPasswordPage(@Validated(ChangePassword.class) @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "web/change-password";
+        }
+
+        try {
+            if (userService.updatePassword(userRequest)){
+                return "redirect:/login";
+            }
+        }
+        catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
         }
         return "web/login-account";
     }
