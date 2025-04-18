@@ -1,8 +1,6 @@
 package hcmute.edu.vn.techstore.config;
 
 import hcmute.edu.vn.techstore.service.impl.UserDetailServiceImpl;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +31,7 @@ public class SecurityConfig {
         return http
                 .csrf(user -> user.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products")
+                        .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products", "/forgot-password")
                         .permitAll()
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
