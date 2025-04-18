@@ -107,8 +107,8 @@ public class BrandServiceImpl implements IBrandService {
     }
 
     @Override
-    public List<BrandEntity> findAll() {
-        return brandRepository.findAll();
+    public List<BrandEntity> findAllByIsActivedTrue() {
+        return brandRepository.findAllByIsActivedTrue();
     }
 
     @Override

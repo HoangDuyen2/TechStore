@@ -35,7 +35,7 @@ public class ProductController {
     @GetMapping("/save")
     public String showAddNewProductForm(Model model) {
         model.addAttribute("product", new ProductDTO());
-        List<BrandEntity> brands = brandService.findAll();
+        List<BrandEntity> brands = brandService.findAllByIsActivedTrue();
         model.addAttribute("brands", brands);
         return "admin/product/add-product";
     }
@@ -44,7 +44,7 @@ public class ProductController {
     public String showAddProductForm(@PathVariable("id") Long id, Model model) {
         ProductDTO product = productService.findProductById(id);
         model.addAttribute("product", product != null ? product : new ProductDTO());
-        List<BrandEntity> brands = brandService.findAll();
+        List<BrandEntity> brands = brandService.findAllByIsActivedTrue();
         model.addAttribute("brands", brands);
         return "admin/product/add-product";
     }
@@ -57,7 +57,7 @@ public class ProductController {
                              Model model) {
 
         if (result.hasErrors()) {
-            List<BrandEntity> brands = brandService.findAll();
+            List<BrandEntity> brands = brandService.findAllByIsActivedTrue();
             model.addAttribute("brands", brands);
             return "admin/product/add-product";
         }

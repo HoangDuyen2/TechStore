@@ -23,7 +23,7 @@ public interface IBrandService {
 
     BrandEntity findByName(String name);
 
-    List<BrandEntity> findAll();
+    List<BrandEntity> findAllByIsActivedTrue();
 
     Optional<BrandEntity> findById(Long id);
 
