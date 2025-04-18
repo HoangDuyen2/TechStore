@@ -4,8 +4,11 @@ import hcmute.edu.vn.techstore.builder.ProductFilterBuilder;
 import hcmute.edu.vn.techstore.convert.ProductFilterBuilderConverter;
 import hcmute.edu.vn.techstore.convert.ProductMapper;
 import hcmute.edu.vn.techstore.dto.ProductDTO;
+import hcmute.edu.vn.techstore.dto.response.ProductHomeSlider;
+import hcmute.edu.vn.techstore.dto.response.ProductHomeTrending;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
+import hcmute.edu.vn.techstore.entity.ReviewEntity;
 import hcmute.edu.vn.techstore.repository.BrandRepository;
 import hcmute.edu.vn.techstore.repository.ProductRepository;
 import hcmute.edu.vn.techstore.repository.custome.ProductRepositoryCustom;
@@ -18,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static hcmute.edu.vn.techstore.utils.ImageUtil.deleteImage;
 
@@ -54,7 +54,6 @@ public class ProductServiceImpl implements IProductService {
             }
             // Gán lại giá trị đường dẫn ảnh (mới hoặc cũ)
             product.setThumbnail(img);
-
 
 
             Optional<BrandEntity> brand = brandRepository.findById(product.getBrandId());
@@ -104,5 +103,59 @@ public class ProductServiceImpl implements IProductService {
         return productPage;
     }
 
+    @Override
+    public List<ProductHomeSlider> getProductHomeSlider() {
+        List<ProductHomeSlider> productHomeSliders = new ArrayList<>();
 
+        // get 2 latest products
+        Pageable pageable = Pageable.ofSize(2);
+        List<ProductEntity> newestProduct = productRepository.findByOrderByCreatedDateAndLastModifiedDateDesc(pageable);
+        for (ProductEntity product : newestProduct) {
+            productHomeSliders.add(ProductHomeSlider.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .thumbnail(product.getThumbnail())
+                    .price(String.valueOf(product.getPrice()))
+                    .build());
+        }
+
+        // Get 2 most buying products
+        List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail(pageable);
+        for (ProductEntity product : mostBuyingProducts) {
+            productHomeSliders.add(ProductHomeSlider.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .thumbnail(product.getThumbnail())
+                    .price(String.valueOf(product.getPrice()))
+                    .build());
+        }
+
+        return productHomeSliders;
+    }
+
+    @Override
+    public List<ProductHomeTrending> getProductHomeTrending() {
+        List<ProductHomeTrending> productHomeSliders = new ArrayList<>();
+
+        // Get 20 most buying products
+        Pageable pageable = Pageable.ofSize(20);
+        List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail(pageable);
+        for (ProductEntity product : mostBuyingProducts) {
+            int start = 0;
+            int count = 0;
+            for (ReviewEntity review : product.getReviews()) {
+                start += review.getRating();
+                count++;
+            }
+            productHomeSliders.add(ProductHomeTrending.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .thumbnail(product.getThumbnail())
+                    .price(String.valueOf(product.getPrice()))
+                    .start((int) Math.round((double) start / count))
+                    .build());
+        }
+
+        return productHomeSliders;
+    }
 }

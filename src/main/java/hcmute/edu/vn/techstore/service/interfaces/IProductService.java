@@ -1,6 +1,8 @@
 package hcmute.edu.vn.techstore.service.interfaces;
 
 import hcmute.edu.vn.techstore.dto.ProductDTO;
+import hcmute.edu.vn.techstore.dto.response.ProductHomeSlider;
+import hcmute.edu.vn.techstore.dto.response.ProductHomeTrending;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +19,8 @@ public interface IProductService {
     List<ProductDTO> findAllProduct();
 
     Page<ProductEntity> filterProducts(Map<String, Object> params, Pageable pageable);
+
+    List<ProductHomeSlider> getProductHomeSlider();
+
+    List<ProductHomeTrending> getProductHomeTrending();
 }
