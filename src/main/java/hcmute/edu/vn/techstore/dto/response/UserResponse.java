@@ -25,7 +25,6 @@ public class UserResponse {
     @NotBlank(message = "Please enter your Phone number!")
     private String phoneNumber;
 
-    @NotBlank(message = "Please enter your firstname!")
     private String fullName;
 
     private EGender gender;

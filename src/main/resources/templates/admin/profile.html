@@ -50,6 +50,10 @@
                                         <div class="body-text">You can change your information here</div>
                                     </div>
                                     <div class="right flex-grow">
+                                        <fieldset class="username mb-24" style="width: 49%;">
+                                            <input type="hidden"  name="userId" th:field="*{userId}">
+                                            <input type="hidden" name="roleName" th:field="*{roleName}">
+                                        </fieldset>
                                         <fieldset class="name mb-24">
                                             <div class="body-title mb-10">First Name</div>
                                             <input class="flex-grow" type="text" placeholder="First name"
@@ -95,10 +99,9 @@
                                             <div class="body-title mb-10">Gender</div>
                                             <div class="select">
                                                 <select class="" th:field="*{gender}">
-                                                    <option th:each="gender : ${genders}"
-                                                            th:value="${gender.name()}"
-                                                            th:text="${gender.name()}">
-                                                    </option>
+                                                    <option th:each="gender : ${T(hcmute.edu.vn.techstore.Enum.EGender).values()}"
+                                                            th:value="${gender}"
+                                                            th:text="${gender}"></option>
                                                 </select>
                                             </div>
                                         </fieldset>
@@ -122,34 +125,6 @@
                                                 <div class="body-title-2" th:errors="*{email}"></div>
                                             </div>
                                         </fieldset>
-                                        <fieldset class="password mb-24">
-                                            <div class="body-title mb-10">Password</div>
-                                            <input class="password-input" type="text" placeholder="Enter password"
-                                                   name="password" tabindex="0" aria-required="true"
-                                                   required="required" th:field="*{password}">
-                                            <span class="show-pass">
-                                                    <i class="icon-eye-off hide"></i>
-                                                    <i class="icon-eye view"></i>
-                                                </span>
-                                            <div class="block-warning" th:if="${#fields.hasErrors('password')}">
-                                                <i class="icon-alert-octagon"></i>
-                                                <div class="body-title-2" th:errors="*{password}"></div>
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="password">
-                                            <div class="body-title mb-10">Confirm password</div>
-                                            <input class="password-input" type="text" placeholder="Confirm password"
-                                                   name="confirmPassword" tabindex="0" aria-required="true"
-                                                   required="required" th:field="*{confirmPassword}">
-                                            <span class="show-pass">
-                                                    <i class="icon-eye-off hide"></i>
-                                                    <i class="icon-eye view"></i>
-                                                </span>
-                                            <div class="block-warning" th:if="${#fields.hasErrors('confirmPassword')}">
-                                                <i class="icon-alert-octagon"></i>
-                                                <div class="body-title-2" th:errors="*{confirmPassword}"></div>
-                                            </div>
-                                        </fieldset>
                                     </div>
                                 </div>
                                 <div class="wg-box">
@@ -161,7 +136,7 @@
                                         <fieldset class="mb-24">
                                             <div class="upload-image flex-grow">
                                                 <div class="item up-load">
-                                                    <img th:src="@{'/uploads/' + ${adminProfile.image}}"
+                                                    <img th:src="@{'/uploads/' + ${adminProfile.getOldImage()}}"
                                                          class="product-image"
                                                          alt="Avatar" width="300px;">
                                                     <label class="uploadfile" for="myFile">
@@ -170,7 +145,7 @@
                                                         </span>
                                                         <span class="body-text">Drop your images here or select <span
                                                                 class="tf-color">click to browse</span></span>
-                                                        <input type="file" id="myFile" name="file">
+                                                        <input type="file" id="myFile" name="file" th:field="*{image}">
                                                     </label>
                                                 </div>
                                             </div>
