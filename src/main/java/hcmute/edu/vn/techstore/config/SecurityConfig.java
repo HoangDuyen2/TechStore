@@ -33,7 +33,7 @@ public class SecurityConfig {
         return http
                 .csrf(user -> user.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/register","/uploads/**","/web/assert/**")
+                        .requestMatchers("/register","/uploads/**","/web/assert/**","/products")
                         .permitAll()
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")

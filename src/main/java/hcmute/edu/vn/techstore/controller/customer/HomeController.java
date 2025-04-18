@@ -16,4 +16,9 @@ public class HomeController {
     public String home(Model model) {
         return "web/index1";
     }
+
+    @GetMapping("/products")
+    public String getAllProducts() {
+        return "web/collection";
+    }
 }
