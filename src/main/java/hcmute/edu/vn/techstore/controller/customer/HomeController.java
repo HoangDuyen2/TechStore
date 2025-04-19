@@ -31,6 +31,7 @@ public class HomeController {
         return "web/index1";
     }
 
+    //Test
     @GetMapping("/products")
     public String getAllProducts(@RequestParam Map<String, Object> params,
                                  @RequestParam(defaultValue = "0") int pageNumber,
@@ -43,7 +44,7 @@ public class HomeController {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<ProductEntity> productPage = productService.filterProducts(params, pageable);
         model.addAttribute("products", productPage.getContent());
-
+        model.addAttribute("brands", brandService.findAllByIsActivedTrue());
         return "web/collection";
     }
 }
