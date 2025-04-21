@@ -3,6 +3,7 @@ package hcmute.edu.vn.techstore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Setter
@@ -24,6 +25,9 @@ public class ReviewEntity {
 
     @Column(nullable = false)
     private int rating;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDate createdAt;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false, referencedColumnName = "id")
