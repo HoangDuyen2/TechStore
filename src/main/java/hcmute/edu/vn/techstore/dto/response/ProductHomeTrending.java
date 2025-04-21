@@ -13,5 +13,6 @@ public class ProductHomeTrending {
     private String name;
     private String thumbnail;
     private String price;
-    private int start;
+    private int stars;
+    private String description;
 }

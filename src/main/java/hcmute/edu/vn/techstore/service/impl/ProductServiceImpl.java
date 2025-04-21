@@ -141,18 +141,13 @@ public class ProductServiceImpl implements IProductService {
         Pageable pageable = Pageable.ofSize(20);
         List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail(pageable);
         for (ProductEntity product : mostBuyingProducts) {
-            int start = 0;
-            int count = 0;
-            for (ReviewEntity review : product.getReviews()) {
-                start += review.getRating();
-                count++;
-            }
             productHomeSliders.add(ProductHomeTrending.builder()
                     .id(product.getId())
                     .name(product.getName())
                     .thumbnail(product.getThumbnail())
                     .price(String.valueOf(product.getPrice()))
-                    .start((int) Math.round((double) start / count))
+                    .stars(product.getStar())
+                    .description(product.getDescription() != null ? product.getDescription() : "")
                     .build());
         }
 
