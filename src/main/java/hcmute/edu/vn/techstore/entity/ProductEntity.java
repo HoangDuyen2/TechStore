@@ -62,6 +62,12 @@ public class ProductEntity extends TrackingDate {
     @Column(name = "isActived")
     private boolean actived;
 
+    @Column(name = "star")
+    private Integer star;
+
+    @Column(name = "numberOfReviews")
+    private Long numberOfReviews;
+
     @ManyToOne
     @JoinColumn(name = "brandId", referencedColumnName = "id")
     private BrandEntity brand;
