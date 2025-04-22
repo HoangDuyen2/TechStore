@@ -102,7 +102,7 @@
                                         <ul class="flex flex-column">
                                             <li class="product-item gap14" th:each="product : ${products}">
                                                 <div class="image no-bg">
-                                                    <img th:src="@{'/uploads/' + ${product.getThumbnail()}}" alt="Product Image">
+                                                    <img th:src="${product.getThumbnail()}" alt="Product Image">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">

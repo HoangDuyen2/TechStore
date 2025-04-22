@@ -246,7 +246,7 @@
                                                     <div class="preview-container mb-10">
                                                         <!-- Hiển thị ảnh cũ khi form tải -->
                                                         <img id="imagePreview"
-                                                             th:src="@{'/uploads/' + ${product.getThumbnail()}}" alt="" width="200px">
+                                                             th:src="${product.getThumbnail()}" alt="" width="200px">
 
                                                     </div>
 
