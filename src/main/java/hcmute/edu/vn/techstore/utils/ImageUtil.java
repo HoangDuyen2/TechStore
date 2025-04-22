@@ -1,5 +1,9 @@
 package hcmute.edu.vn.techstore.utils;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -8,39 +12,47 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
+@Component
 public class ImageUtil {
-    private static final Path ROOT = Paths.get("./uploads");
 
-    static {
-        try {
-            Files.createDirectories(ROOT);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
-        }
+    private final Cloudinary cloudinary;
+
+    @Autowired
+    public ImageUtil(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
     }
 
-    public static String saveImage(MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
-        String uniqueFileName = UUID.randomUUID().toString() + "_" + LocalDate.now() + "_" + fileName;
-        Files.copy(file.getInputStream(), ROOT.resolve(uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
-        return uniqueFileName;
+    public String saveImage(MultipartFile file) throws IOException {
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap("resource_type", "auto"));
+        return uploadResult.get("secure_url").toString(); // Trả về URL ảnh
     }
 
-    public static boolean deleteImage(String filename) throws IOException {
-        Path file = ROOT.resolve(filename);
-        return Files.deleteIfExists(file);
+    public boolean deleteImage(String imageUrl) throws IOException {
+        String publicId = extractPublicId(imageUrl);
+        Map result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        return "ok".equals(result.get("result"));
     }
 
-    public static boolean isValidSuffixImage(String img) {
+    public boolean isValidSuffixImage(String img) {
         return img.endsWith(".jpg") || img.endsWith(".jpeg") ||
                 img.endsWith(".png") || img.endsWith(".gif") ||
                 img.endsWith(".bmp");
     }
 
-    public static String updateImage(MultipartFile file, String oldFilename) throws IOException {
-        deleteImage(oldFilename);
+    public String updateImage(MultipartFile file, String oldImageUrl) throws IOException {
+        deleteImage(oldImageUrl);
         return saveImage(file);
+    }
+
+    private String extractPublicId(String url) {
+        if (url == null || url.isEmpty()) return null;
+        // URL: https://res.cloudinary.com/your_cloud/image/upload/v1234567890/filename.jpg
+        String[] parts = url.split("/");
+        String filename = parts[parts.length - 1]; // filename.jpg
+        return filename.split("\\.")[0]; // filename
     }
 }

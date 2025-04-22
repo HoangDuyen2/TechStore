@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.*;
 
-import static hcmute.edu.vn.techstore.utils.ImageUtil.deleteImage;
 
 
 @Service
@@ -33,29 +32,34 @@ public class ProductServiceImpl implements IProductService {
     private final BrandRepository brandRepository;
     private final ProductMapper productDTOConverter;
     private final ProductFilterBuilderConverter productFilterBuilderConverter;
+    private final ImageUtil imageUtil;
 
     @Override
     public void saveProduct(ProductDTO product, MultipartFile file, String existingImagePath) {
-        String img = (product.getThumbnail() != null && !product.getThumbnail().isEmpty()) ? product.getThumbnail() : "default-product.jpg";
+        String img = (product.getThumbnail() != null && !product.getThumbnail().isEmpty())
+                ? product.getThumbnail()
+                : "default-product.jpg";
 
         try {
             // Kiểm tra nếu có ảnh mới được tải lên
             if (file != null && !file.isEmpty()) {
                 // Nếu có ảnh cũ và không phải ảnh mặc định, xóa ảnh cũ
                 if (existingImagePath != null && !existingImagePath.isEmpty() && !existingImagePath.equals("default-product.jpg")) {
-                    deleteImage(existingImagePath); // Phương thức để xóa ảnh
+                    imageUtil.deleteImage(existingImagePath); // ✅ Gọi qua bean
                 }
+
                 // Lưu ảnh mới
-                if (ImageUtil.isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
-                    img = ImageUtil.saveImage(file);
+                if (imageUtil.isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
+                    img = imageUtil.saveImage(file); // ✅ Gọi qua bean
                 } else {
                     throw new IllegalArgumentException("Invalid image format. Only JPG, JPEG, PNG, GIF, BMP are allowed.");
                 }
             }
+
             // Gán lại giá trị đường dẫn ảnh (mới hoặc cũ)
             product.setThumbnail(img);
 
-
+            // Ánh xạ và lưu vào database
             Optional<BrandEntity> brand = brandRepository.findById(product.getBrandId());
 
             if (brand.isPresent()) {
@@ -70,6 +74,7 @@ public class ProductServiceImpl implements IProductService {
             throw new RuntimeException("Failed to save the image: " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public ProductDTO findProductById(Long id) {
