@@ -9,6 +9,7 @@ import hcmute.edu.vn.techstore.repository.OrderDetailRepository;
 import hcmute.edu.vn.techstore.repository.ProductRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IBrandService;
 import hcmute.edu.vn.techstore.service.interfaces.IImageService;
+import hcmute.edu.vn.techstore.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,6 +28,7 @@ public class BrandServiceImpl implements IBrandService {
     private final ProductRepository productRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final IImageService imageService;
+    private final ImageUtil imageUtil;
 
     @Override
     public Page<BrandResponse> findAll(Pageable pageable) {
@@ -44,7 +47,14 @@ public class BrandServiceImpl implements IBrandService {
         try {
             BrandEntity brand = new BrandEntity();
             brand.setName(brandRequest.getBrandName());
-            brand.setImage(imageService.saveImage(file));
+            // Lưu ảnh mới
+            String img = "default-brand.jpg";
+            if (imageUtil.isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
+                img = imageUtil.saveImage(file); // ✅ Gọi qua bean
+            } else {
+                throw new IllegalArgumentException("Invalid image format. Only JPG, JPEG, PNG, GIF, BMP are allowed.");
+            }
+            brand.setImage(img);
             brand.setIsActived(true);
             brandRepository.save(brand);
             return true;
@@ -60,11 +70,20 @@ public class BrandServiceImpl implements IBrandService {
             BrandEntity brand = brandRepository.findById(id).get();
             brand.setName(brandRequest.getBrandName());
             brand.setIsActived(brandRequest.isActive());
+            String img = brand.getImage();
             if (file != null && !file.isEmpty()) {
-                brand.setImage(imageService.updateImage(file, brand.getImage()));
-            } else {
-                brand.setImage(brand.getImage());
+                // Nếu có ảnh cũ và không phải ảnh mặc định, xóa ảnh cũ
+                if (img != null && !img.isEmpty() && !img.equals("default-brand.jpg")) {
+                    imageUtil.deleteImage(img); // ✅ Gọi qua bean
+                }
+                // Lưu ảnh mới
+                if (imageUtil.isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
+                    img = imageUtil.saveImage(file); // ✅ Gọi qua bean
+                } else {
+                    throw new IllegalArgumentException("Invalid image format. Only JPG, JPEG, PNG, GIF, BMP are allowed.");
+                }
             }
+            brand.setImage(img);
             brandRepository.save(brand);
             return true;
         } catch (Exception e) {
