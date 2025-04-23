@@ -114,7 +114,7 @@ public class ProductServiceImpl implements IProductService {
 
         // get 2 latest products
         Pageable pageable = Pageable.ofSize(2);
-        List<ProductEntity> newestProduct = productRepository.findByOrderByCreatedDateAndLastModifiedDateDesc(pageable);
+        List<ProductEntity> newestProduct = productRepository.findByOrderByCreatedDateDesc(pageable);
         for (ProductEntity product : newestProduct) {
             productHomeSliders.add(ProductHomeSlider.builder()
                     .id(product.getId())

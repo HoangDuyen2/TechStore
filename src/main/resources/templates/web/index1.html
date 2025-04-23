@@ -15,14 +15,13 @@
 <main id="main">
     <!-- main-slider start -->
     <section class="slider-content">
-        <div class="home-slider owl-carousel owl-theme" id="home-slider" th:each="product : ${productHomeSliders}">
-            <div class="item">
+        <div class="home-slider owl-carousel owl-theme" id="home-slider">
+            <div class="item" th:each="product : ${productHomeSliders}">
                 <div class="slider-image">
-                    <div class="slide-img">
-                        <img th:src="@{'/uploads/' + ${product.thumbnail}}" class="img-fluid desk-img"
-                             alt="slider-1">
-                        <img th:src="@{'/uploads/' + ${product.thumbnail}}" class="img-fluid resp-img"
-                             alt="mobile-slider1">
+                    <div class="slide-img" style="display: flex; justify-content: center;">
+                        <img th:src="${product.getThumbnail()}"
+                             style="max-width: 100%; max-height: 500px; width: auto; height: auto" alt="slider">
+                        <img th:src="${product.getThumbnail()}" class="img-fluid resp-img" alt="mobile-slider">
                     </div>
                     <div class="container slider-text-info">
                         <div class="slider-text-content">
@@ -195,10 +194,10 @@
                                 <div class="single-product-wrap" th:each="product : ${productHomeTrending}">
                                     <div class="product-image">
                                         <a href="product-template.html" class="pro-img">
-                                            <img th:src="@{'/uploads/' + ${product.thumbnail}}"
-                                                 class="img-fluid img1 resp-img1" alt="p-1">
-                                            <img th:src="@{'/uploads/' + ${product.thumbnail}}"
-                                                 class="img-fluid img2 resp-img2" alt="p-2">
+                                            <img th:src="${product.thumbnail}" class="img-fluid img1 resp-img1"
+                                                 alt="p-1">
+                                            <img th:src="${product.thumbnail}" class="img-fluid img2 resp-img2"
+                                                 alt="p-2">
                                         </a>
                                         <div class="product-action">
                                             <a href="wishlist-product.html" class="add-to-wishlist">
@@ -437,11 +436,11 @@
             <div class="testi-category">
                 <div class="testi-wrap">
                     <div class="brand-slider owl-carousel owl-theme" id="brand-slider">
-                        <div class="item" data-animate="animate__fadeInUp">
-                            <div class="brand-img" th:each="brand : ${brands}">
+                        <div class="item" data-animate="animate__fadeInUp" th:each="brand : ${brands}">
+                            <div class="brand-img">
                                 <a href="JavaScript:void(0)" class="brand-img"><img
-                                        th:src="@{'/uploads/' + ${brand.getImage()}}" class="img-fluid"
-                                        alt="brand-1"></a>
+                                        th:src="*{brand.getImage()}" class="img-fluid"
+                                        alt="brand"></a>
                             </div>
                         </div>
                     </div>

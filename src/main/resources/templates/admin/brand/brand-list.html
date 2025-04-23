@@ -107,14 +107,8 @@
                                     <ul class="flex flex-column" th:each="brand : ${brands}">
                                         <li class="product-item gap14">
                                             <div class="image no-bg">
-                                                <img th:if="${brand.image.startsWith('https')}"
-                                                     th:src="${brand.image}"
-                                                     class="product-image"
+                                                <img th:src="${brand.image}" class="product-image"
                                                      alt="Ảnh sản phẩm mặc định">
-                                                <img th:unless="${brand.image.startsWith('https')}"
-                                                     th:src="@{'/uploads/' + ${brand.image}}"
-                                                     class="product-image"
-                                                     alt="Ảnh sản phẩm">
                                             </div>
                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                 <div class="name">
