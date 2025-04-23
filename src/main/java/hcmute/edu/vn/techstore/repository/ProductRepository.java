@@ -17,9 +17,9 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long>, J
 
     // find product sort by createdAt and updatedAt
     @Query("SELECT p FROM ProductEntity p ORDER BY p.createdAt DESC")
-    List<ProductEntity> findByOrderByCreatedDateDesc(Pageable pageable);
+    List<ProductEntity> findByOrderByCreatedDateDesc();
 
     @Query("SELECT p FROM ProductEntity p JOIN OrderDetailEntity od ON p.id = od.product.id " +
             "GROUP BY p.id ORDER BY SUM(od.quantity) DESC")
-    List<ProductEntity> findTopMostBuyingProductsByOrderDetail(Pageable pageable);
+    List<ProductEntity> findTopMostBuyingProductsByOrderDetail();
 }

@@ -113,26 +113,35 @@ public class ProductServiceImpl implements IProductService {
         List<ProductHomeSlider> productHomeSliders = new ArrayList<>();
 
         // get 2 latest products
-        Pageable pageable = Pageable.ofSize(2);
-        List<ProductEntity> newestProduct = productRepository.findByOrderByCreatedDateDesc(pageable);
+        List<ProductEntity> newestProduct = productRepository.findByOrderByCreatedDateDesc();
         for (ProductEntity product : newestProduct) {
-            productHomeSliders.add(ProductHomeSlider.builder()
-                    .id(product.getId())
-                    .name(product.getName())
-                    .thumbnail(product.getThumbnail())
-                    .price(String.valueOf(product.getPrice()))
-                    .build());
+            if (product.isActived() && product.getBrand().getIsActived()) {
+                productHomeSliders.add(ProductHomeSlider.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .thumbnail(product.getThumbnail())
+                        .price(String.valueOf(product.getPrice()))
+                        .build());
+            }
+            if (productHomeSliders.size() == 2) {
+                break; // Chỉ lấy 2 sản phẩm mới nhất
+            }
         }
 
         // Get 2 most buying products
-        List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail(pageable);
+        List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail();
         for (ProductEntity product : mostBuyingProducts) {
-            productHomeSliders.add(ProductHomeSlider.builder()
-                    .id(product.getId())
-                    .name(product.getName())
-                    .thumbnail(product.getThumbnail())
-                    .price(String.valueOf(product.getPrice()))
-                    .build());
+            if (product.isActived() && product.getBrand().getIsActived()) {
+                productHomeSliders.add(ProductHomeSlider.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .thumbnail(product.getThumbnail())
+                        .price(String.valueOf(product.getPrice()))
+                        .build());
+            }
+            if (productHomeSliders.size() == 4) {
+                break; // Chỉ lấy 2 sản phẩm bán chạy nhất
+            }
         }
 
         return productHomeSliders;
@@ -142,18 +151,24 @@ public class ProductServiceImpl implements IProductService {
     public List<ProductHomeTrending> getProductHomeTrending() {
         List<ProductHomeTrending> productHomeSliders = new ArrayList<>();
 
+//         This line for testing
+//        List<ProductEntity> mostBuyingProducts = productRepository.findByOrderByCreatedDateDesc();
         // Get 20 most buying products
-        Pageable pageable = Pageable.ofSize(20);
-        List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail(pageable);
+        List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail();
         for (ProductEntity product : mostBuyingProducts) {
-            productHomeSliders.add(ProductHomeTrending.builder()
-                    .id(product.getId())
-                    .name(product.getName())
-                    .thumbnail(product.getThumbnail())
-                    .price(String.valueOf(product.getPrice()))
-                    .stars(product.getStar())
-                    .description(product.getDescription() != null ? product.getDescription() : "")
-                    .build());
+            if (product.isActived() && product.getBrand().getIsActived()) {
+                productHomeSliders.add(ProductHomeTrending.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .thumbnail(product.getThumbnail())
+                        .price(String.valueOf(product.getPrice()))
+                        .stars(product.getStar() != null ? product.getStar() : 0)
+                        .description(product.getDescription() != null ? product.getDescription() : "")
+                        .build());
+            }
+            if (productHomeSliders.size() == 20) {
+                break; // Chỉ lấy 20 sản phẩm bán chạy nhất
+            }
         }
 
         return productHomeSliders;

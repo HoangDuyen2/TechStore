@@ -190,8 +190,9 @@
                 <div class="collection-wrap">
                     <div class="collection-slider swiper" id="new-product">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide" data-animate="animate__fadeInUp">
-                                <div class="single-product-wrap" th:each="product : ${productHomeTrending}">
+                            <div class="swiper-slide" data-animate="animate__fadeInUp"
+                                 th:each="product : ${productHomeTrending}">
+                                <div class="single-product-wrap">
                                     <div class="product-image">
                                         <a href="product-template.html" class="pro-img">
                                             <img th:src="${product.thumbnail}" class="img-fluid img1 resp-img1"
@@ -226,17 +227,21 @@
                                             <h6><a href="product-template.html" th:text="${product.name}"></a></h6>
                                         </div>
                                         <div class="price-box">
-                                            <span class="new-price" th:text="'$' + ${product.price}">$65.00</span>
+                                            <span class="new-price" th:text="'$' + ${product.price}"></span>
                                             <!--                                            <span class="old-price">$70.00</span>-->
                                         </div>
                                         <div class="product-ratting">
                                                     <span class="review-ratting">
                                                         <span class="review-star">
-                                                            <span th:each="i : ${#numbers.sequence(1, product.stars)}">
-                                                                <i class="fas fa-star"></i>
+                                                            <span th:if="${product.getStars() > 0}">
+                                                                <span th:each="i : ${#numbers.sequence(1, product.stars)}">
+                                                                    <i class="fas fa-star"></i>
+                                                                </span>
                                                             </span>
-                                                            <span th:each="i : ${#numbers.sequence(1, 5 - product.stars)}">
-                                                                <i class="feather-star"></i>
+                                                            <span th:if="${product.getStars() < 5}">
+                                                                <span th:each="i : ${#numbers.sequence(1, 5 - product.stars)}">
+                                                                    <i class="feather-star"></i>
+                                                                </span>
                                                             </span>
                                                         </span>
                                                         <span class="review-caption">No reviews</span>
