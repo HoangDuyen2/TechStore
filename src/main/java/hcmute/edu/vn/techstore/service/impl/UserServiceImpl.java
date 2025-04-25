@@ -12,7 +12,9 @@ import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IImageService;
+import hcmute.edu.vn.techstore.service.interfaces.IUserFactory;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
+import hcmute.edu.vn.techstore.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,7 +30,8 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserResponseConverter userResponseConverter;
-    private final IImageService imageService;
+    private final ImageUtil imageUtil;
+    private final UserFactoryProducer userFactoryProducer;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -49,40 +52,11 @@ public class UserServiceImpl implements IUserService {
         RoleEntity role = roleRepository.findByName(ERole.valueOf(userRequest.getRoleName()))
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
-        UserEntity user = createUser(userRequest, accountEntity, role);
-
-        if (userRequest.getRoleName().contains("STAFF")){
-            addStaff(user, userRequest);
-        }
+        IUserFactory userFactory = userFactoryProducer.getFactory(userRequest.getRoleName());
+        UserEntity user = userFactory.createUser(userRequest,accountEntity, role);
 
         userRepository.save(user);
         return true;
-    }
-
-    public UserEntity createUser(UserRequest userRequest, AccountEntity accountEntity, RoleEntity roleEntity) throws IOException {
-        UserEntity user = UserEntity.builder()
-                .account(accountEntity)
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .phoneNumber(userRequest.getPhoneNumber())
-                .dateOfBirth(userRequest.getDateOfBirth())
-                .address(userRequest.getAddress())
-                .gender(userRequest.getGender())
-                .isActived(true)
-                .role(roleEntity)
-                .build();
-
-        if ((userRequest.getImage() != null && !userRequest.getImage().isEmpty())) {
-            user.setImage(imageService.saveImage(userRequest.getImage()));
-        }
-        else user.setImage("default.png");
-        return user;
-    }
-
-    public void addStaff(UserEntity user, UserRequest userRequest) {
-        user.setAddress(userRequest.getAddress());
-        user.setCccd(userRequest.getCccd());
-        user.setRelativeName(userRequest.getRelativeName());
     }
 
     public void validateEmailAndPhoneUniqueness(UserRequest userRequest) {
@@ -137,8 +111,12 @@ public class UserServiceImpl implements IUserService {
             newEntity.setAccount(accountEntity);
 
             if ((user.getImage() != null && !user.getImage().isEmpty())) {
-                newEntity.setImage(imageService.saveImage(user.getImage()));
-            } else newEntity.setImage(oldEntity.getImage());
+                if (!oldEntity.getImage().contains("default-user")) {
+                    imageUtil.deleteImage(oldEntity.getImage());
+                }
+                newEntity.setImage(imageUtil.saveImage(user.getImage())); // ✅ Gọi qua bean
+            }
+            else newEntity.setImage(oldEntity.getImage());
             newEntity.setActived(oldEntity.isActived());
             userRepository.save(newEntity);
             return true;
@@ -177,5 +155,4 @@ public class UserServiceImpl implements IUserService {
         userRepository.save(userEntity);
         return true;
     }
-
 }
