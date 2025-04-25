@@ -121,7 +121,7 @@
                                                                 <div class="product-image">
                                                                     <a th:href="@{/product/{id}(id=${product.id})}"
                                                                        class="pro-img">
-                                                                        <img th:src="@{'/uploads/' + ${product.getThumbnail()}}"
+                                                                        <img th:src="${product.getThumbnail()}"
                                                                              class="img-fluid img1 resp-img1"
                                                                              th:alt="${product.name}">
                                                                         <!-- Nếu có ảnh phụ, bạn có thể xử lý thêm ở đây -->
@@ -243,7 +243,7 @@
                                         <!-- button end -->
                                         <!-- filter-form start -->
                                         <div class="facets">
-                                            <form class="facets-form">
+                                            <form class="facets-form" >
                                                 <div class="facets-wrapper">
                                                     <!-- Product-Categories start -->
                                                     <div class="shop-sidebar" data-animate="animate__fadeInUp">
@@ -279,8 +279,7 @@
                                                         <a href="#collapse-3" data-bs-toggle="collapse"
                                                            class="shop-title shop-title-lg">Price</a>
                                                         <div class="filter-info" data-animate="animate__fadeInUp">
-                                                            <span class="shop-price">The highest price is $89.00</span>
-                                                            <facet-remove><a href="collection.html" class="reset-text">Reset</a>
+                                                            <span class="shop-price">The highest price is 100.000.000VNĐ</span>
                                                             </facet-remove>
                                                         </div>
                                                         <!-- Product-price start -->
@@ -288,23 +287,23 @@
                                                              data-animate="animate__fadeInUp">
                                                             <price-range class="price-range">
                                                                 <div class="price-range-group group-range">
-                                                                    <input type="range" class="range" min="0" max="89"
+                                                                    <input type="range" class="range" min="0" max="100"
                                                                            value="0" id="range1">
-                                                                    <input type="range" class="range" min="0" max="89"
-                                                                           value="89" id="range2">
+                                                                    <input type="range" class="range" min="0" max="100"
+                                                                           value="100" id="range2">
                                                                 </div>
                                                                 <div class="price-input-group group-input"
                                                                      data-animate="animate__fadeInUp">
                                                                     <div class="price-range-input input-price">
                                                                         <label class="label-text">From</label>
-                                                                        <span class="price-value">$</span>
+                                                                        <span class="price-value">Triệu</span>
                                                                         <span id="demo1" class="price-field">0</span>
                                                                     </div>
                                                                     <span class="price-range-delimeter">-</span>
                                                                     <div class="price-range-input input-price">
                                                                         <label class="label-text">To</label>
-                                                                        <span class="price-value">$</span>
-                                                                        <span id="demo2" class="price-field">89</span>
+                                                                        <span class="price-value">Triệu</span>
+                                                                        <span id="demo2" class="price-field">100</span>
                                                                     </div>
                                                                 </div>
                                                             </price-range>

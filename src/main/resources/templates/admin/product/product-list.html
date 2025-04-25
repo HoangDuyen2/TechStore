@@ -52,6 +52,10 @@
                                         </li>
                                     </ul>
                                 </div>
+                                <div th:if="${successMessage}" class="alert alert-success" role="alert"
+                                     style="width: fit-content; padding: 10px 16px; margin: 12px 0; border-radius: 4px;">
+                                    <span th:text="${successMessage}"></span>
+                                </div>
                                 <!-- product-list -->
                                 <div class="wg-box">
                                     <div class="flex items-center justify-between gap10 flex-wrap">

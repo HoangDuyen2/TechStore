@@ -8,6 +8,7 @@ public class ProductFilterBuilder {
     private Long minPrice;
     private Long maxPrice;
 
+
     // Constructor private để đảm bảo chỉ sử dụng Builder
     private ProductFilterBuilder(Builder builder) {
         this.name = builder.name;

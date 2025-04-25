@@ -38,7 +38,7 @@ public class ProductServiceImpl implements IProductService {
     public void saveProduct(ProductDTO product, MultipartFile file, String existingImagePath) {
         String img = (product.getThumbnail() != null && !product.getThumbnail().isEmpty())
                 ? product.getThumbnail()
-                : "default-product.jpg";
+                : "https://res.cloudinary.com/techstore2025/image/upload/v1745587682/default-phone_p5dcoi.jpg";
 
         try {
             // Kiểm tra nếu có ảnh mới được tải lên

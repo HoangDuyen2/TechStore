@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -54,7 +55,8 @@ public class ProductController {
                              BindingResult result,
                              @RequestParam("file") MultipartFile file,
                              @RequestParam("existingImagePath") String existingImagePath,
-                             Model model) {
+                             Model model,
+                             RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
             List<BrandEntity> brands = brandService.findAllByIsActivedTrue();
@@ -75,6 +77,9 @@ public class ProductController {
             model.addAttribute("msg", "An error occurred while saving the product: " + e.getMessage());
             return "admin/product/add-product";
         }
+
+        String message = (product.getId() != null) ? "Chỉnh sửa sản phẩm thành công!" : "Thêm sản phẩm thành công!";
+        redirectAttributes.addFlashAttribute("successMessage", message);
         return "redirect:/admin/products";
     }
 
