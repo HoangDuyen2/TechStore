@@ -152,9 +152,9 @@ public class ProductServiceImpl implements IProductService {
         List<ProductHomeTrending> productHomeSliders = new ArrayList<>();
 
 //         This line for testing
-//        List<ProductEntity> mostBuyingProducts = productRepository.findByOrderByCreatedDateDesc();
+        List<ProductEntity> mostBuyingProducts = productRepository.findByOrderByCreatedDateDesc();
         // Get 20 most buying products
-        List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail();
+//        List<ProductEntity> mostBuyingProducts = productRepository.findTopMostBuyingProductsByOrderDetail();
         for (ProductEntity product : mostBuyingProducts) {
             if (product.isActived() && product.getBrand().getIsActived()) {
                 productHomeSliders.add(ProductHomeTrending.builder()
