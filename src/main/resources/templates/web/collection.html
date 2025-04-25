@@ -3,6 +3,61 @@
 <!-- Added by HTTrack -->
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
 <div th:insert="~{web/fragments/head::head}"></div>
+<style>
+    .custom-sort-dropdown {
+        position: relative;
+        display: inline-block;
+        font-size: 16px;
+        user-select: none;
+    }
+
+    .sort-label {
+        margin-right: 6px;
+        font-weight: 500;
+    }
+
+    .sort-button {
+        background: #fff;
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 500;
+    }
+
+    .sort-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        margin-top: 5px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        list-style: none;
+        padding: 8px 0;
+        min-width: 240px;
+        display: none;
+        z-index: 100;
+    }
+
+    .sort-dropdown-list li {
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .sort-dropdown-list li:hover {
+        background-color: #f4f4f4;
+    }
+
+    .sort-dropdown-list.show {
+        display: block;
+    }
+</style>
 <body>
 <!-- top notification start -->
 <div class="top-notification-bar">
@@ -74,35 +129,21 @@
                                 </div>
                                 <!-- product-short start -->
                                 <div class="product-short">
-                                    <label for="SortBy">Sort by:</label>
-                                    <select class="nice-select" name="sortby" id="SortBy">
-                                        \
-                                        <option value="best-selling">Best Selling</option>
-                                        <option value="title-ascending">Alphabetically, A-Z</option>
-                                        <option value="title-descending">Alphabetically, Z-A</option>
-                                        <option value="price-ascending">Price, low to high</option>
-                                        <option value="price-descending">Price, high to low</option>
-                                        <option value="created-descending">Date, new to old</option>
-                                        <option value="created-ascending">Date, old to new</option>
-                                    </select>
-                                    <span class="sort-icon"><i class="feather-chevron-down"></i></span>
-                                    <a href="javascript:void(0)" class="short-title">
-                                        <span class="sort-title">Best Selling</span>
-                                        <span class="sort-icon"><i class="feather-chevron-down"></i></span>
-                                    </a>
-                                    <a href="javascript:void(0)" class="short-title short-title-lg">
-                                        <span class="sort-title">Best Selling</span>
-                                        <span class="sort-icon"><i class="feather-chevron-down"></i></span>
-                                    </a>
-                                    <ul class="pro-ul collapse">
-                                        <li class="pro-li selected"><a href="javascript:void(0)">Best Selling</a></li>
-                                        <li class="pro-li"><a href="javascript:void(0)">Alphabetically, A-Z</a></li>
-                                        <li class="pro-li"><a href="javascript:void(0)">Alphabetically, Z-A</a></li>
-                                        <li class="pro-li"><a href="javascript:void(0)">Price, low to high</a></li>
-                                        <li class="pro-li"><a href="javascript:void(0)">Price, high to low</a></li>
-                                        <li class="pro-li"><a href="javascript:void(0)">Date, new to old</a></li>
-                                        <li class="pro-li"><a href="javascript:void(0)">Date, old to new</a></li>
-                                    </ul>
+                                    <div class="custom-sort-dropdown">
+                                        <span class="sort-label">Sort by:</span>
+                                        <div class="sort-button" onclick="toggleSortDropdown()">
+                                            <span id="currentSortText">Select</span>
+                                            <i class="feather-chevron-down"></i>
+                                        </div>
+                                        <ul class="sort-dropdown-list" id="sortDropdownList">
+                                            <li data-value="title-ascending">Alphabetically, A-Z</li>
+                                            <li data-value="title-descending">Alphabetically, Z-A</li>
+                                            <li data-value="price-ascending">Price, low to high</li>
+                                            <li data-value="price-descending">Price, high to low</li>
+                                            <li data-value="created-descending">Date, new to old</li>
+                                            <li data-value="created-ascending">Date, old to new</li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 <!-- product-short end -->
                             </div>
@@ -215,15 +256,33 @@
                                                 </ul>
                                             </div>
                                             <div class="paginatoin-area" data-animate="animate__fadeInUp">
-                                                <ul class="pagination-page-box animate__fadeInUp animate__animated"
-                                                    data-animate="animate__fadeInUp">
-                                                    <li class="number active"><a href="javascript:void(0)"
-                                                                                 class="theme-glink">1</a></li>
-                                                    <li class="number"><a href="javascript:void(0)"
-                                                                          class="gradient-text">2</a></li>
-                                                    <li class="page-next"><a href="javascript:void(0)"
-                                                                             class="theme-glink"><i
-                                                            class="fa -solid fa-angle-right"></i></a></li>
+                                                <ul class="pagination-page-box animate__fadeInUp animate__animated" data-animate="animate__fadeInUp">
+
+                                                    <!-- Nút Previous -->
+                                                    <li class="page-prev" th:if="${pageNumber > 0}">
+                                                        <a th:href="@{${baseUrl} + 'pageNumber=' + (${pageNumber - 1}) + '&pageSize=' + ${pageSize} + '&sortBy=' + ${sortBy} + '&sortOrder=' + ${sortOrder}}"
+                                                           class="theme-glink">
+                                                            <i class="fa-solid fa-angle-left"></i>
+                                                        </a>
+                                                    </li>
+
+                                                    <!-- Các số trang -->
+                                                    <li class="number"
+                                                        th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                                        th:classappend="${i == pageNumber} ? 'active' : ''">
+                                                        <a th:href="@{${baseUrl} + 'pageNumber=' + ${i} + '&pageSize=' + ${pageSize} + '&sortBy=' + ${sortBy} + '&sortOrder=' + ${sortOrder}}"
+                                                           th:text="${i + 1}"
+                                                           class="theme-glink"></a>
+                                                    </li>
+
+                                                    <!-- Nút Next -->
+                                                    <li class="page-next" th:if="${pageNumber < totalPages - 1}">
+                                                        <a th:href="@{${baseUrl} + 'pageNumber=' + (${pageNumber + 1}) + '&pageSize=' + ${pageSize} + '&sortBy=' + ${sortBy} + '&sortOrder=' + ${sortOrder}}"
+                                                           class="theme-glink">
+                                                            <i class="fa-solid fa-angle-right"></i>
+                                                        </a>
+                                                    </li>
+
                                                 </ul>
                                             </div>
                                         </div>
@@ -243,9 +302,20 @@
                                         <!-- button end -->
                                         <!-- filter-form start -->
                                         <div class="facets">
-                                            <form class="facets-form" >
+                                            <form class="facets-form" action="/products" method="get" >
+
+                                                <input type="hidden" name="brandNames" id="brandNamesInput" th:value="${param.brandNames}">
+                                                <input type="hidden" name="minPrice" id="minPriceInput" th:value="${param.minPrice}">
+                                                <input type="hidden" name="maxPrice" id="maxPriceInput" th:value="${param.maxPrice}">
+
                                                 <div class="facets-wrapper">
                                                     <!-- Product-Categories start -->
+                                                    <button type="submit" class="axil-btn btn-outline-primary" id="filterButton">Filter</button>
+                                                    <br><br>
+
+                                                    <input class="form-control mr-sm-2" type="search" placeholder="Search" name="name" aria-label="Search" th:value="${param.name}">
+                                                    <br>
+
                                                     <div class="shop-sidebar" data-animate="animate__fadeInUp">
                                                         <h6 class="shop-title" data-animate="animate__fadeInUp">
                                                             Brands</h6>
@@ -260,8 +330,10 @@
                                                                     <li class="cat-checkbox"
                                                                         data-animate="animate__fadeInUp">
                                                                         <label class="checkbox-label">
-                                                                            <input type="checkbox" class="cust-checkbox"
-                                                                                   th:value="${brand.id}">
+                                                                            <input type="checkbox" class="cust-checkbox brand-check"
+                                                                                   th:value="${brand.name}"
+                                                                                   onchange="updateSelectedBrands()"
+                                                                                   th:checked="${param.brandNames != null and #lists.contains(#strings.arraySplit(param.brandNames, ','), brand.name)}">
                                                                             <span class="check-name"
                                                                                   th:text="${brand.name}">Brand Name</span>
                                                                             <span class="cust-check"></span>
@@ -1366,5 +1438,135 @@
 <script th:src="@{/web/assert/js/plugin.js}"></script>
 <!-- theme js -->
 <script th:src="@{/web/assert/js/main.js}"></script>
+<script>
+    const rangeMin = document.getElementById('range1');
+    const rangeMax = document.getElementById('range2');
+    const minPriceInput = document.getElementById('minPriceInput');
+    const maxPriceInput = document.getElementById('maxPriceInput');
+
+    function updateSelectedBrands() {
+        const selectedBrands = Array.from(document.querySelectorAll('.brand-check:checked'))
+            .map(cb => cb.value)
+            .join(',');
+        document.getElementById('brandNamesInput').value = selectedBrands;
+    }
+
+    function updatePriceInputs() {
+        let min = parseInt(rangeMin.value);
+        let max = parseInt(rangeMax.value);
+
+        if (min > max) {
+            [min, max] = [max, min];
+        }
+
+        // ✅ Convert sang đơn vị VNĐ (Triệu → VND)
+        minPriceInput.value = min * 1_000_000;
+        maxPriceInput.value = max * 1_000_000;
+
+        // Hiển thị lại giá theo đơn vị Triệu
+        document.getElementById("demo1").innerText = min;
+        document.getElementById("demo2").innerText = max;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        updateSelectedBrands();
+
+        // ✅ Convert lại giá trị từ URL (VND) sang Triệu để map slider
+        const min = parseInt(minPriceInput.value) / 1_000_000 || 0;
+        const max = parseInt(maxPriceInput.value) / 1_000_000 || 100;
+
+        rangeMin.value = min;
+        rangeMax.value = max;
+
+        document.getElementById("demo1").innerText = min;
+        document.getElementById("demo2").innerText = max;
+    });
+
+    // Khi người dùng kéo
+    rangeMin.addEventListener('input', updatePriceInputs);
+    rangeMax.addEventListener('input', updatePriceInputs);
+
+    // ✅ Trước khi submit → xử lý tất cả
+    document.querySelector('.facets-form').addEventListener('submit', function (e) {
+        const nameInput = this.querySelector('input[name="name"]');
+        if (nameInput && nameInput.value.trim() === '') {
+            nameInput.remove(); // xóa nếu trống
+        }
+
+        updateSelectedBrands();
+        updatePriceInputs();
+    });
+
+</script>
+
+
+
+<script>
+    function toggleSortDropdown() {
+        const dropdown = document.getElementById("sortDropdownList");
+        dropdown.classList.toggle("show");
+    }
+
+    function mapSortLabel(sortBy, sortOrder) {
+        if (sortBy === "name" && sortOrder === "asc") return "Alphabetically, A-Z";
+        if (sortBy === "name" && sortOrder === "desc") return "Alphabetically, Z-A";
+        if (sortBy === "price" && sortOrder === "asc") return "Price, low to high";
+        if (sortBy === "price" && sortOrder === "desc") return "Price, high to low";
+        if (sortBy === "createdAt" && sortOrder === "desc") return "Date, new to old";
+        if (sortBy === "createdAt" && sortOrder === "asc") return "Date, old to new";
+        return "Select";
+    }
+
+    function parseSortValue(dataValue) {
+        switch (dataValue) {
+            case "title-ascending": return { sortBy: "name", sortOrder: "asc" };
+            case "title-descending": return { sortBy: "name", sortOrder: "desc" };
+            case "price-ascending": return { sortBy: "price", sortOrder: "asc" };
+            case "price-descending": return { sortBy: "price", sortOrder: "desc" };
+            case "created-descending": return { sortBy: "createdAt", sortOrder: "desc" };
+            case "created-ascending": return { sortBy: "createdAt", sortOrder: "asc" };
+            default: return null;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownItems = document.querySelectorAll("#sortDropdownList li");
+        const currentText = document.getElementById("currentSortText");
+
+        // ✅ Đọc từ URL để gán lại nhãn dropdown
+        const urlParams = new URLSearchParams(window.location.search);
+        const sortBy = urlParams.get("sortBy");
+        const sortOrder = urlParams.get("sortOrder");
+        const label = mapSortLabel(sortBy, sortOrder);
+        currentText.textContent = label;
+
+        // Khi click chọn sort mới
+        dropdownItems.forEach(item => {
+            item.addEventListener("click", function () {
+                const dataValue = this.getAttribute("data-value");
+                const sort = parseSortValue(dataValue);
+
+                if (sort) {
+                    const newUrl = new URL(window.location.href);
+                    newUrl.searchParams.set("sortBy", sort.sortBy);
+                    newUrl.searchParams.set("sortOrder", sort.sortOrder);
+                    newUrl.searchParams.set("pageNumber", 0); // Reset về trang đầu
+                    window.location.href = newUrl.toString();
+                }
+            });
+        });
+
+        // Đóng nếu click ra ngoài
+        document.addEventListener("click", function (event) {
+            const dropdown = document.getElementById("sortDropdownList");
+            const trigger = document.querySelector(".sort-button");
+            if (!dropdown.contains(event.target) && !trigger.contains(event.target)) {
+                dropdown.classList.remove("show");
+            }
+        });
+    });
+</script>
+
+
 </body>
 </html>
