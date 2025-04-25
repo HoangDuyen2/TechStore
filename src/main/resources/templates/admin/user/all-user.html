@@ -89,11 +89,7 @@
                                         <ul class="list">
                                             <li class="user-item gap14" th:each="eachUser : ${users}">
                                                 <div class="image">
-                                                    <img th:if="${eachUser.getImage().startsWith('https')}"
-                                                         th:src="${eachUser.getImage()}"
-                                                         alt="Ảnh người dùng mặc định">
-                                                    <img th:unless="${eachUser.getImage().startsWith('https')}"
-                                                         th:src="@{'/uploads/' + ${eachUser.getImage()}}"
+                                                    <img th:src="${eachUser.getImage()}"
                                                          alt="Ảnh người dùng mặc định">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
