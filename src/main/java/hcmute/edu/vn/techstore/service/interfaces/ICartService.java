@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface ICartService {
     CartResponse getCart(String email);
+    void addCart(CartResponse cart, String email);
 }

@@ -5,7 +5,9 @@ import hcmute.edu.vn.techstore.dto.response.CartDetailResponse;
 import hcmute.edu.vn.techstore.dto.response.CartResponse;
 import hcmute.edu.vn.techstore.dto.response.ProductResponse;
 import hcmute.edu.vn.techstore.entity.CartEntity;
+import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.CartRepository;
+import hcmute.edu.vn.techstore.repository.UserRepository;
 import hcmute.edu.vn.techstore.service.interfaces.ICartService;
 import hcmute.edu.vn.techstore.utils.PriceUtil;
 import lombok.AllArgsConstructor;
@@ -20,6 +22,7 @@ import java.util.Optional;
 public class CartServiceImpl implements ICartService {
     private final CartRepository cartRepository;
     private final CartConverter cartConverter;
+    private final UserRepository userRepository;
     private final PriceUtil priceUtil;
 
     @Override
@@ -34,6 +37,18 @@ public class CartServiceImpl implements ICartService {
         return cartResponse;
     }
 
+    @Override
+    public void addCart(CartResponse cart, String email) {
+        if (cart == null) {
+            UserEntity user = userRepository.findByAccount_Email(email).orElse(null);
+            CartEntity cartEntity = CartEntity.builder()
+                    .totalPrice(BigDecimal.ZERO)
+                    .build();
+            user.setCart(cartEntity);
+            userRepository.save(user);
+        }
+    }
+
     public BigDecimal totalPrice(CartResponse cartResponse) {
         List<CartDetailResponse> cartDetailResponseList = cartResponse.getCartDetails();
         BigDecimal totalPrice = BigDecimal.ZERO;
@@ -42,5 +57,6 @@ public class CartServiceImpl implements ICartService {
         }
         return totalPrice;
     }
+
 
 }

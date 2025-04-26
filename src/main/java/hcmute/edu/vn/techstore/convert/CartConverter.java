@@ -19,7 +19,8 @@ public class CartConverter {
 
     public CartResponse toCartResponse(CartEntity cartEntity) {
         CartResponse cartResponse = new CartResponse();
-        cartResponse.setCartDetails(cartDetailService.getAllCartDetail(cartEntity.getUser().getAccount().getEmail()));
+        cartDetailService.getAllCartDetail(cartEntity.getUser().getAccount().getEmail());
+        cartResponse.setCartDetails(cartDetailService.getAllCartDetailActived());
         return cartResponse;
     }
 }
