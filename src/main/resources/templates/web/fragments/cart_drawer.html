@@ -18,7 +18,7 @@
         <div class="drawer-inner cart-fill" th:if="${cart} != null">
             <div class="drawer-scrollable">
                 <ul class="cart-items" th:each="eachCart : ${cart.cartDetails}">
-                    <li class="cart-item">
+                    <li class="cart-item" th:data-product-id="${eachCart.product.id}">
                         <div class="cart-item-wrap">
                             <div class="cart-item-image">
                                 <a href="product-template.html">
@@ -47,14 +47,22 @@
                                     <div class="cart-item-qty">
                                         <div class="js-qty-wrapper">
                                             <div class="js-qty-wrap">
-                                                <button type="button" class="js-qty-adjust js-qty-adjust-minus" aria-label="Remove item"><span><i class="feather-minus"></i></span></button>
+                                                <button type="button" class="js-qty-adjust js-qty-adjust-minus" onclick="decreaseQuantity(this)" aria-label="Remove item">
+                                                    <span><i class="feather-minus"></i></span>
+                                                </button>
+
                                                 <input type="number" name="refractometers-s-red" class="js-qty-num" th:value="${eachCart.quantity}" min="1">
-                                                <button type="button" class="js-qty-adjust js-qty-adjust-plus" aria-label="Add item"><span><i class="feather-plus"></i></span></button>
+
+                                                <button type="button" class="js-qty-adjust js-qty-adjust-plus" onclick="increaseQuantity(this)" aria-label="Add item">
+                                                    <span><i class="feather-plus"></i></span>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="cart-item-remove">
-                                        <button type="submit" class="cart-remove text-danger" aria-label="Remove item"><i class="feather-trash-2"></i></button>
+                                        <button type="button" class="cart-remove text-danger" onclick="deleteItem(this)" aria-label="Remove item">
+                                            <i class="feather-trash-2"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>

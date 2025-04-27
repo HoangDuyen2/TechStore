@@ -19,10 +19,17 @@ public class CartConverter {
     private final ICartDetailService cartDetailService;
     private final PriceUtil priceUtil;
 
-    public CartResponse toCartResponse(CartEntity cartEntity) {
+    public CartResponse toCartResponseActived(CartEntity cartEntity) {
         CartResponse cartResponse = new CartResponse();
         CartDetailWrapper cartDetailWrapper = cartDetailService.getAllCartDetail(cartEntity.getUser().getAccount().getEmail());
         cartResponse.setCartDetails(cartDetailWrapper.getActiveCartDetails());
+        return cartResponse;
+    }
+
+    public CartResponse toCartResponseInActived(CartEntity cartEntity) {
+        CartResponse cartResponse = new CartResponse();
+        CartDetailWrapper cartDetailWrapper = cartDetailService.getAllCartDetail(cartEntity.getUser().getAccount().getEmail());
+        cartResponse.setCartDetails(cartDetailWrapper.getInactiveCartDetails());
         return cartResponse;
     }
 }

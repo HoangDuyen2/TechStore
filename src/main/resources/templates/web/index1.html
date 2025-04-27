@@ -1680,6 +1680,11 @@
 <!-- back-to-top start -->
 <a href="javascript:void(0)" id="top" class="scroll"><span><i class="feather-arrow-up"></i></span></a>
 <!-- back-to-top end -->
+</body>
+<!-- plugin js -->
+<script th:src="@{/web/assert/js/plugin.js}"></script>
+<!-- theme js -->
+<script th:src="@{/web/assert/js/main.js}"></script>
 <script>
     function addToCart(button) {
         const productId = button.getAttribute('data-product-id');
@@ -1704,11 +1709,72 @@
             });
     }
 </script>
+<script>
+    function increaseQuantity(button) {
+        console.log("increaseQuantity called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/add-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Tăng số lượng thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function decreaseQuantity(button) {
+        console.log("decreaseQuantity called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/decrease-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Giảm số lượng thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function deleteItem(button) {
+        console.log("deleteItem called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/delete-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Xóa sản phẩm thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function getProductId(button) {
+        const cartItem = button.closest('.cart-item');
+        return cartItem ? cartItem.getAttribute('data-product-id') : null;
+    }
+</script>
 
 
-<!-- plugin js -->
-<script th:src="@{/web/assert/js/plugin.js}"></script>
-<!-- theme js -->
-<script th:src="@{/web/assert/js/main.js}"></script>
-</body>
 </html>

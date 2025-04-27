@@ -34,7 +34,20 @@ public class CartServiceImpl implements ICartService {
         if (cartEntity == null) {
             return null;
         }
-        CartResponse cartResponse = cartConverter.toCartResponse(cartEntity);
+        CartResponse cartResponse = cartConverter.toCartResponseActived(cartEntity);
+        cartResponse.setTotalPrice(priceUtil.formatPrice(totalPrice(cartResponse)));
+        cartEntity.setTotalPrice(totalPrice(cartResponse));
+        cartRepository.save(cartEntity);
+        return cartResponse;
+    }
+
+    public CartResponse getAllCartDetailInactive(String email) {
+        CartEntity cartEntity = cartRepository.findByCart_User_Account_Email(email).orElse(null);
+
+        if (cartEntity == null) {
+            return null;
+        }
+        CartResponse cartResponse = cartConverter.toCartResponseInActived(cartEntity);
         cartResponse.setTotalPrice(priceUtil.formatPrice(totalPrice(cartResponse)));
         return cartResponse;
     }
@@ -47,6 +60,7 @@ public class CartServiceImpl implements ICartService {
             cartEntity = CartEntity.builder()
                     .totalPrice(BigDecimal.ZERO)
                     .build();
+            cartRepository.save(cartEntity);
             user.setCart(cartEntity);
             userRepository.save(user);
         }
@@ -64,5 +78,13 @@ public class CartServiceImpl implements ICartService {
         return totalPrice;
     }
 
+    public Long getCartId(String email) {
+        Optional<CartEntity> cartEntity = Optional.ofNullable(cartRepository.findByCart_User_Account_Email(email).orElse(null));
+        return cartEntity.map(CartEntity::getId).orElse(null);
+    }
+
+    public void deleteAllCartDetails(String email){
+        cartDetailService.deleteAllCartDetail(email);
+    }
 
 }

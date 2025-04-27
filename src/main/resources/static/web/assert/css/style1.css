@@ -6596,3 +6596,12 @@ a.np-product:hover img {
 .product-detail-info .product-info .product-social ul.pro-social-icon li a.pinterest {
     color: #bd081c;
 }
+
+.disabled-item {
+    background-color: #d3d3d3;
+    pointer-events: none;
+}
+
+.disabled-item .item-remove {
+    pointer-events: auto; /* Nhưng riêng nút Remove vẫn cho phép click */
+}
