@@ -83,8 +83,8 @@ public class CartServiceImpl implements ICartService {
         return cartEntity.map(CartEntity::getId).orElse(null);
     }
 
-    public void deleteAll(String email){
-
+    public void deleteAllCartDetails(String email){
+        cartDetailService.deleteAllCartDetail(email);
     }
 
 }

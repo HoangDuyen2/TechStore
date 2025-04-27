@@ -49,7 +49,7 @@
             </section>
             <!-- breadcrumb end -->
             <!-- cart-page start -->
-            <section class="cart-page section-ptb" th:if="${cart == null}">
+            <section class="cart-page section-ptb" th:if="${cart == null||cart.cartDetails == null && cartDetailsInActived == null}">
                 <div class="container">
                     <div class="row">
                         <div class="col">
@@ -70,7 +70,7 @@
                 </div>
             </section>
 
-            <section class="cart-page section-ptb" th:unless="${cart == null}">
+            <section class="cart-page section-ptb" th:unless="${cart == null||cart.cartDetails == null && cartDetailsInActived == null}">
                 <form method="post">
                     <div class="container">
                         <div class="row">

@@ -25,7 +25,9 @@ public class CartController {
     @GetMapping("/carts")
     public String cartPage(Model model) {
         CartResponse cartResponse = cartService.getAllCartDetailInactive(SecurityUtils.getCurrentUsername());
-        model.addAttribute("cartDetailsInActived", cartResponse.getCartDetails());
+        if (cartResponse != null) {
+            model.addAttribute("cartDetailsInActived", cartResponse.getCartDetails());
+        }
         return "web/cart-page";
     }
 
@@ -53,7 +55,7 @@ public class CartController {
     }
     @GetMapping("/delete-all")
     public String deleteAllCartDetail() {
-        cartDetailService.deleteAllCartDetail(SecurityUtils.getCurrentUsername());
-        return "web/cart-page";
+        cartService.deleteAllCartDetails(SecurityUtils.getCurrentUsername());
+        return "redirect:/carts";
     }
 }
