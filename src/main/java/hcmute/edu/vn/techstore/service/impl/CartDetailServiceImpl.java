@@ -83,4 +83,12 @@ public class CartDetailServiceImpl implements ICartDetailService {
         cartDetailRepository.save(cartDetailEntity);
     }
 
+    @Override
+    public void deleteAllCartDetail(String email){
+        List<CartDetailEntity> cartDetailEntities = cartDetailRepository.findAllByCart_User_Account_Email(email);
+        for (CartDetailEntity cartDetailEntity : cartDetailEntities) {
+            cartDetailRepository.delete(cartDetailEntity);
+        }
+    }
+
 }

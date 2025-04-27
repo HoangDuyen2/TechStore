@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class CartController {
@@ -22,6 +24,8 @@ public class CartController {
 
     @GetMapping("/carts")
     public String cartPage(Model model) {
+        CartResponse cartResponse = cartService.getAllCartDetailInactive(SecurityUtils.getCurrentUsername());
+        model.addAttribute("cartDetailsInActived", cartResponse.getCartDetails());
         return "web/cart-page";
     }
 
@@ -46,5 +50,10 @@ public class CartController {
         Long cartId = cartService.getCartId(SecurityUtils.getCurrentUsername());
         cartDetailService.deleteCartDetail(productId, cartId);
         return "Xóa sản phẩm trong giỏ hàng thành công!";
+    }
+    @GetMapping("/delete-all")
+    public String deleteAllCartDetail() {
+        cartDetailService.deleteAllCartDetail(SecurityUtils.getCurrentUsername());
+        return "web/cart-page";
     }
 }

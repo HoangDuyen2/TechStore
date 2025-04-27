@@ -81,251 +81,130 @@
                                             <div class="cart-title" data-animate="animate__fadeInUp">
                                                 <h6>My cart:</h6>
                                                 <span class="cart-count">
-                                                    <span class="cart-counter">3</span>
-                                                    <span class="cart-item-title">Item</span>
+                                                    <span class="cart-counter" th:text="${cart.cartDetails.size()  + cartDetailsInActived.size()} "></span>
+                                                    <span class="cart-item-title"> Item</span>
                                                 </span>
                                             </div>
-                                            <div class="item-wrap">
-                                                <ul class="cart-wrap">
+                                            <div class="item-wrap" th:each="eachCart : ${cart.cartDetails}">
+                                                <ul class="cart-wrap" th:data-product-id="${eachCart.product.id}">
                                                     <!-- cart-info start -->
-                                                    <li class="item-info" data-animate="animate__fadeInUp">
+                                                    <li class="item-info" data-animate="animate__fadeInUp" >
+                                                        <!-- Thêm checkbox vào đây -->
+                                                        <input type="checkbox" class="cart-checkbox" style="margin: 10px" onchange="toggleOrderButton()" />
                                                         <!-- cart-img start -->
                                                         <div class="item-img">
                                                             <a href="product-template.html">
-                                                                <img th:src="@{/web/assert/image/home1/product/product-54.jpg}" class="img-fluid" alt="p-1">
+                                                                <img th:src="${eachCart.product.getThumbnail()}" class="img-fluid" alt="p-1">
                                                             </a>
                                                         </div>
                                                         <!-- cart-img end -->
                                                         <!-- cart-title start -->
                                                         <div class="item-text">
-                                                            <a href="product-template.html">Bluetooth earbuds</a>
+                                                            <a href="product-template.html" th:text="${eachCart.product.name}"></a>
                                                             <span class="item-option">
-                                                                <span class="item-title">Color:</span>
-                                                                <span class="item-type">Black</span>
-                                                            </span>
-                                                            <span class="item-option">
-                                                                <span class="item-price">$11,00</span>
-                                                            </span>
+                                                            <span class="item-title">OS:</span>
+                                                            <span class="item-type" th:text="${eachCart.product.operatingSystem}"></span>
+                                                        </span>
+                                                                                                        <span class="item-option">
+                                                            <span class="item-price" th:text="${eachCart.product.price}"></span>
+                                                        </span>
                                                         </div>
                                                         <!-- cart-title send -->
                                                     </li>
                                                     <!-- cart-info end -->
+
                                                     <!-- cart-qty start -->
                                                     <li class="item-qty" data-animate="animate__fadeInUp">
                                                         <div class="product-quantity-action">
                                                             <div class="product-quantity">
                                                                 <div class="cart-plus-minus">
-                                                                    <button class="dec qtybutton minus"><i class="fa-solid fa-minus"></i></button>
-                                                                    <input type="text" name="quantity" value="1">
-                                                                    <button class="inc qtybutton plus"><i class="fa-solid fa-plus"></i></button>
+                                                                    <button class="dec qtybutton minus" onclick="decreaseQuantity(this)">
+                                                                        <i class="fa-solid fa-minus"></i>
+                                                                    </button>
+                                                                    <input type="text" name="quantity" th:value="${eachCart.quantity}" min="1">
+                                                                    <button class="inc qtybutton plus" onclick="increaseQuantity(this)">
+                                                                        <i class="fa-solid fa-plus"></i>
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="item-remove">
-                                                            <span class="remove-wrap">
-                                                                <a href="javascript:void(0)" class="text-danger">Remove</a>
-                                                            </span>
+            <span class="remove-wrap">
+                <a href="javascript:void(0)" class="text-danger" onclick="deleteItem(this)">Remove</a>
+            </span>
                                                         </div>
                                                     </li>
                                                     <!-- cart-qty end -->
+
                                                     <!-- cart-price start -->
                                                     <li class="item-price" data-animate="animate__fadeInUp">
-                                                        <span class="amount full-price">$11,00</span>
+                                                        <span class="amount full-price" th:text="${eachCart.totalPriceRow}"></span>
                                                     </li>
                                                     <!-- cart-price end -->
                                                 </ul>
-                                                <ul class="cart-wrap">
+                                            </div>
+                                            <div class="item-wrap" th:each="eachCart : ${cartDetailsInActived}">
+                                                <ul class="cart-wrap disabled-item" th:data-product-id="${eachCart.product.id}">
                                                     <!-- cart-info start -->
-                                                    <li class="item-info" data-animate="animate__fadeInUp">
+                                                    <li class="item-info" data-animate="animate__fadeInUp" >
                                                         <!-- cart-img start -->
                                                         <div class="item-img">
                                                             <a href="product-template.html">
-                                                                <img th:src="@{/web/assert/image/home1/product/product-7.jpg}" class="img-fluid" alt="p-1">
+                                                                <img th:src="${eachCart.product.getThumbnail()}" class="img-fluid" alt="p-1">
                                                             </a>
                                                         </div>
                                                         <!-- cart-img end -->
                                                         <!-- cart-title start -->
                                                         <div class="item-text">
-                                                            <a href="product-template.html">Portable speaker</a>
+                                                            <a href="product-template.html" th:text="${eachCart.product.name}"></a>
                                                             <span class="item-option">
-                                                                <span class="item-title">Color:</span>
-                                                                <span class="item-type">White</span>
-                                                            </span>
+                                                            <span class="item-title">OS:</span>
+                                                            <span class="item-type" th:text="${eachCart.product.operatingSystem}"></span>
+                                                        </span>
                                                             <span class="item-option">
-                                                                <span class="item-price">$21,00</span>
-                                                            </span>
+                                                            <span class="item-price" th:text="${eachCart.product.price}"></span>
+                                                        </span>
                                                         </div>
                                                         <!-- cart-title send -->
                                                     </li>
                                                     <!-- cart-info end -->
+
                                                     <!-- cart-qty start -->
                                                     <li class="item-qty" data-animate="animate__fadeInUp">
                                                         <div class="product-quantity-action">
                                                             <div class="product-quantity">
                                                                 <div class="cart-plus-minus">
-                                                                    <button class="dec qtybutton minus"><i class="fa-solid fa-minus"></i></button>
-                                                                    <input type="text" name="quantity" value="1">
-                                                                    <button class="inc qtybutton plus"><i class="fa-solid fa-plus"></i></button>
+                                                                    <button class="dec qtybutton minus" onclick="decreaseQuantity(this)">
+                                                                        <i class="fa-solid fa-minus"></i>
+                                                                    </button>
+                                                                    <input type="text" name="quantity" th:value="${eachCart.quantity}" min="1">
+                                                                    <button class="inc qtybutton plus" onclick="increaseQuantity(this)">
+                                                                        <i class="fa-solid fa-plus"></i>
+                                                                    </button>
                                                                 </div>
-                                                                <span class="dec qtybtn"></span>
-                                                                <span class="inc qtybtn"></span>
                                                             </div>
                                                         </div>
                                                         <div class="item-remove">
                                                             <span class="remove-wrap">
-                                                                <a href="javascript:void(0)" class="text-danger">Remove</a>
+                                                                <a href="javascript:void(0)" class="text-danger" onclick="deleteItem(this)">Remove</a>
                                                             </span>
                                                         </div>
                                                     </li>
                                                     <!-- cart-qty end -->
+
                                                     <!-- cart-price start -->
                                                     <li class="item-price" data-animate="animate__fadeInUp">
-                                                        <span class="amount full-price">$21,00</span>
-                                                    </li>
-                                                    <!-- cart-price end -->
-                                                </ul>
-                                                <ul class="cart-wrap">
-                                                    <!-- cart-info start -->
-                                                    <li class="item-info" data-animate="animate__fadeInUp">
-                                                        <!-- cart-img start -->
-                                                        <div class="item-img">
-                                                            <a href="product-template.html">
-                                                                <img th:src="@{/web/assert/image/home1/product/product-31.jpg}" class="img-fluid" alt="p-1">
-                                                            </a>
-                                                        </div>
-                                                        <!-- cart-img end -->
-                                                        <!-- cart-title start -->
-                                                        <div class="item-text">
-                                                            <a href="product-template.html">Verse earphones</a>
-                                                            <span class="item-option">
-                                                                <span class="item-title">Color:</span>
-                                                                <span class="item-type">Red</span>
-                                                            </span>
-                                                            <span class="item-option">
-                                                                <span class="item-price">$24,00</span>
-                                                            </span>
-                                                        </div>
-                                                        <!-- cart-title send -->
-                                                    </li>
-                                                    <!-- cart-info end -->
-                                                    <!-- cart-qty start -->
-                                                    <li class="item-qty" data-animate="animate__fadeInUp">
-                                                        <div class="product-quantity-action">
-                                                            <div class="product-quantity">
-                                                                <div class="cart-plus-minus">
-                                                                    <button class="dec qtybutton minus"><i class="fa-solid fa-minus"></i></button>
-                                                                    <input type="text" name="quantity" value="1">
-                                                                    <button class="inc qtybutton plus"><i class="fa-solid fa-plus"></i></button>
-                                                                </div>
-                                                                <span class="dec qtybtn"></span>
-                                                                <span class="inc qtybtn"></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="item-remove">
-                                                            <span class="remove-wrap">
-                                                                <a href="javascript:void(0)" class="text-danger">Remove</a>
-                                                            </span>
-                                                        </div>
-                                                    </li>
-                                                    <!-- cart-qty end -->
-                                                    <!-- cart-price start -->
-                                                    <li class="item-price" data-animate="animate__fadeInUp">
-                                                        <span class="amount full-price">$24,00</span>
+                                                        <span class="amount full-price" th:text="${eachCart.totalPriceRow}"></span>
                                                     </li>
                                                     <!-- cart-price end -->
                                                 </ul>
                                             </div>
                                             <div class="cart-buttons" data-animate="animate__fadeInUp">
-                                                <a href="collection.html" class="btn-style2">Continue shopping</a>
-                                                <a href="cart-empty.html" class="btn-style2">Clear cart</a>
+                                                <a th:href="@{/products}" class="btn-style2">Continue shopping</a>
+                                                <a th:href="@{/delete-all}" class="btn-style2">Clear cart</a>
                                             </div>
-                                        </div>
-                                        <div class="special-notes" data-animate="animate__fadeInUp">
-                                            <label>Special instructions for seller</label>
-                                            <textarea rows="10" name="note"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="cart-info-wrap">
-                                        <div class="cart-calculator cart-info">
-                                            <h6 data-animate="animate__fadeInUp">Shipping info</h6>
-                                            <div class="culculate-shipping" id="shipping-calculator">
-                                                <ul>
-                                                    <li class="field" data-animate="animate__fadeInUp">
-                                                        <label>Country</label>
-                                                        <select>
-                                                            <option>India</option>
-                                                            <option>Afghanistan</option>
-                                                            <option>Austria </option>
-                                                            <option>Belgium</option>
-                                                            <option>Bhutan</option>
-                                                            <option>Canada</option>
-                                                            <option>France</option>
-                                                            <option>Germany</option>
-                                                            <option>Maldives</option>
-                                                            <option>Nepal</option>
-                                                        </select>
-                                                    </li>
-                                                    <li class="field" data-animate="animate__fadeInUp">
-                                                        <label>State</label>
-                                                        <select>
-                                                            <option>Gujarat</option>
-                                                            <option>Andaman and Nicobar Islands</option>
-                                                            <option>Andhra Pradesh</option>
-                                                            <option>Bihar</option>
-                                                            <option>Chandigarh</option>
-                                                            <option>Delhi</option>
-                                                            <option>Haryana</option>
-                                                            <option>Jammu and Kashmir</option>
-                                                            <option>Karnataka</option>
-                                                            <option>Ladakh</option>
-                                                        </select>
-                                                    </li>
-                                                    <li class="field cpn-code" data-animate="animate__fadeInUp">
-                                                        <label>Postal/Zip Codes</label>
-                                                        <input type="text" name="q" placeholder="Zip/Postal Code">
-                                                    </li>
-                                                </ul>
-                                                <div class="shipping-info" data-animate="animate__fadeInUp">
-                                                    <a href="javascript:void(0)" class="btn btn-style2">Calculate</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="cart-total-wrap cart-info">
-                                            <div class="cart-total">
-                                                <div class="total-amount">
-                                                    <h6 class="total-title" data-animate="animate__fadeInUp">Total</h6>
-                                                    <span class="amount total-price" data-animate="animate__fadeInUp">$56.00</span>
-                                                </div>
-                                                <div class="proceed-to-discount" data-animate="animate__fadeInUp">
-                                                    <input type="text" name="discount" placeholder="Discount code">
-                                                </div>
-                                                <div class="proceed-to-checkout" data-animate="animate__fadeInUp">
-                                                    <a href="checkout-style1.html" class="btn btn-style2">Checkout</a>
-                                                </div>
-                                                <div class="cart-payment-icon" data-animate="animate__fadeInUp">
-                                                    <ul class="payment-icon">
-                                                        <li>
-                                                            <a href="index1.html">
-                                                                <img th:src="@{/web/assert/image/home1/payment/pay-2.jpg}" class="img-fluid" alt="pay-1">
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="index1.html">
-                                                                <img th:src="@{/web/assert/image/home1/payment/pay-3.jpg}" class="img-fluid" alt="pay-2">
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="index1.html">
-                                                                <img th:src="@{/web/assert/image/home1/payment/pay-4.jpg}" class="img-fluid" alt="pay-3">
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="index1.html">
-                                                                <img th:src="@{/web/assert/image/home1/payment/pay-6.jpg}" class="img-fluid" alt="pay-4">
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                            <div style="margin-top: 20px; text-align: center;">
+                                                <button id="orderButton" class="btn-style2" style="display: none;">Order</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1959,10 +1838,105 @@
         <a href="javascript:void(0)" id="top" class="scroll"><span><i class="feather-arrow-up"></i></span></a>
         <!-- back-to-top end -->
         <!-- plugin js -->
-        <script th:src="@{/web/assert/js/plugin.js}"></script>
-        <!-- theme js -->
-        <script th:src="@{/web/assert/js/main.js}"></script>
+
     </body>
+<script th:src="@{/web/assert/js/plugin.js}"></script>
+<!-- theme js -->
+<script th:src="@{/web/assert/js/main.js}"></script>
+<script>
+    // Hàm gọi tới phương thức add-cart
+    function increaseQuantity(button) {
+        const productId = getProductId(button);  // Lấy productId từ phần tử HTML
+
+        fetch(window.location.origin + "/add-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Tăng số lượng thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    // Hàm gọi tới phương thức decrease-cart
+    function decreaseQuantity(button) {
+        const productId = getProductId(button);  // Lấy productId từ phần tử HTML
+
+        fetch(window.location.origin + "/decrease-cart?productId=" + productId )
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Giảm số lượng thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    // Hàm gọi tới phương thức delete-cart
+    function deleteItem(link) {
+        const productId = getProductId(link);  // Lấy productId từ phần tử HTML
+
+        fetch(window.location.origin + "/delete-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Xóa sản phẩm thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    // Hàm lấy productId từ phần tử HTML
+    function getProductId(element) {
+        const listItem = element.closest('ul');
+        const productId = listItem ? listItem.getAttribute('data-product-id') : null;
+        console.log('Product ID:', productId);  // Log productId để kiểm tra
+        return productId;
+    }
+</script>
+<script>
+    function toggleOrderButton() {
+        const checkboxes = document.querySelectorAll('.cart-checkbox');
+        const orderButton = document.getElementById('orderButton');
+
+        let atLeastOneChecked = false;
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                atLeastOneChecked = true;
+            }
+        });
+
+        if (atLeastOneChecked) {
+            orderButton.style.display = 'inline-block';
+        } else {
+            orderButton.style.display = 'none';
+        }
+    }
+</script>
+
+
+
 
 <!-- Mirrored from spacingtech.com/html/etro/etro/cart-page.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Mar 2025 13:01:55 GMT -->
 </html>
