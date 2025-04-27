@@ -63,4 +63,24 @@ public class CartDetailServiceImpl implements ICartDetailService {
         else cartDetailEntity.setQuantity(cartDetailEntity.getQuantity()+1);
         cartDetailRepository.save(cartDetailEntity);
     }
+
+    @Override
+    public void deleteCartDetail(Long productId, Long cartId) {
+        CartDetailEntity cartDetailEntity = cartDetailRepository.findByCart_IdAndAndProduct_Id(cartId, productId);
+        if (cartDetailEntity == null) {
+            throw new RuntimeException("Not found this product");
+        }
+        cartDetailRepository.delete(cartDetailEntity);
+    }
+
+    @Override
+    public void decreaseCartDetail(Long productId, Long cartId) {
+        CartDetailEntity cartDetailEntity = cartDetailRepository.findByCart_IdAndAndProduct_Id(cartId, productId);
+        if (cartDetailEntity == null) {
+            throw new RuntimeException("Not found this product");
+        }
+        else cartDetailEntity.setQuantity(cartDetailEntity.getQuantity()-1);
+        cartDetailRepository.save(cartDetailEntity);
+    }
+
 }

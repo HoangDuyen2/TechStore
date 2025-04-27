@@ -36,6 +36,8 @@ public class CartServiceImpl implements ICartService {
         }
         CartResponse cartResponse = cartConverter.toCartResponse(cartEntity);
         cartResponse.setTotalPrice(priceUtil.formatPrice(totalPrice(cartResponse)));
+        cartEntity.setTotalPrice(totalPrice(cartResponse));
+        cartRepository.save(cartEntity);
         return cartResponse;
     }
 
@@ -64,5 +66,9 @@ public class CartServiceImpl implements ICartService {
         return totalPrice;
     }
 
+    public Long getCartId(String email) {
+        Optional<CartEntity> cartEntity = Optional.ofNullable(cartRepository.findByCart_User_Account_Email(email).orElse(null));
+        return cartEntity.map(CartEntity::getId).orElse(null);
+    }
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface ICartDetailService {
     CartDetailWrapper getAllCartDetail(String email);
-
     void addCartDetail(Long productId, Long cartId);
+    void deleteCartDetail(Long productId, Long cartId);
+    void decreaseCartDetail(Long productId, Long cartId);
 }
