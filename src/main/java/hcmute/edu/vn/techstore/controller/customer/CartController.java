@@ -9,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,8 +23,9 @@ public class CartController {
     }
 
     @GetMapping("/add-cart")
-    public String addCart(Model model) {
-        cartService.addCart((CartResponse) model.getAttribute("cart"), SecurityUtils.getCurrentUsername());
-        return "web/index1";
+    @ResponseBody
+    public String addCart(@RequestParam("productId") Long productId) {
+        cartService.addCart(productId, SecurityUtils.getCurrentUsername());
+        return "Thêm sản phẩm vào giỏ hàng thành công!";
     }
 }

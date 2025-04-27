@@ -1,11 +1,13 @@
 package hcmute.edu.vn.techstore.service.interfaces;
 
 import hcmute.edu.vn.techstore.dto.response.CartDetailResponse;
+import hcmute.edu.vn.techstore.dto.response.CartDetailWrapper;
+import hcmute.edu.vn.techstore.entity.CartDetailEntity;
 
 import java.util.List;
 
 public interface ICartDetailService {
-    void getAllCartDetail(String email);
-    List<CartDetailResponse> getAllCartDetailInactive();
-    List<CartDetailResponse> getAllCartDetailActived();
+    CartDetailWrapper getAllCartDetail(String email);
+
+    void addCartDetail(Long productId, Long cartId);
 }

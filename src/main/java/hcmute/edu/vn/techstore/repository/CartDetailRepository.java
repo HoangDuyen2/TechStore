@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CartDetailRepository extends JpaRepository<CartDetailEntity, Long> {
     List<CartDetailEntity> findAllByCart_User_Account_Email(String email);
+    CartDetailEntity findByCart_IdAndAndProduct_Id(Long cart_id, Long product_id);
 }
