@@ -12,7 +12,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Table(name = "carts")
 public class CartEntity {
     @Id

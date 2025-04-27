@@ -9,7 +9,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Table(name = "cartdetails")
 public class CartDetailEntity {
     @Id

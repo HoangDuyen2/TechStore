@@ -5,7 +5,7 @@
                 <div class="main-menu-wrap">
                     <!-- header-logo start -->
                     <div class="header-theme-logo">
-                        <a href="index1.html" class="theme-logo">
+                        <a th:href="@{/home}" class="theme-logo">
                             <img th:src="@{/web/assert/image/home1/logo.png}" class="img-fluid" alt="logo">
                         </a>
                     </div>
@@ -93,29 +93,24 @@
                                     <div class="account-main">
                                         <span class="acc-title">Account</span>
                                         <div class="account-login">
-                                            <a href="create-account.html">Register</a>
-                                            <a href="login-account.html">Log in</a>
+                                            <a th:if="${#authentication.principal == 'anonymousUser'}" th:href="@{/register}">Register</a>
+                                            <a th:unless="${#authentication.principal == 'anonymousUser'}" th:text="${user.getFullName()}"></a>
+                                            <a th:if="${#authentication.principal == 'anonymousUser'}" th:href="@{/login}">Login</a>
+                                            <a th:unless="${#authentication.principal == 'anonymousUser'}" th:href="@{/logout}">Logout</a>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li class="side-wrap wishlist-wrap">
-                                <div class="wishlist-wrapper">
-                                    <a href="wishlist-product.html">
-                                                <span class="wishlist-icon-count">
-                                                    <span class="wishlist-icon"><i class="feather-heart"></i></span>
-                                                    <span class="wishlist-count">(5)</span>
-                                                </span>
-                                    </a>
                                 </div>
                             </li>
                             <li class="side-wrap cart-wrap">
                                 <div class="cart-wrapper">
                                     <a href="javascript:void(0)" class="js-cart-drawer">
-                                                <span class="cart-icon-count">
-                                                    <span class="cart-icon"><i class="feather-shopping-bag"></i></span>
-                                                    <span class="cart-count cart-counter">(4)</span>
-                                                </span>
+                                        <span class="cart-icon-count">
+                                            <span class="cart-icon"><i class="feather-shopping-bag"></i></span>
+                                            <span class="cart-count cart-counter"
+                                                  th:if="${#authentication.principal != 'anonymousUser'}"
+                                                  th:text="'(' + ${cart != null and cart.cartDetails != null ? cart.cartDetails.size() : 0} + ')'">
+                                            </span>
+                                        </span>
                                     </a>
                                 </div>
                             </li>
@@ -140,18 +135,9 @@
                                         <span class="menu-arrow"><i class="feather-chevron-down"></i></span>
                                     </a>
                                     <div class="menu-dropdown menu-single collapse">
-                                        <ul class="ul">
-                                            <li class="menusingle-li">
-                                                <a href="index1.html" class="menusingle-title">
-                                                    <span class="sp-link-title">Home 01</span>
-                                                </a>
-                                            </li>
-                                            <li class="menusingle-li">
-                                                <a href="index2.html" class="menusingle-title">
-                                                    <span class="sp-link-title">Home 02</span>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                        <a th:href="@{/home}" class="menusingle-title">
+                                            <span class="sp-link-title">Home</span>
+                                        </a>
                                     </div>
                                 </li>
                                 <li class="menu-link">
