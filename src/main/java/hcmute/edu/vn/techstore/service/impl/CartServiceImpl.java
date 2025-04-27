@@ -85,6 +85,9 @@ public class CartServiceImpl implements ICartService {
 
     public void deleteAllCartDetails(String email){
         cartDetailService.deleteAllCartDetail(email);
+        CartEntity cartEntity = cartRepository.findByCart_User_Account_Email(email).orElse(null);
+        cartEntity.setTotalPrice(BigDecimal.ZERO);
+        cartRepository.save(cartEntity);
     }
 
 }
