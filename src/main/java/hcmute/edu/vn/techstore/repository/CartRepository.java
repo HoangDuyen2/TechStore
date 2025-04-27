@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<CartEntity, Long> {
-    @Query("SELECT c.cart FROM CartDetailEntity c WHERE c.cart.user.account.email = :email")
+    @Query("SELECT c FROM CartEntity c WHERE c.user.account.email = :email")
     Optional<CartEntity> findByCart_User_Account_Email(@Param("email") String email);
     Optional<CartEntity> findById(Long cartId);
 }
