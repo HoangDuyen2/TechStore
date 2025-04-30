@@ -34,10 +34,10 @@
                                 <!-- breadcrumb-list start -->
                                 <ul class="breadcrumb-ul">
                                     <li class="breadcrumb-li">
-                                        <a class="breadcrumb-link" href="index1.html">Home</a>
+                                        <a class="breadcrumb-link" th:href="@{/home}">Home</a>
                                     </li>
                                     <li class="breadcrumb-li">
-                                        <span class="breadcrumb-text">Evm power bank</span>
+                                        <span class="breadcrumb-text" th:text="${product.getName()}"></span>
                                     </li>
                                 </ul>
                                 <!-- breadcrumb-list end -->
@@ -57,66 +57,26 @@
                                 <div class="product-detail-slider product-details-tb product-details product-details-sticky">
                                     <!-- Product slider start -->
                                     <div class="product-detail-img product-detail-img-bottom">
-                                        <div class="product-img-top" data-animate="animate__fadeInUp">
-                                            <button class="full-view"><i class="feather-maximize"></i></button>
-                                            <!-- blog slick slider start -->
-                                            <div class="slider-big-7 slick-slider">
-                                                <div class="slick-slide">
-                                                    <a th:href="@{/web/assert/image/home1/product/product-65.jpg}" class="product-single">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-65.jpg}" data-zoom="image/home1/product/product-65.jpg}" class="img-fluid zoom" alt="product-65">
-                                                    </a>
-                                                </div>
-                                                <div class="slick-slide">
-                                                    <a th:href="@{/web/assert/image/home1/product/product-66.jpg}" class="product-single">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-66.jpg}" data-zoom="image/home1/product/product-66.jpg}" class="img-fluid zoom" alt="product-66">
-                                                    </a>
-                                                </div>
-                                                <div class="slick-slide">
-                                                    <a th:href="@{/web/assert/image/home1/product/product-67.jpg}" class="product-single">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-67.jpg}" data-zoom="image/home1/product/product-67.jpg}" class="img-fluid zoom" alt="product-67">
-                                                    </a>
-                                                </div>
-                                                <div class="slick-slide">
-                                                    <a th:href="@{/web/assert/image/home1/product/product-68.jpg}" class="product-single">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-68.jpg}" data-zoom="image/home1/product/product-68.jpg}" class="img-fluid zoom" alt="product-68">
-                                                    </a>
-                                                </div>
-                                                <div class="slick-slide">
-                                                    <a th:href="@{/web/assert/image/home1/product/product-69.jpg}" class="product-single">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-69.jpg}" data-zoom="image/home1/product/product-69.jpg}" class="img-fluid zoom" alt="product-69">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+<!--                                        <div class="product-img-top" data-animate="animate__fadeInUp">-->
+<!--                                            <button class="full-view"><i class="feather-maximize"></i></button>-->
+<!--                                            &lt;!&ndash; blog slick slider start &ndash;&gt;-->
+<!--                                            <div class="slider-big-7 slick-slider">-->
+<!--                                                <div class="slick-slide" th:each="image : ${productImages.getExistingImagePaths()}">-->
+<!--                                                    <a class="product-single">-->
+<!--                                                        <img th:src="${image}" th:data-zoom="${image}" class="img-fluid zoom" alt="product-65">-->
+<!--                                                    </a>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
                                         <!-- blog slick slider end -->
                                         <!-- small slick-slider start -->
                                         <div class="pro-slider">
                                             <div class="slider-small-7 pro-detail-slider small-slider" data-animate="animate__fadeInUp">
-                                                <div class="slick-slide">
-                                                    <a href="javascript:void(0)" class="product-single--thumbnail">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-65.jpg}" class="img-fluid" alt="product-65">
-                                                    </a>
-                                                </div>
-                                                <div class="slick-slide">
-                                                    <a href="javascript:void(0)" class="product-single--thumbnail">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-66.jpg}" class="img-fluid" alt="product-66">
-                                                    </a>
-                                                </div>
-                                                <div class="slick-slide">
-                                                    <a href="javascript:void(0)" class="product-single--thumbnail">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-67.jpg}" class="img-fluid" alt="product-67">
-                                                    </a>
-                                                </div>
-                                                <div class="slick-slide">
-                                                    <a href="javascript:void(0)" class="product-single--thumbnail">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-68.jpg}" class="img-fluid" alt="product-68">
-                                                    </a>
-                                                </div>
-                                                <div class="slick-slide">
-                                                    <a href="javascript:void(0)" class="product-single--thumbnail">
-                                                        <img th:src="@{/web/assert/image/home1/product/product-69.jpg}" class="img-fluid" alt="product-69">
-                                                    </a>
-                                                </div>
+<!--                                                <div class="slick-slide" th:each="image : ${productImages.getExistingImagePaths()}">-->
+<!--                                                    <a href="javascript:void(0)" class="product-single&#45;&#45;thumbnail">-->
+<!--                                                        <img th:src="${image}" class="img-fluid" alt="product-65">-->
+<!--                                                    </a>-->
+<!--                                                </div>-->
                                             </div>
                                         </div>
                                         <!-- small slick-slider end -->
@@ -130,7 +90,7 @@
                                             <div class="product-info"  data-animate="animate__fadeInUp">
                                                 <!-- product-title start -->
                                                 <div class="product-title">
-                                                    <h2>Evm power bank</h2>
+                                                    <h2 th:text="${product.getName()}"></h2>
                                                 </div>
                                                 <!-- product-title end -->
                                             </div>
@@ -138,22 +98,29 @@
                                                 <!-- product-rating start -->
                                                 <div class="product-ratting">
                                                     <span class="pro-ratting">
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star-half-alt"></i>
+                                                        <th:block th:with="ratingCount=${product.star}">
+                                                            <!-- Loop for filled stars -->
+                                                            <th:block th:if="${ratingCount > 0}">
+                                                                <th:block th:each="i : ${#numbers.sequence(1, ratingCount)}">
+                                                                    <i class="fas fa-star"></i>
+                                                                </th:block>
+                                                            </th:block>
+                                                            <!-- Loop for empty stars -->
+                                                            <th:block th:if="${ratingCount < 5}">
+                                                                <th:block th:each="i : ${#numbers.sequence(1, (5 - ratingCount))}">
+                                                                    <i class="far fa-star"></i>
+                                                                </th:block>
+                                                            </th:block>
+                                                        </th:block>
                                                     </span>
-                                                    <span class="spr-badge-caption">2 Reviews</span>
+                                                    <span class="spr-badge-caption" th:text="${product.numberOfReviews != null ? product.numberOfReviews + ' Reviews' : '0 Reviews'}"></span>
                                                 </div>
                                                 <!-- product-rating end -->
                                             </div>
                                             <div class="product-info"  data-animate="animate__fadeInUp">
                                                 <div class="pro-prlb pro-sale">
                                                     <div class="price-box">
-                                                        <span class="new-price">$22.00</span>
-                                                        <span class="old-price">$45.00</span>
-                                                        <span class="percent-count">22</span>
+                                                        <span class="new-price" th:text="${product.price}"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -161,23 +128,23 @@
                                                 <div class="product-inventory">
                                                     <div class="stock-inventory stock-more">
                                                         <p class="text-success">Hurry up! only
-                                                            <span class="available-stock bg-success">51</span>
+                                                            <span class="available-stock bg-success" th:text="${product.stockQuantity}"></span>
                                                             <span>products left in stock!</span>
                                                         </p>
                                                     </div>
                                                     <div class="stock-inventory stock-zero collapse">
                                                         <p class="text-danger">Unfortunately
-                                                            <span class="available-stock bg-danger">51</span>
+                                                            <span class="available-stock bg-danger" th:text="${product.stockQuantity}"></span>
                                                             <span>products left in stock!</span>
                                                         </p>
                                                     </div>
                                                     <div class="product-variant">
                                                         <h6>Availability:</h6>
                                                         <span class="stock-qty in-stock text-success">
-                                                            <span>In stock<i class="bi bi-check2"></i></span>
+                                                            <span th:if="${product.stockQuantity >= 1}">In stock<i class="bi bi-check2"></i></span>
                                                         </span>
                                                         <span class="stock-qty out-stock text-danger collapse">
-                                                            <span>Out of stock</span>
+                                                            <span th:unless="${product.stockQuantity >= 1}">Out of stock</span>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -190,25 +157,9 @@
                                                                 <div class="swatch clearfix Color">
                                                                     <div class="header">
                                                                         <h6>
-                                                                        <span>Color:</span>
-                                                                        <span class="data-value">Black</span>
+                                                                        <span>Brand:</span>
+                                                                        <span class="data-value" th:text="${product.brandId.getName()}"></span>
                                                                         </h6>
-                                                                    </div>
-                                                                    <div class="variant-wrap">
-                                                                        <div class="variant-property">
-                                                                            <div class="swatch-element color Black">
-                                                                                <input type="radio" name="option-0" value="Black" checked>
-                                                                                <label>Black</label>
-                                                                            </div>
-                                                                            <div class="swatch-element color Gray">
-                                                                                <input type="radio" name="option-0" value="Gray">
-                                                                                <label>Gray</label>
-                                                                            </div>
-                                                                            <div class="swatch-element color Gold">
-                                                                                <input type="radio" name="option-0" value="Gold">
-                                                                                <label>Gold</label>
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -220,23 +171,10 @@
                                                 <form method="post" class="cart">
                                                     <div class="pro-detail-button">
                                                         <div class="product-quantity-button">
-                                                            <div class="product-quantity-action">
-                                                                <h6>Quantity:</h6>
-                                                                <div class="product-quantity">
-                                                                    <div class="cart-plus-minus">
-                                                                        <button class="dec qtybutton minus"><i class="feather-minus"></i></button>
-                                                                        <input type="text" name="quantity" value="1">
-                                                                        <button class="inc qtybutton plus"><i class="feather-plus"></i></button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
                                                             <button type="button" class="btn add-to-cart ajax-spin-cart">
-                                                            <span class="cart-title">Add to cart</span>
+                                                                <span class="cart-title">Add to cart</span>
                                                             </button>
                                                         </div>
-                                                        <a href="cart-empty.html" class="btn btn-cart btn-theme">
-                                                            <span>Buy now</span>
-                                                        </a>
                                                     </div>
                                                 </form>
                                             </div>
@@ -254,8 +192,8 @@
                                                             <div class="delivery-block">
                                                                 <div class="space-block">
                                                                     <h4 data-animate="animate__fadeInUp">Delivery</h4>
-                                                                    <p data-animate="animate__fadeInUp">All orders shipped with UPS Express.</p>
-                                                                    <p data-animate="animate__fadeInUp">Always free shipping for orders over US $250.</p>
+                                                                    <p data-animate="animate__fadeInUp">All orders shipped with Sendo Express.</p>
+                                                                    <p data-animate="animate__fadeInUp">Always free shipping for orders over 1.000.000đ.</p>
                                                                     <p data-animate="animate__fadeInUp">All orders are shipped with a UPS tracking number.</p>
                                                                 </div>
                                                                 <div class="space-block">
@@ -268,8 +206,8 @@
                                                                 <div class="space-block">
                                                                     <h4 data-animate="animate__fadeInUp">Help</h4>
                                                                     <p data-animate="animate__fadeInUp">Give us a shout if you have any other questions and/or concerns.</p>
-                                                                    <p data-animate="animate__fadeInUp">Email:<a href="mailto:contact@domain.com">demo@gmail.com</a></p>
-                                                                    <p data-animate="animate__fadeInUp">Phone:<a href="tel:+1(23)456789">+1 (23) 456 789</a></p>
+                                                                    <p data-animate="animate__fadeInUp">Email:<a href="mailto:admin@techstore.com">admin@techstore.com</a></p>
+                                                                    <p data-animate="animate__fadeInUp">Phone:<a href="tel:+(38)0332694718">+ (38) 033 269 4718</a></p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -285,20 +223,17 @@
                                                             <div class="product-form-list">
                                                                 <div class="single-product-wrap">
                                                                     <div class="product-image">
-                                                                        <a class="pro-img" href="collection.html">
-                                                                            <img class="img-fluid img1 resp-img1" th:src="@{/web/assert/image/home1/product/product-1.jpg}"
+                                                                        <a class="pro-img" th:href="@{/products}">
+                                                                            <img class="img-fluid img1 resp-img1" th:src="${product.thumbnail}"
                                                                             alt="p-1">
-                                                                            <img class="img-fluid img2 resp-img2" th:src="@{/web/assert/image/home1/product/product-2.jpg}"
-                                                                            alt="p-2">
                                                                         </a>
                                                                     </div>
                                                                     <div class="product-content">
                                                                         <div class="pro-title-price">
-                                                                            <h6><a href="product-template.html">Portable speaker</a></h6>
+                                                                            <h6><a th:href="@{/products/{id}(id=${product.getId()})}" th:text="${product.getName()}"></a></h6>
                                                                             <div class="product-price">
                                                                                 <div class="price-box">
-                                                                                    <span class="new-price">$24.00</span>
-                                                                                    <span class="old-price">$29.00</span>
+                                                                                    <span class="new-price" th:text="${product.price}"></span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -325,27 +260,8 @@
                                                 </div>
                                             </div>
                                             <div class="product-info" data-animate="animate__fadeInUp">
-                                                <p><span>🚚</span> Item will be delivered on or before <span id="ten-days-ahead">Mar 3 2025</span></p>
-                                            </div>
-                                            <div class="product-info" data-animate="animate__fadeInUp">
-                                                <div class="product-actions">
-                                                    <!-- pro-deatail wishlist start -->
-                                                    <div class="pro-aff-che">
-                                                        <a href="wishlist-product.html" class="wishlist">
-                                                            <span class="wishlist-icon action-wishlist tile-actions--btn wishlist-btn">
-                                                                <span class="add-wishlist"><i class="feather-heart"></i></span>
-                                                            </span>
-                                                            <span class="wishlist-text">Wishlist</span>
-                                                        </a>
-                                                    </div>
-                                                    <!-- pro-deatail wishlist end -->
-                                                </div>
-                                            </div>
-                                            <div class="product-info" data-animate="animate__fadeInUp">
-                                                <div class="product-sku">
-                                                    <h6>SKU:</h6>
-                                                    <span class="variant-sku">abccd-18</span>
-                                                </div>
+                                                    <span>🚚</span> Item will be delivered on or before
+                                                    <span id="delivery-date"></span>
                                             </div>
                                             <div class="product-info" data-animate="animate__fadeInUp">
                                                 <div class="share-icons">
@@ -2266,211 +2182,7 @@
         </div>
         <!-- mobile-menu end -->
         <!-- cart-drawer start -->
-        <div class="cart-drawer" id="cart-drawer">
-            <form method="post" action="javascript:void(0)" class="drawer-contents">
-                <div class="drawer-fixed-header">
-                    <div class="drawer-header">
-                        <h6 class="drawer-header-title">Cart</h6>
-                        <div class="drawer-close">
-                            <button type="button" class="drawer-close-btn" aria-label="Close"><span class="drawer-close-icon"><i class="feather-x"></i></span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="drawer-cart-empty cart-unfill">
-                    <div class="drawer-scrollable">
-                        <h2>Your cart is currently empty</h2>
-                        <a href="collection.html" class="btn-style2">Continue shopping</a>
-                    </div>
-                </div>
-                <div class="drawer-inner cart-fill">
-                    <div class="drawer-scrollable">
-                        <ul class="cart-items">
-                            <li class="cart-item">
-                                <div class="cart-item-wrap">
-                                    <div class="cart-item-image">
-                                        <a href="product-template.html"><img th:src="@{/web/assert/image/home1/cart/cart-1.jpg}" class="img-fluid" alt="p-1"></a>
-                                    </div>
-                                    <div class="cart-item-details">
-                                        <div class="cart-item-info">
-                                            <div class="cart-item-name">
-                                                <a href="product-template.html">Earbuds</a>
-                                            </div>
-                                            <div class="cart-item-variants">
-                                                <h6>Size:</h6>
-                                                <span>S</span>
-                                            </div>
-                                            <div class="cart-item-variants">
-                                                <h6>Color:</h6>
-                                                <span>White</span>
-                                            </div>
-                                        </div>
-                                        <div class="cart-item-price">
-                                            <h6>$79.00</h6>
-                                        </div>
-                                        <div class="cart-qty-remove">
-                                            <div class="cart-item-qty">
-                                                <div class="js-qty-wrapper">
-                                                    <div class="js-qty-wrap">
-                                                        <button type="button" class="js-qty-adjust js-qty-adjust-minus" aria-label="Remove item"><span><i class="feather-minus"></i></span></button>
-                                                        <input type="number" name="refractometers-s-red" class="js-qty-num" value="1" min="1">
-                                                        <button type="button" class="js-qty-adjust js-qty-adjust-plus" aria-label="Add item"><span><i class="feather-plus"></i></span></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="cart-item-remove">
-                                                <button type="submit" class="cart-remove text-danger" aria-label="Remove item"><i class="feather-trash-2"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="cart-item">
-                                <div class="cart-item-wrap">
-                                    <div class="cart-item-image">
-                                        <a href="product-template.html"><img th:src="@{/web/assert/image/home1/cart/cart-2.jpg}" class="img-fluid" alt="p-7"></a>
-                                    </div>
-                                    <div class="cart-item-details">
-                                        <div class="cart-item-info">
-                                            <div class="cart-item-name">
-                                                <a href="product-template.html">Sandisk ssd</a>
-                                            </div>
-                                            <div class="cart-item-variants">
-                                                <h6>Size:</h6>
-                                                <span>S</span>
-                                            </div>
-                                            <div class="cart-item-variants">
-                                                <h6>Color:</h6>
-                                                <span>Black</span>
-                                            </div>
-                                        </div>
-                                        <div class="cart-item-price">
-                                            <h6>$49.00</h6>
-                                        </div>
-                                        <div class="cart-qty-remove">
-                                            <div class="cart-item-qty">
-                                                <div class="js-qty-wrapper">
-                                                    <div class="js-qty-wrap">
-                                                        <button type="button" class="js-qty-adjust js-qty-adjust-minus" aria-label="Remove item"><span><i class="feather-minus"></i></span></button>
-                                                        <input type="number" name="digital-thermometer-s-red" class="js-qty-num" value="1" min="1">
-                                                        <button type="button" class="js-qty-adjust js-qty-adjust-plus" aria-label="Add item"><span><i class="feather-plus"></i></span></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="cart-item-remove">
-                                                <button type="submit" class="cart-remove text-danger" aria-label="Remove item"><i class="feather-trash-2"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="cart-item">
-                                <div class="cart-item-wrap">
-                                    <div class="cart-item-image">
-                                        <a href="product-template.html"><img th:src="@{/web/assert/image/home1/cart/cart-3.jpg}" class="img-fluid" alt="p-9"></a>
-                                    </div>
-                                    <div class="cart-item-details">
-                                        <div class="cart-item-info">
-                                            <div class="cart-item-name">
-                                                <a href="product-template.html">Router Wi-Fi 7</a>
-                                            </div>
-                                            <div class="cart-item-variants">
-                                                <h6>Size:</h6>
-                                                <span>S</span>
-                                            </div>
-                                            <div class="cart-item-variants">
-                                                <h6>Color:</h6>
-                                                <span>Black</span>
-                                            </div>
-                                        </div>
-                                        <div class="cart-item-price">
-                                            <h6>$69.00</h6>
-                                        </div>
-                                        <div class="cart-qty-remove">
-                                            <div class="cart-item-qty">
-                                                <div class="js-qty-wrapper">
-                                                    <div class="js-qty-wrap">
-                                                        <button type="button" class="js-qty-adjust js-qty-adjust-minus" aria-label="Remove item"><span><i class="feather-minus"></i></span></button>
-                                                        <input type="number" name="optical-microscope-s-red" class="js-qty-num" value="1" min="1">
-                                                        <button type="button" class="js-qty-adjust js-qty-adjust-plus" aria-label="Add item"><span><i class="feather-plus"></i></span></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="cart-item-remove">
-                                                <button type="submit" class="cart-remove text-danger" aria-label="Remove item"><i class="feather-trash-2"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="cart-item">
-                                <div class="cart-item-wrap">
-                                    <div class="cart-item-image">
-                                        <a href="product-template.html"><img th:src="@{/web/assert/image/home1/cart/cart-4.jpg}" class="img-fluid" alt="p-12"></a>
-                                    </div>
-                                    <div class="cart-item-details">
-                                        <div class="cart-item-info">
-                                            <div class="cart-item-name">
-                                                <a href="product-template.html">Smart phone</a>
-                                            </div>
-                                            <div class="cart-item-variants">
-                                                <h6>Size:</h6>
-                                                <span>S</span>
-                                            </div>
-                                            <div class="cart-item-variants">
-                                                <h6>Color:</h6>
-                                                <span>White</span>
-                                            </div>
-                                        </div>
-                                        <div class="cart-item-price">
-                                            <h6>$49.00</h6>
-                                        </div>
-                                        <div class="cart-qty-remove">
-                                            <div class="cart-item-qty">
-                                                <div class="js-qty-wrapper">
-                                                    <div class="js-qty-wrap">
-                                                        <button type="button" class="js-qty-adjust js-qty-adjust-minus" aria-label="Remove item"><span><i class="feather-minus"></i></span></button>
-                                                        <input type="number" name="dental-tools-s-red" class="js-qty-num" value="1" min="1">
-                                                        <button type="button" class="js-qty-adjust js-qty-adjust-plus" aria-label="Add item"><span><i class="feather-plus"></i></span></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="cart-item-remove">
-                                                <button type="submit" class="cart-remove text-danger" aria-label="Remove item"><i class="feather-trash-2"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="drawer-notes">
-                            <label for="cartnote">Order note</label>
-                            <textarea name="note" class="cart-notes" id="cartnote"></textarea>
-                        </div>
-                    </div>
-                    <div class="drawer-footer">
-                        <div class="drawer-total">
-                            <span class="drawer-subtotal">Subtotal</span>
-                            <h6 class="drawer-totalprice"><span class="total-cart">$246.00</span></h6>
-                        </div>
-                        <div class="drawer-ship-text">
-                            <span>Shipping, taxes, and discount codes calculated at checkout</span>
-                        </div>
-                        <div class="drawer-cart-checkout">
-                            <div class="wt-content">
-                                <div class="wt-content-btn">
-                                    <div class="wt-btn wt-full-btn">
-                                        <a href="cart-page.html" class="btn-style4">View cart</a>
-                                    </div>
-                                    <div class="wt-btn wt-full-btn">
-                                        <a href="checkout-style1.html" class="btn-style2">Checkout</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+        <div th:insert="~{web/fragments/cart_drawer::cart-drawer}"></div>
         <!-- cart-drawer end -->
         <!-- bottom-menu start -->
         <div class="bottom-menu">
@@ -2535,6 +2247,143 @@
         <!-- theme js -->
         <script th:src="@{/web/assert/js/main.js}"></script>
     </body>
+<script>
+    function addToCart(button) {
+        const productId = button.getAttribute('data-product-id');
+
+        fetch(`/add-cart?productId=${productId}`, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text(); // lấy nội dung phản hồi
+                } else {
+                    throw new Error('Thêm thất bại!');
+                }
+            })
+            .then(data => {
+                alert(data); // Hiện thông báo "Thêm sản phẩm vào giỏ hàng thành công!"
+                location.reload(); // Sau đó reload lại trang
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra!');
+            });
+    }
+</script>
+<script>
+    function increaseQuantity(button) {
+        console.log("increaseQuantity called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/add-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Tăng số lượng thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function decreaseQuantity(button) {
+        console.log("decreaseQuantity called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/decrease-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Giảm số lượng thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function deleteItem(button) {
+        console.log("deleteItem called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/delete-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Xóa sản phẩm thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function getProductId(button) {
+        const cartItem = button.closest('.cart-item');
+        return cartItem ? cartItem.getAttribute('data-product-id') : null;
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        // Tạo trường ẩn lưu giá trị rating
+        const ratingValueInput = $("#ratingValue");
+
+        // Gán sự kiện click cho tất cả các sao
+        $(".fa-star").click(function (){
+            // Lấy ID của ngôi sao được click
+            const starId = $(this).attr("id");
+            // Lấy số sao từ ID (st1 -> 1, st2 -> 2, ...)
+            const  rating = starId.replace("st","");
+
+            // Cập nhật giá trị vào trường ẩn
+            ratingValueInput.val(rating);
+
+            // Đặt màu mặc định (đen) cho tất cả các sao
+            $(".fa-star").css("color","black");
+
+            // Tô màu xanh cho các sao từ 1 đến giá trị rating
+            for (let i = 1; i <= rating; i++) {
+                $("#st" + i).css("color", "blue");
+            }
+        });
+    });
+
+</script>
+<script>
+    // Mảng tên ngày và tháng tiếng Anh
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    // Tính ngày hôm nay + 14
+    const today = new Date();
+    const deliveryDate = new Date();
+    deliveryDate.setDate(today.getDate() + 14);
+
+    // Lấy thông tin ngày, tháng, năm
+    const dayName = days[deliveryDate.getDay()];
+    const monthName = months[deliveryDate.getMonth()];
+    const day = deliveryDate.getDate();
+    const year = deliveryDate.getFullYear();
+
+    // Gán vào phần tử HTML
+    document.getElementById("delivery-date").textContent =
+        `${dayName}, ${monthName} ${day} ${year}`;
+</script>
 
 <!-- Mirrored from spacingtech.com/html/etro/etro/product-template7.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Mar 2025 13:01:38 GMT -->
 </html>

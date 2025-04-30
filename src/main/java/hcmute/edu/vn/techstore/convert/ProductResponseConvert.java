@@ -23,7 +23,7 @@ public class ProductResponseConvert {
         if (brand != null) {
             productResponse.setBrandId(brand);
         }
-        productResponse.setPrice(product.getPrice());
+        productResponse.setPrice(priceUtil.formatPrice(product.getPrice()));
         return productResponse;
     }
 

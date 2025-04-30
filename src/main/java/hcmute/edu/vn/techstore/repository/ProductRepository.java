@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long>, JpaSpecificationExecutor<ProductEntity> {
@@ -22,4 +23,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long>, J
     @Query("SELECT p FROM ProductEntity p JOIN OrderDetailEntity od ON p.id = od.product.id " +
             "GROUP BY p.id ORDER BY SUM(od.quantity) DESC")
     List<ProductEntity> findTopMostBuyingProductsByOrderDetail();
+
+    @Override
+    Optional<ProductEntity> findById(Long aLong);
 }

@@ -3,9 +3,11 @@ package hcmute.edu.vn.techstore.service.impl;
 import hcmute.edu.vn.techstore.builder.ProductFilterBuilder;
 import hcmute.edu.vn.techstore.convert.ProductFilterBuilderConverter;
 import hcmute.edu.vn.techstore.convert.ProductMapper;
+import hcmute.edu.vn.techstore.convert.ProductResponseConvert;
 import hcmute.edu.vn.techstore.dto.ProductDTO;
 import hcmute.edu.vn.techstore.dto.response.ProductHomeSlider;
 import hcmute.edu.vn.techstore.dto.response.ProductHomeTrending;
+import hcmute.edu.vn.techstore.dto.response.ProductResponse;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
 import hcmute.edu.vn.techstore.entity.ReviewEntity;
@@ -33,6 +35,7 @@ public class ProductServiceImpl implements IProductService {
     private final ProductMapper productDTOConverter;
     private final ProductFilterBuilderConverter productFilterBuilderConverter;
     private final ImageUtil imageUtil;
+    private final ProductResponseConvert productResponseConvert;
 
     @Override
     public void saveProduct(ProductDTO product, MultipartFile file, String existingImagePath) {
@@ -172,5 +175,14 @@ public class ProductServiceImpl implements IProductService {
         }
 
         return productHomeSliders;
+    }
+
+    @Override
+    public Optional<ProductResponse> findProductResponseById(Long id) {
+        ProductEntity p = productRepository.findById(id).orElse(null);
+        if (p != null) {
+            return Optional.ofNullable(productResponseConvert.toProductResponse(p));
+        }
+        return null;
     }
 }
