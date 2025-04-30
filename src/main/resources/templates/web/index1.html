@@ -444,7 +444,7 @@
                     <div class="brand-slider owl-carousel owl-theme" id="brand-slider">
                         <div class="item" data-animate="animate__fadeInUp" th:each="brand : ${brands}">
                             <div class="brand-img">
-                                <a href="JavaScript:void(0)" class="brand-img"><img
+                                <a th:href="@{/products(brandNames=${brand.name})}" class="brand-img"><img
                                         th:src="*{brand.getImage()}" class="img-fluid"
                                         alt="brand"></a>
                             </div>

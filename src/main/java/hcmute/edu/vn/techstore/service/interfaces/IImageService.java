@@ -1,16 +1,10 @@
 package hcmute.edu.vn.techstore.service.interfaces;
 
-import hcmute.edu.vn.techstore.entity.ImageEntity;
-import org.springframework.web.multipart.MultipartFile;
+import hcmute.edu.vn.techstore.dto.ProductImageUpdateDTO;
+
+import java.util.List;
 
 public interface IImageService {
-    String addImage(MultipartFile file);
-
-    ImageEntity findById(Long aLong);
-
-    String saveImage(MultipartFile file);
-
-    String updateImage(MultipartFile file, String filename);
-
-    boolean deleteImage(String filename);
+    List<String> getImagePathsByProductId(Long productId);
+    void updateProductImages(ProductImageUpdateDTO form);
 }

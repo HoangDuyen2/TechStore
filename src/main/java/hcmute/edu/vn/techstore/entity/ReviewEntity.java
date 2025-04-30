@@ -41,8 +41,6 @@ public class ReviewEntity {
     @JoinColumn(name = "orderId", nullable = false, referencedColumnName = "id")
     private OrderEntity order;
 
-    @OneToMany(mappedBy = "review")
-    private List<ImageEntity> images;
 
     @OneToMany(mappedBy = "parentReview", cascade = CascadeType.ALL)
     private List<ReviewEntity> response;

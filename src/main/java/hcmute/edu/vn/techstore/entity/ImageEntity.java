@@ -24,8 +24,4 @@ public class ImageEntity {
     @JoinColumn(name = "productId", referencedColumnName = "id")
     private ProductEntity product;
 
-    @ManyToOne
-    @JoinColumn(name = "reviewId", referencedColumnName = "id")
-    private ReviewEntity review;
-
 }
