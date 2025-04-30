@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.controller.customer;
 
+import hcmute.edu.vn.techstore.dto.ProductImageUpdateDTO;
 import hcmute.edu.vn.techstore.dto.response.ProductResponse;
 import hcmute.edu.vn.techstore.service.interfaces.IImageService;
 import hcmute.edu.vn.techstore.service.interfaces.IProductService;
@@ -20,6 +21,9 @@ public class ProductController {
     @GetMapping("/{id}")
     public String getProductId(@PathVariable("id") Long id, Model model) {
         ProductResponse productResponse = productService.findProductResponseById(id).orElse(null);
+        ProductImageUpdateDTO productImageUpdateDTO = new ProductImageUpdateDTO();
+        productImageUpdateDTO.setExistingImagePaths(imageService.getImagePathsByProductId(id));
+        model.addAttribute("productImages", productImageUpdateDTO);
         model.addAttribute("product", productResponse);
         return "web/product-template7";
     }

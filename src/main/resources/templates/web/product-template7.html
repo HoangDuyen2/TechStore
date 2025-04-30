@@ -57,26 +57,26 @@
                                 <div class="product-detail-slider product-details-tb product-details product-details-sticky">
                                     <!-- Product slider start -->
                                     <div class="product-detail-img product-detail-img-bottom">
-<!--                                        <div class="product-img-top" data-animate="animate__fadeInUp">-->
-<!--                                            <button class="full-view"><i class="feather-maximize"></i></button>-->
-<!--                                            &lt;!&ndash; blog slick slider start &ndash;&gt;-->
-<!--                                            <div class="slider-big-7 slick-slider">-->
-<!--                                                <div class="slick-slide" th:each="image : ${productImages.getExistingImagePaths()}">-->
-<!--                                                    <a class="product-single">-->
-<!--                                                        <img th:src="${image}" th:data-zoom="${image}" class="img-fluid zoom" alt="product-65">-->
-<!--                                                    </a>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
+                                        <div class="product-img-top" data-animate="animate__fadeInUp">
+                                            <button class="full-view"><i class="feather-maximize"></i></button>
+                                            <!-- blog slick slider start -->
+                                            <div class="slider-big-7 slick-slider">
+                                                <div class="slick-slide" th:each="image : ${productImages.getExistingImagePaths()}">
+                                                    <a class="product-single">
+                                                        <img th:src="${image}" th:data-zoom="${image}" class="img-fluid zoom" alt="product-65">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <!-- blog slick slider end -->
                                         <!-- small slick-slider start -->
                                         <div class="pro-slider">
                                             <div class="slider-small-7 pro-detail-slider small-slider" data-animate="animate__fadeInUp">
-<!--                                                <div class="slick-slide" th:each="image : ${productImages.getExistingImagePaths()}">-->
-<!--                                                    <a href="javascript:void(0)" class="product-single&#45;&#45;thumbnail">-->
-<!--                                                        <img th:src="${image}" class="img-fluid" alt="product-65">-->
-<!--                                                    </a>-->
-<!--                                                </div>-->
+                                                <div class="slick-slide" th:each="image : ${productImages.getExistingImagePaths()}" style="height: 105px; width:105px">
+                                                    <a href="javascript:void(0)" class="product-single--thumbnail">
+                                                        <img th:src="${image}" class="img-fluid" alt="product-65">
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                         <!-- small slick-slider end -->
@@ -327,16 +327,7 @@
                                         <div class="collapse show" id="description" data-bs-parent="#collapse-tab" role ="tab" aria-expanded="true">
                                             <div class="description-review-text">
                                                 <div class="product-description">
-                                                    <p data-animate="animate__fadeInUp">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                    <h6 data-animate="animate__fadeInUp">About this item</h6>
-                                                    <ul>
-                                                        <li data-animate="animate__fadeInUp">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-                                                        <li data-animate="animate__fadeInUp">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-                                                        <li data-animate="animate__fadeInUp">As Cicero would put it, “Um, not so fast.”</li>
-                                                        <li data-animate="animate__fadeInUp">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</li>
-                                                        <li data-animate="animate__fadeInUp">Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</li>
-                                                        <li data-animate="animate__fadeInUp">Nor is there anyone who loves or pursues or desires to obtain pain of itself.</li>
-                                                    </ul>
+                                                    <p data-animate="animate__fadeInUp" th:text="${product.description}"></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -352,41 +343,47 @@
                                                     <table>
                                                         <tbody>
                                                             <tr class="product-info" data-animate="animate__fadeInUp">
-                                                                <th>Vendor</th>
+                                                                <th>Brand</th>
                                                                 <td>
-                                                                    <a href="javascript:void(0)">Etro</a>
+                                                                    <a href="javascript:void(0)" th:text="${product.brandId.getName()}"></a>
                                                                 </td>
                                                             </tr>
                                                             <tr class="product-info" data-animate="animate__fadeInUp">
-                                                                <th>Type</th>
+                                                                <th>OS</th>
+                                                                <td th:text="${product.operatingSystem}"></td>
+                                                            </tr>
+                                                            <tr class="product-info" data-animate="animate__fadeInUp">
+                                                                <th>Battery capacity</th>
                                                                 <td>
-                                                                    <a href="javascript:void(0)">Portable speaker</a>
+                                                                    <a href="javascript:void(0)" th:text="${product.batteryCapacity}"></a>
                                                                 </td>
                                                             </tr>
                                                             <tr class="product-info" data-animate="animate__fadeInUp">
-                                                                <th>Color</th>
-                                                                <td>Black, Gray, Gold</td>
+                                                                <th>Connection</th>
+                                                                <td th:text="${product.connectivity}"></td>
                                                             </tr>
                                                             <tr class="product-info" data-animate="animate__fadeInUp">
-                                                                <th>Sku</th>
-                                                                <td>abccd-13</td>
+                                                                <th>Front camera</th>
+                                                                <td th:text="${product.frontCamera}"></td>
+                                                            </tr>
+                                                            <tr class="product-info" data-animate="animate__fadeInUp">
+                                                                <th>Rear camera</th>
+                                                                <td th:text="${product.rearCamera}"></td>
+                                                            </tr>
+                                                            <tr class="product-info" data-animate="animate__fadeInUp">
+                                                                <th>Processor</th>
+                                                                <td th:text="${product.processor}"></td>
+                                                            </tr>
+                                                            <tr class="product-info" data-animate="animate__fadeInUp">
+                                                                <th>SIM</th>
+                                                                <td th:text="${product.sim}"></td>
+                                                            </tr>
+                                                            <tr class="product-info" data-animate="animate__fadeInUp">
+                                                                <th>Warranty</th>
+                                                                <td th:text="${product.warranty}"></td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li role="presentation">
-                                        <a href="#other-content" class="tab-title collapsed" data-bs-toggle="collapse">
-                                            <h6 class="tab-name" data-animate="animate__fadeInUp">Other content</h6>
-                                            <span class="tab-icon" data-animate="animate__fadeInUp"><i class="feather-plus"></i></span>
-                                        </a>
-                                        <div class="collapse" id="other-content" data-bs-parent="#collapse-tab">
-                                            <div class="description-review-text">
-                                                <div class="product-custom-content">
-                                                    <p data-animate="animate__fadeInUp">The purpose of lorem ipsum is to create a natural looking block of text (sentence, paragraph, page, etc.) that doesn't distract from the layout. A practice not without controversy, laying out pages with meaningless filler text can be very useful when the focus is meant to be on design, not content.</p>
-                                                    <p data-animate="animate__fadeInUp">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -462,21 +459,6 @@
                                                             </div>
                                                             <!-- spar-from end -->
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li role="presentation" data-animate="animate__fadeInUp">
-                                        <a href="#collapse-video" class="tab-title collapsed" data-bs-toggle="collapse" role="tab" aria-expanded="false">
-                                            <h6 class="tab-name">Video</h6>
-                                            <span class="tab-icon"><i class="feather-plus"></i></span>
-                                        </a>
-                                        <div class="collapse" id="collapse-video" data-bs-parent="#collapse-tab">
-                                            <div class="description-review-text">
-                                                <div class="video">
-                                                    <div class="video-wrapper">
-                                                        <iframe src="https://www.youtube.com/embed/0Aja_yP93PY" allowfullscreen></iframe>
                                                     </div>
                                                 </div>
                                             </div>
