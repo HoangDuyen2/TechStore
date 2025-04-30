@@ -34,7 +34,7 @@ public class CartDetailConverter {
         BigDecimal totalPrice = BigDecimal.ZERO;
             ProductResponse productResponse = cartDetailResponse.getProduct();
             if (productResponse.isActived()&&productResponse.getBrandId().getIsActived()){
-                BigDecimal productItem = cartDetailResponse.getProduct().getPrice();
+                BigDecimal productItem = priceUtil.parsePrice(productResponse.getPrice());
                 int quantity = cartDetailResponse.getQuantity();
                 totalPrice = totalPrice.add(productItem.multiply(new BigDecimal(quantity)));
             }

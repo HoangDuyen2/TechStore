@@ -23,7 +23,7 @@ public class ProductResponse {
     @Size(max = 500, message = "Description must not exceed 500 characters")
     private String description;
 
-    private BigDecimal price;
+    private String price;
 
     private String warranty;
 
@@ -58,4 +58,7 @@ public class ProductResponse {
 
     @NotNull(message = "Brand ID cannot be null")
     private BrandEntity brandId;
+
+    private int star;
+    private Long numberOfReviews;
 }

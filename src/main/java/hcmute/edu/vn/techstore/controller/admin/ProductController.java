@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@Controller("adminProductController")
 @RequiredArgsConstructor
 @RequestMapping("/admin/products")
 public class ProductController {
