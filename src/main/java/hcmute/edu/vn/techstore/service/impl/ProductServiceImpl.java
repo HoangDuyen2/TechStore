@@ -8,6 +8,7 @@ import hcmute.edu.vn.techstore.dto.ProductDTO;
 import hcmute.edu.vn.techstore.dto.response.ProductHomeSlider;
 import hcmute.edu.vn.techstore.dto.response.ProductHomeTrending;
 import hcmute.edu.vn.techstore.dto.response.ProductResponse;
+import hcmute.edu.vn.techstore.dto.response.ProductSearchSuggestion;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
 import hcmute.edu.vn.techstore.entity.ReviewEntity;
@@ -23,8 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 
 @Service
@@ -184,5 +186,17 @@ public class ProductServiceImpl implements IProductService {
             return Optional.ofNullable(productResponseConvert.toProductResponse(p));
         }
         return null;
+    }
+
+    @Override
+    public List<ProductSearchSuggestion> searchSuggestions(String keyword) {
+        List<ProductEntity> products = productRepository.searchByKeywordAndActivedBrand(keyword);
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        return products.stream().map(p -> new ProductSearchSuggestion(
+                p.getId(),
+                p.getName(),
+                p.getThumbnail(),
+                formatter.format(p.getPrice())
+        )).collect(Collectors.toList());
     }
 }

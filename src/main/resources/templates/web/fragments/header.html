@@ -14,60 +14,24 @@
                     <!-- header-search start -->
                     <div class="header-element header-search">
                         <div class="header-theme-search">
-                            <form method="get" action="https://spacingtech.com/search" class="search-form">
+                            <form method="get" action="/products" class="search-form">
                                 <div class="search-bar">
                                     <div class="form-search">
-                                        <input type="search" name="search-input" class="search-input" value="" placeholder="Search our store" required="">
-                                        <button type="button" onclick="location.href='search.html'" class="search-btn" disabled=""><i class="feather-search"></i></button>
+                                        <input type="search" id="search-input" name="name" class="search-input" placeholder="Search our store" autocomplete="off">
                                     </div>
-                                    <div class="search-results">
-                                        <p class="search-for">Search for <span class="search-text">a</span></p>
-                                        <ul>
-                                            <li>
-                                                <a href="product-template.html">
-                                                    <img th:src="@{/web/assert/image/home1/product/product-1.jpg}" class="img-fluid" alt="product-1.jpg}">
-                                                    <span>Earbuds</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="product-template.html">
-                                                    <img th:src="@{/web/assert/image/home1/product/product-7.jpg}" class="img-fluid" alt="product-7.jpg}">
-                                                    <span>Sandisk ssd</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="product-template.html">
-                                                    <img th:src="@{/web/assert/image/home1/product/product-15.jpg}" class="img-fluid" alt="product-15.jpg}">
-                                                    <span>Router wifi6</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="product-template.html">
-                                                    <img th:src="@{/web/assert/image/home1/product/product-18.jpg}" class="img-fluid" alt="product-18.jpg}">
-                                                    <span>Smartphone</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="product-template.html">
-                                                    <img th:src="@{/web/assert/image/home1/product/product-31.jpg}" class="img-fluid" alt="product-31.jpg}">
-                                                    <span>IPad mini</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="product-template.html">
-                                                    <img th:src="@{/web/assert/image/home1/product/product-49.jpg}" class="img-fluid" alt="product-49.jpg}">
-                                                    <span>HP color printer</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <p class="search-more"><a href="search.html">See all results (12)</a></p>
-                                        <p class="search-fail">Search not found</p>
+                                    <div class="search-results" style="display: none;">
+                                        <p class="search-for d-none">Search for <span class="search-text"></span></p>
+                                        <ul id="search-suggestions"></ul>
+                                        <p class="search-more d-none">
+                                            <a href="/products" id="see-all-results-link">See all results</a>
+                                        </p>
+                                        <p class="search-fail d-none">Search not found</p>
                                     </div>
-                                    <a href="search.html" class="search-btn">Search</a>
                                 </div>
                             </form>
                         </div>
                     </div>
+
                     <!-- header-text end -->
                     <!-- search-wrapper end -->
                     <!-- header-icon start -->

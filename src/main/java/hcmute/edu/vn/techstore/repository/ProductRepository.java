@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +27,10 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long>, J
 
     @Override
     Optional<ProductEntity> findById(Long aLong);
+
+    @Query("SELECT p FROM ProductEntity p " +
+            "WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "AND p.actived = true " +
+            "AND p.brand.isActived = true")
+    List<ProductEntity> searchByKeywordAndActivedBrand(@Param("keyword") String keyword);
 }
