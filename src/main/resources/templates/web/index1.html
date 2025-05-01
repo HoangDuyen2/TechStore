@@ -665,7 +665,7 @@
                                     </div>
                                     <div class="blog-post-content">
                                         <div class="blogtitle-like">
-                                            <h6 class="blog-title">We offer warranty, but with our services, you won't
+                                            <h6 class="blog-title">We offer warranty, but with our services, you won’t
                                                 need it</h6>
                                             <a class="blog-comment" href="article.html">
                                                 <span class="icon"><i class="feather-heart"></i></span>
@@ -690,7 +690,7 @@
                                     </div>
                                     <div class="blog-post-content">
                                         <div class="blogtitle-like">
-                                            <h6 class="blog-title">We're licensed and our team trained per the industry
+                                            <h6 class="blog-title">We’re licensed and our team trained per the industry
                                                 standard</h6>
                                             <a class="blog-comment" href="article.html">
                                                 <span class="icon"><i class="feather-heart"></i></span>
@@ -1503,26 +1503,27 @@
         return cartItem ? cartItem.getAttribute('data-product-id') : null;
     }
 </script>
+<script th:src="@{/web/assert/js/search-autocomplete.js}"></script>
 <script>
     // Quickview functionality
     document.addEventListener('DOMContentLoaded', function() {
         const quickviewButtons = document.querySelectorAll('.quickview');
-        
+
         quickviewButtons.forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 const productId = this.getAttribute('data-product-id');
-                
+
                 // Load quickview content
                 fetch(`/products/quickview/${productId}`)
                     .then(response => response.text())
                     .then(html => {
                         document.getElementById('quickview-content').innerHTML = html;
-                        
+
                         // Initialize modal
                         const modal = new bootstrap.Modal(document.getElementById('quickview-modal'));
                         modal.show();
-                        
+
                         // Initialize Swiper for quickview slider
                         const galleryThumbs = new Swiper('.gallery-thumbs', {
                             spaceBetween: 10,
@@ -1531,7 +1532,7 @@
                             watchSlidesVisibility: true,
                             watchSlidesProgress: true,
                         });
-                        
+
                         const galleryTop = new Swiper('.gallery-top', {
                             spaceBetween: 10,
                             navigation: {

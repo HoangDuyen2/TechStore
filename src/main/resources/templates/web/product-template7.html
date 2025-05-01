@@ -2180,15 +2180,6 @@
     document.getElementById("delivery-date").textContent =
         `${dayName}, ${monthName} ${day} ${year}`;
 </script>
-<script>
-    function openQuickView(productId) {
-        fetch(`/products/quickview/${productId}`)
-            .then(response => response.text())
-            .then(html => {
-                document.getElementById("quickview-modal-body").innerHTML = html;
-                $('#quickviewModal').modal('show'); // nếu dùng Bootstrap
-            });
-    }
-</script>
-<!-- Mirrored from spacingtech.com/html/etro/etro/product-template7.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Mar 2025 13:01:38 GMT -->
+<script th:src="@{/web/assert/js/search-autocomplete.js}"></script>
+
 </html>

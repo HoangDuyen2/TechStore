@@ -33,36 +33,6 @@ public class HomeController {
         return "web/index1";
     }
 
-    @GetMapping("/products")
-    public String getAllProducts(@RequestParam Map<String, Object> params,
-                                 @RequestParam(defaultValue = "0") int pageNumber,
-                                 @RequestParam(defaultValue = "2") int pageSize,
-                                 @RequestParam(defaultValue = "asc") String sortOrder,
-                                 @RequestParam(defaultValue = "price") String sortBy,
-                                 Model model) {
 
-        Sort sort = sortOrder.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<ProductEntity> productPage = productService.filterProducts(params, pageable);
-
-        // Tạo baseUrl giữ filter
-        String queryParams = params.entrySet().stream()
-                .filter(entry -> !List.of("pageNumber", "pageSize", "sortBy", "sortOrder").contains(entry.getKey()))
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining("&"));
-        String baseUrl = "/products" + (queryParams.isEmpty() ? "?" : "?" + queryParams + "&");
-
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("brands", brandService.findAllByIsActivedTrue());
-        model.addAttribute("baseUrl", baseUrl);
-        model.addAttribute("sortBy", sortBy);
-        model.addAttribute("sortOrder", sortOrder);
-        model.addAttribute("pageNumber", pageNumber);
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("pageSize", pageSize);
-
-
-        return "web/collection";
-    }
 
 }
