@@ -6,4 +6,6 @@ public interface IOrderService {
     CheckoutRequest getCheckoutRequest(String email);
 
     CheckoutRequest applyDiscount(CheckoutRequest checkoutRequest);
+
+    boolean createOrder(CheckoutRequest checkoutRequest);
 }

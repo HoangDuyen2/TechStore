@@ -1,17 +1,10 @@
 package hcmute.edu.vn.techstore;
 
+import hcmute.edu.vn.techstore.Enum.EPayment;
 import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.Enum.EGender;
-import hcmute.edu.vn.techstore.entity.AccountEntity;
-import hcmute.edu.vn.techstore.entity.ImageEntity;
-import hcmute.edu.vn.techstore.entity.RoleEntity;
-import hcmute.edu.vn.techstore.entity.UserEntity;
-import hcmute.edu.vn.techstore.entity.CartEntity;
-import hcmute.edu.vn.techstore.entity.WalletEntity;
-import hcmute.edu.vn.techstore.repository.AccountRepository;
-import hcmute.edu.vn.techstore.repository.ImageRepository;
-import hcmute.edu.vn.techstore.repository.RoleRepository;
-import hcmute.edu.vn.techstore.repository.UserRepository;
+import hcmute.edu.vn.techstore.entity.*;
+import hcmute.edu.vn.techstore.repository.*;
 import hcmute.edu.vn.techstore.service.interfaces.IImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +26,7 @@ public class TechStoreApplication {
 	private final AccountRepository accountRepository;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final hcmute.edu.vn.techstore.service.interfaces.IImageService imageService;
+	private final PaymentRepository paymentRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TechStoreApplication.class, args);
@@ -161,6 +154,15 @@ public class TechStoreApplication {
 
 				// Save the user (which will cascade to account, cart, and wallet)
 				userRepository.save(customerUser);
+			}
+
+			// Create payment methods if they don't exist
+			for (EPayment payment : EPayment.values()) {
+				if (paymentRepository.findByName(payment.name()).isEmpty()) {
+					PaymentEntity paymentEntity = new PaymentEntity();
+					paymentEntity.setName(payment.name());
+					paymentRepository.save(paymentEntity);
+				}
 			}
 		};
 	}

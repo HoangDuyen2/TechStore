@@ -20,4 +20,6 @@ public interface IDiscountService {
     boolean updateDiscount(Long id, DiscountRequest discountRequest);
 
     boolean deleteDiscount(Long id);
+
+    boolean decreaseQuantity(Long id, int quantity);
 }

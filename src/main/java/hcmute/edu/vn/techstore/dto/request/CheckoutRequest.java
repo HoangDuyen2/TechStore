@@ -1,6 +1,7 @@
 package hcmute.edu.vn.techstore.dto.request;
 
 
+import hcmute.edu.vn.techstore.Enum.EPayment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,10 +20,12 @@ public class CheckoutRequest {
     private String discountValue;
     private List<ProductCheckout> productCheckouts;
     private String totalPrice;
+    private EPayment paymentMethod;
 
     @Setter
     @Getter
     public static class ProductCheckout {
+        private Long id;
         private String name;
         private int quantity;
         private String price;

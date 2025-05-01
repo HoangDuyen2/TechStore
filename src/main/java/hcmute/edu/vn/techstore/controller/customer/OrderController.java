@@ -41,23 +41,16 @@ public class OrderController {
     public String createOrder(@ModelAttribute("checkoutRequest") CheckoutRequest checkoutRequest,
                               @RequestParam("paymentMethod") String paymentMethod,
                               Model model) {
-        if (checkoutRequest.getDiscountValue() == null) {
-            checkoutRequest = orderService.applyDiscount(checkoutRequest);
+        checkoutRequest.setPaymentMethod(EPayment.valueOf(paymentMethod));
+
+        try {
+            orderService.createOrder(checkoutRequest);
+            return "redirect:/order-complete";
+        } catch (Exception e) {
+            model.addAttribute("error", "Failed to create order: " + e.getMessage());
             model.addAttribute("checkoutRequest", checkoutRequest);
             model.addAttribute("paymentMethods", EPayment.values());
             return "web/checkout-style1";
         }
-
-        return "web/checkout-style1";
-//        checkoutRequest.setPaymentMethod(EPayment.valueOf(paymentMethod));
-//
-//        if (orderService.createOrder(checkoutRequest)) {
-//            return "redirect:/order-complete";
-//        } else {
-//            model.addAttribute("error", "Failed to create order");
-//            model.addAttribute("checkoutRequest", checkoutRequest);
-//            model.addAttribute("paymentMethods", EPayment.values());
-//            return "web/checkout-style1";
-//        }
     }
 }

@@ -97,4 +97,15 @@ public class DiscountServiceImpl implements IDiscountService {
             return false;
         }
     }
+
+    @Override
+    public boolean decreaseQuantity(Long id, int quantity) {
+        DiscountEntity discount = discountRepository.findById(id).orElse(null);
+        if (discount != null && discount.getQuantity() >= quantity && discount.getExpiredDate().isAfter(java.time.LocalDate.now())) {
+            discount.setQuantity(discount.getQuantity() - quantity);
+            discountRepository.save(discount);
+            return true;
+        }
+        return false;
+    }
 }

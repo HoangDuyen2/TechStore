@@ -33,4 +33,6 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long>, J
             "AND p.actived = true " +
             "AND p.brand.isActived = true")
     List<ProductEntity> searchByKeywordAndActivedBrand(@Param("keyword") String keyword);
+
+    ProductEntity findByName(String name);
 }
