@@ -16,6 +16,7 @@ import hcmute.edu.vn.techstore.repository.ProductRepository;
 import hcmute.edu.vn.techstore.repository.custome.ProductRepositoryCustom;
 import hcmute.edu.vn.techstore.service.interfaces.IProductService;
 import hcmute.edu.vn.techstore.utils.ImageUtil;
+import hcmute.edu.vn.techstore.utils.PriceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,7 @@ public class ProductServiceImpl implements IProductService {
     private final ProductFilterBuilderConverter productFilterBuilderConverter;
     private final ImageUtil imageUtil;
     private final ProductResponseConvert productResponseConvert;
+    private final PriceUtil priceUtil;
 
     @Override
     public void saveProduct(ProductDTO product, MultipartFile file, String existingImagePath) {
@@ -123,7 +125,7 @@ public class ProductServiceImpl implements IProductService {
                         .id(product.getId())
                         .name(product.getName())
                         .thumbnail(product.getThumbnail())
-                        .price(String.valueOf(product.getPrice()))
+                        .price(priceUtil.formatPrice(product.getPrice()))
                         .build());
             }
             if (productHomeSliders.size() == 2) {
@@ -139,7 +141,7 @@ public class ProductServiceImpl implements IProductService {
                         .id(product.getId())
                         .name(product.getName())
                         .thumbnail(product.getThumbnail())
-                        .price(String.valueOf(product.getPrice()))
+                        .price(priceUtil.formatPrice(product.getPrice()))
                         .build());
             }
             if (productHomeSliders.size() == 4) {

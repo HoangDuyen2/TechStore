@@ -18,13 +18,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ProductController {
     private final IProductService productService;
     private final IImageService imageService;
-    @GetMapping("/{id}")
-    public String getProductId(@PathVariable("id") Long id, Model model) {
+
+    private void prepareProductModel(Long id, Model model) {
         ProductResponse productResponse = productService.findProductResponseById(id).orElse(null);
         ProductImageUpdateDTO productImageUpdateDTO = new ProductImageUpdateDTO();
         productImageUpdateDTO.setExistingImagePaths(imageService.getImagePathsByProductId(id));
         model.addAttribute("productImages", productImageUpdateDTO);
         model.addAttribute("product", productResponse);
+    }
+
+    @GetMapping("/{id}")
+    public String getProductId(@PathVariable("id") Long id, Model model) {
+        prepareProductModel(id, model);
         return "web/product-template7";
+    }
+
+    @GetMapping("/quickview/{id}")
+    public String getQuickView(@PathVariable("id") Long id, Model model) {
+        prepareProductModel(id, model);
+        return "web/fragments/quickview-slider :: quickview"; // chỉ phần cần render
     }
 }

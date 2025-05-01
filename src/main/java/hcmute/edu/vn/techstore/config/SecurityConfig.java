@@ -32,7 +32,7 @@ public class SecurityConfig {
         return http
                 .csrf(user -> user.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products","/products/*", "/forgot-password")
+                        .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products","/products/**", "/forgot-password")
                         .permitAll()
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
