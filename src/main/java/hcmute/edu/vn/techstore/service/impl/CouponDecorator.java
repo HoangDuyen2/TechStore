@@ -13,7 +13,7 @@ public class CouponDecorator extends OrderPriceDecorator {
     @Override
     public BigDecimal calculateTotal(CheckoutRequest request) {
         BigDecimal total = wrapped.calculateTotal(request);
-        BigDecimal percent = new BigDecimal(request.getDiscountValue()); // e.g., 10 means 10%
+        BigDecimal percent = new BigDecimal(request.getDiscountValue().replace("%", "")); // e.g., 10 means 10%
         BigDecimal discount = total.multiply(percent).divide(BigDecimal.valueOf(100));
         return total.subtract(discount).max(BigDecimal.ZERO);
     }

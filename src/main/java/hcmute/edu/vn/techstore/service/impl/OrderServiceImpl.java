@@ -59,12 +59,12 @@ public class OrderServiceImpl implements IOrderService {
             DiscountEntity discountEntity = discountRepository.findByCode(checkoutRequest.getDiscountCode());
             if (discountEntity != null) {
                 checkoutRequest.setDiscountName(discountEntity.getName());
-//                if (discountEntity.getDiscountType().equals(EDiscountType.COUPON)) {
-//                    checkoutRequest.setDiscountValue(discountEntity.getAmount().toString() + "%");
-//                } else {
-//                    checkoutRequest.setDiscountValue(discountEntity.getAmount().toString() + " VND" );
-//                }
-                checkoutRequest.setDiscountValue(discountEntity.getAmount().toString());
+                if (discountEntity.getDiscountType().equals(EDiscountType.COUPON)) {
+                    checkoutRequest.setDiscountValue(discountEntity.getAmount().toString() + "%");
+                } else {
+                    checkoutRequest.setDiscountValue(discountEntity.getAmount().toString() + " VND" );
+                }
+//                checkoutRequest.setDiscountValue(discountEntity.getAmount().toString());
                 checkoutRequest.setTotalPrice(priceUtil.formatPrice(getTotalPriceWithDiscount(checkoutRequest)));
             }
         }

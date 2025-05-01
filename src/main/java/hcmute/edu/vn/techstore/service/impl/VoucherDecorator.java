@@ -13,7 +13,7 @@ public class VoucherDecorator extends OrderPriceDecorator {
     @Override
     public BigDecimal calculateTotal(CheckoutRequest request) {
         BigDecimal total = wrapped.calculateTotal(request);
-        BigDecimal fixedAmount = new BigDecimal(request.getDiscountValue());
+        BigDecimal fixedAmount = new BigDecimal(request.getDiscountValue().replace(" VND", "")); // e.g., 100000 means 100,000 VND
         return total.subtract(fixedAmount).max(BigDecimal.ZERO);
     }
 }
