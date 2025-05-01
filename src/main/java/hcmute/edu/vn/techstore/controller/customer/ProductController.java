@@ -29,8 +29,6 @@ public class ProductController {
     private final IProductService productService;
     private final IImageService imageService;
     private final IBrandService brandService;
-    private final IImageService imageService;
-
 
     @GetMapping("")
     public String getAllProducts(@RequestParam Map<String, Object> params,
