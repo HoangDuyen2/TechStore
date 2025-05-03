@@ -314,6 +314,10 @@
                                                 <input type="hidden" name="brandNames" id="brandNamesInput" th:value="${param.brandNames}">
                                                 <input type="hidden" name="minPrice" id="minPriceInput" th:value="${param.minPrice}">
                                                 <input type="hidden" name="maxPrice" id="maxPriceInput" th:value="${param.maxPrice}">
+                                                <input type="hidden" name="os" id="osInput" th:value="${param.os}">
+                                                <input type="hidden" name="processor" id="processorInput" th:value="${param.processor}">
+                                                <input type="hidden" name="sim" id="simInput" th:value="${param.sim}">
+                                                <input type="hidden" name="connectivity" id="connectivityInput" th:value="${param.connectivity}">
 
                                                 <div class="facets-wrapper">
                                                     <!-- Product-Categories start -->
@@ -395,37 +399,47 @@
                                                             <h6 class="shop-title" >Operating System</h6>
                                                             <div class="collapse filter-element" id="collapse-2">
                                                                 <ul class="brand-ul scrollbar">
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox os-check" value="iOS"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.os != null and #lists.contains(#strings.arraySplit(param.os, ','), 'iOS')}">
                                                                             <span class="filter-name">iOS</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox os-check" value="Android"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.os != null and #lists.contains(#strings.arraySplit(param.os, ','), 'Android')}">
                                                                             <span class="filter-name">Android</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox os-check" value="MIUI"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.os != null and #lists.contains(#strings.arraySplit(param.os, ','), 'MIUI')}">
                                                                             <span class="filter-name">MIUI</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox os-check" value="ColorOS"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.os != null and #lists.contains(#strings.arraySplit(param.os, ','), 'ColorOS')}">
                                                                             <span class="filter-name">ColorOS</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox os-check" value="HyperOS"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.os != null and #lists.contains(#strings.arraySplit(param.os, ','), 'HyperOS')}">
                                                                             <span class="filter-name">HyperOS</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
@@ -439,30 +453,38 @@
                                                             <h6 class="shop-title" >Processor</h6>
                                                             <div class="collapse filter-element" id="collapse-1">
                                                                 <ul class="brand-ul scrollbar">
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox processor-check" value="Snapdragon"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.processor != null and #lists.contains(#strings.arraySplit(param.processor, ','), 'Snapdragon')}">
                                                                             <span class="filter-name">Snapdragon</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox processor-check" value="MediaTek"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.processor != null and #lists.contains(#strings.arraySplit(param.processor, ','), 'MediaTek')}">
                                                                             <span class="filter-name">MediaTek</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox processor-check" value="Bionic"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.processor != null and #lists.contains(#strings.arraySplit(param.processor, ','), 'Bionic')}">
                                                                             <span class="filter-name">Bionic</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox processor-check" value="Exynos"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.processor != null and #lists.contains(#strings.arraySplit(param.processor, ','), 'Exynos')}">
                                                                             <span class="filter-name">Exynos</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
@@ -476,23 +498,29 @@
                                                             <h6 class="shop-title" >Sim</h6>
                                                             <div class="collapse filter-element" id="collapse-4">
                                                                 <ul class="brand-ul scrollbar">
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox sim-check" value="eSIM"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.sim != null and #lists.contains(#strings.arraySplit(param.sim, ','), 'eSIM')}">
                                                                             <span class="filter-name">eSIM</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox sim-check" value="Nano"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.sim != null and #lists.contains(#strings.arraySplit(param.sim, ','), 'Nano')}">
                                                                             <span class="filter-name">Nano</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox sim-check" value="Dual"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.sim != null and #lists.contains(#strings.arraySplit(param.sim, ','), 'Dual')}">
                                                                             <span class="filter-name">Dual</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
@@ -506,37 +534,47 @@
                                                             <h6 class="shop-title" >Connection</h6>
                                                             <div class="collapse filter-element" id="collapse-6">
                                                                 <ul class="brand-ul scrollbar">
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox conn-check" value="Wi-Fi"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.connectivity != null and #lists.contains(#strings.arraySplit(param.connectivity, ','), 'Wi-Fi')}">
                                                                             <span class="filter-name">Wi-Fi</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox conn-check" value="Wi-Fi 7"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.connectivity != null and #lists.contains(#strings.arraySplit(param.connectivity, ','), 'Wi-Fi 7')}">
                                                                             <span class="filter-name">Wi-Fi 7</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox conn-check" value="5G"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.connectivity != null and #lists.contains(#strings.arraySplit(param.connectivity, ','), '5G')}">
                                                                             <span class="filter-name">5G</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox conn-check" value="4G"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.connectivity != null and #lists.contains(#strings.arraySplit(param.connectivity, ','), '4G')}">
                                                                             <span class="filter-name">4G</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
-                                                                    <li class="brand-li">
+                                                                    <li>
                                                                         <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <input type="checkbox" class="cust-checkbox conn-check" value="NFC"
+                                                                                   onchange="updateAllFilters()"
+                                                                                   th:checked="${param.connectivity != null and #lists.contains(#strings.arraySplit(param.connectivity, ','), 'NFC')}">
                                                                             <span class="filter-name">NFC</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
@@ -1386,6 +1424,23 @@
         document.getElementById('brandNamesInput').value = selectedBrands;
     }
 
+    function updateSelectedValues(className, hiddenInputId) {
+        const selected = Array.from(document.querySelectorAll('.' + className + ':checked'))
+            .map(cb => cb.value.trim())
+            .filter(v => v !== '')
+            .join(',');
+        const input = document.getElementById(hiddenInputId);
+        if (input) input.value = selected;
+    }
+
+    function updateAllFilters() {
+        updateSelectedBrands();
+        updateSelectedValues('os-check', 'osInput');
+        updateSelectedValues('processor-check', 'processorInput');
+        updateSelectedValues('sim-check', 'simInput');
+        updateSelectedValues('conn-check', 'connectivityInput');
+    }
+
     function updatePriceInputs() {
         let min = parseInt(rangeMin.value);
         let max = parseInt(rangeMax.value);
@@ -1394,19 +1449,16 @@
             [min, max] = [max, min];
         }
 
-        // ✅ Convert sang đơn vị VNĐ (Triệu → VND)
         minPriceInput.value = min * 1_000_000;
         maxPriceInput.value = max * 1_000_000;
 
-        // Hiển thị lại giá theo đơn vị Triệu
         document.getElementById("demo1").innerText = min;
         document.getElementById("demo2").innerText = max;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        updateSelectedBrands();
+        updateAllFilters();
 
-        // ✅ Convert lại giá trị từ URL (VND) sang Triệu để map slider
         const min = parseInt(minPriceInput.value) / 1_000_000 || 0;
         const max = parseInt(maxPriceInput.value) / 1_000_000 || 100;
 
@@ -1417,21 +1469,24 @@
         document.getElementById("demo2").innerText = max;
     });
 
-    // Khi người dùng kéo
     rangeMin.addEventListener('input', updatePriceInputs);
     rangeMax.addEventListener('input', updatePriceInputs);
 
-    // ✅ Trước khi submit → xử lý tất cả
     document.querySelector('.facets-form').addEventListener('submit', function (e) {
+        updatePriceInputs();
+        updateAllFilters();
+
+        this.querySelectorAll('input[type="hidden"]').forEach(input => {
+            if (!input.value || input.value.trim() === '') {
+                input.remove();
+            }
+        });
+
         const nameInput = this.querySelector('input[name="name"]');
         if (nameInput && nameInput.value.trim() === '') {
-            nameInput.remove(); // xóa nếu trống
+            nameInput.remove();
         }
-
-        updateSelectedBrands();
-        updatePriceInputs();
     });
-
 </script>
 
 

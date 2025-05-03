@@ -4,6 +4,7 @@ package hcmute.edu.vn.techstore.repository.custome;
 import hcmute.edu.vn.techstore.builder.ProductFilterBuilder;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,6 +49,50 @@ public class ProductRepositoryCustom {
             }
             if (builder.getMaxPrice() != null) {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), builder.getMaxPrice()));
+            }
+
+           if (builder.getSim() != null && !builder.getSim().isEmpty()) {
+                List<Predicate> simPredicates = builder.getSim().stream()
+                        .filter(val -> val != null && !val.trim().isEmpty())
+                        .map(val -> criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("sim")),
+                                "%" + val.toLowerCase() + "%"
+                        ))
+                        .collect(Collectors.toList());
+                predicates.add(criteriaBuilder.or(simPredicates.toArray(new Predicate[0])));
+            }
+
+            if (builder.getConnectivity() != null && !builder.getConnectivity().isEmpty()) {
+                List<Predicate> connPredicates = builder.getConnectivity().stream()
+                        .filter(val -> val != null && !val.trim().isEmpty())
+                        .map(val -> criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("connectivity")),
+                                "%" + val.toLowerCase() + "%"
+                        ))
+                        .collect(Collectors.toList());
+                predicates.add(criteriaBuilder.or(connPredicates.toArray(new Predicate[0])));
+            }
+
+            if (builder.getOs() != null && !builder.getOs().isEmpty()) {
+                List<Predicate> osPredicates = builder.getOs().stream()
+                        .filter(val -> val != null && !val.trim().isEmpty())
+                        .map(val -> criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("operatingSystem")),
+                                "%" + val.toLowerCase() + "%"
+                        ))
+                        .collect(Collectors.toList());
+                predicates.add(criteriaBuilder.or(osPredicates.toArray(new Predicate[0])));
+            }
+
+            if (builder.getProcessor() != null && !builder.getProcessor().isEmpty()) {
+                List<Predicate> processorPredicates = builder.getProcessor().stream()
+                        .filter(val -> val != null && !val.trim().isEmpty())
+                        .map(val -> criteriaBuilder.like(
+                                criteriaBuilder.lower(root.get("processor")),
+                                "%" + val.toLowerCase() + "%"
+                        ))
+                        .collect(Collectors.toList());
+                predicates.add(criteriaBuilder.or(processorPredicates.toArray(new Predicate[0])));
             }
 
             predicates.add(criteriaBuilder.isTrue(root.get("actived")));
