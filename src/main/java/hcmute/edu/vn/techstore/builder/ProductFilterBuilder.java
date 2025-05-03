@@ -5,6 +5,10 @@ import java.util.List;
 public class ProductFilterBuilder {
     private String name;
     private List<String> brandNames;
+    private List<String> sim;
+    private List<String> connectivity;
+    private List<String> os;
+    private List<String> processor;
     private Long minPrice;
     private Long maxPrice;
 
@@ -15,6 +19,10 @@ public class ProductFilterBuilder {
         this.brandNames = builder.brandNames;
         this.minPrice = builder.minPrice;
         this.maxPrice = builder.maxPrice;
+        this.sim = builder.sim;
+        this.connectivity = builder.connectivity;
+        this.os = builder.os;
+        this.processor = builder.processor;
     }
 
     // Builder class
@@ -23,6 +31,11 @@ public class ProductFilterBuilder {
         private List<String> brandNames;
         private Long minPrice;
         private Long maxPrice;
+        private List<String> sim;
+        private List<String> connectivity;
+        private List<String> os;
+        private List<String> processor;
+
 
         // Setter cho name
         public Builder setName(String name) {
@@ -43,6 +56,22 @@ public class ProductFilterBuilder {
 
         public Builder setMaxPrice(Long maxPrice) {
             this.maxPrice = maxPrice;
+            return this;
+        }
+        public Builder setSim(List<String> sim) {
+            this.sim = sim;
+            return this;
+        }
+        public Builder setConnectivity(List<String> connectivity) {
+            this.connectivity = connectivity;
+            return this;
+        }
+        public Builder setOs(List<String> os) {
+            this.os = os;
+            return this;
+        }
+        public Builder setProcessor(List<String> processor) {
+            this.processor = processor;
             return this;
         }
 
@@ -66,6 +95,22 @@ public class ProductFilterBuilder {
 
     public Long getMaxPrice() {
         return maxPrice;
+    }
+
+    public List<String> getSim() {
+        return sim;
+    }
+
+    public List<String> getConnectivity() {
+        return connectivity;
+    }
+
+    public List<String> getOs() {
+        return os;
+    }
+
+    public List<String> getProcessor() {
+        return processor;
     }
 }
 

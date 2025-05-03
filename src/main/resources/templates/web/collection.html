@@ -317,11 +317,13 @@
 
                                                 <div class="facets-wrapper">
                                                     <!-- Product-Categories start -->
-                                                    <button type="submit" class="axil-btn btn-outline-primary" id="filterButton">Filter</button>
-                                                    <br><br>
 
-                                                    <input class="form-control mr-sm-2" type="search" placeholder="Search" name="name" aria-label="Search" th:value="${param.name}">
+                                                    <div class="filter-info" style="display: flex; justify-content: space-between;">
+                                                        <a th:href="@{/products}"  class="reset-text">Reset</a>
+                                                        <button type="submit" class="axil-btn btn-outline-primary" id="filterButton">Filter</button>
+                                                    </div>
                                                     <br>
+                                                    <input class="form-control mr-sm-2" type="search" placeholder="Search" name="name" aria-label="Search" th:value="${param.name}">
 
                                                     <div class="shop-sidebar" data-animate="animate__fadeInUp">
                                                         <h6 class="shop-title" data-animate="animate__fadeInUp">
@@ -403,6 +405,13 @@
                                                                     <li class="brand-li">
                                                                         <label class="cust-checkbox-label">
                                                                             <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <span class="filter-name">Android</span>
+                                                                            <span class="cust-check"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="brand-li">
+                                                                        <label class="cust-checkbox-label">
+                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
                                                                             <span class="filter-name">MIUI</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
@@ -417,21 +426,44 @@
                                                                     <li class="brand-li">
                                                                         <label class="cust-checkbox-label">
                                                                             <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">Realme UI</span>
+                                                                            <span class="filter-name">HyperOS</span>
+                                                                            <span class="cust-check"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Product Operasystem end-->
+                                                        <!-- Product Operasystem -->
+                                                        <div class="shop-sidebar sidebar-product" data-animate="animate__fadeInUp">
+                                                            <h6 class="shop-title" >Processor</h6>
+                                                            <div class="collapse filter-element" id="collapse-1">
+                                                                <ul class="brand-ul scrollbar">
+                                                                    <li class="brand-li">
+                                                                        <label class="cust-checkbox-label">
+                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <span class="filter-name">Snapdragon</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
                                                                     <li class="brand-li">
                                                                         <label class="cust-checkbox-label">
                                                                             <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">HarmonyOS</span>
+                                                                            <span class="filter-name">MediaTek</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
                                                                     <li class="brand-li">
                                                                         <label class="cust-checkbox-label">
                                                                             <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">Android</span>
+                                                                            <span class="filter-name">Bionic</span>
+                                                                            <span class="cust-check"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="brand-li">
+                                                                        <label class="cust-checkbox-label">
+                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <span class="filter-name">Exynos</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
@@ -447,42 +479,21 @@
                                                                     <li class="brand-li">
                                                                         <label class="cust-checkbox-label">
                                                                             <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">eSim</span>
+                                                                            <span class="filter-name">eSIM</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
                                                                     <li class="brand-li">
                                                                         <label class="cust-checkbox-label">
                                                                             <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">duaLSim</span>
+                                                                            <span class="filter-name">Nano</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
                                                                     <li class="brand-li">
                                                                         <label class="cust-checkbox-label">
                                                                             <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">ColorOS</span>
-                                                                            <span class="cust-check"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li class="brand-li">
-                                                                        <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">Realme UI</span>
-                                                                            <span class="cust-check"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li class="brand-li">
-                                                                        <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">HarmonyOS</span>
-                                                                            <span class="cust-check"></span>
-                                                                        </label>
-                                                                    </li>
-                                                                    <li class="brand-li">
-                                                                        <label class="cust-checkbox-label">
-                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
-                                                                            <span class="filter-name">Android</span>
+                                                                            <span class="filter-name">Dual</span>
                                                                             <span class="cust-check"></span>
                                                                         </label>
                                                                     </li>
@@ -490,6 +501,50 @@
                                                             </div>
                                                         </div>
                                                         <!-- Product Sim end-->
+                                                        <!-- Product Connection-->
+                                                        <div class="shop-sidebar sidebar-product" data-animate="animate__fadeInUp">
+                                                            <h6 class="shop-title" >Connection</h6>
+                                                            <div class="collapse filter-element" id="collapse-6">
+                                                                <ul class="brand-ul scrollbar">
+                                                                    <li class="brand-li">
+                                                                        <label class="cust-checkbox-label">
+                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <span class="filter-name">Wi-Fi</span>
+                                                                            <span class="cust-check"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="brand-li">
+                                                                        <label class="cust-checkbox-label">
+                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <span class="filter-name">Wi-Fi 7</span>
+                                                                            <span class="cust-check"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="brand-li">
+                                                                        <label class="cust-checkbox-label">
+                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <span class="filter-name">5G</span>
+                                                                            <span class="cust-check"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="brand-li">
+                                                                        <label class="cust-checkbox-label">
+                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <span class="filter-name">4G</span>
+                                                                            <span class="cust-check"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                    <li class="brand-li">
+                                                                        <label class="cust-checkbox-label">
+                                                                            <input type="checkbox" name="cust-checkbox" class="cust-checkbox">
+                                                                            <span class="filter-name">NFC</span>
+                                                                            <span class="cust-check"></span>
+                                                                        </label>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Product Connection end-->
                                                     </div>
 
                                                 </div>

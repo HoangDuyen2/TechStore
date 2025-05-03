@@ -17,6 +17,10 @@ public class ProductFilterBuilderConverter {
                 .setBrandNames(MapUtil.getObject(params, "brandNames", List.class))
                 .setMinPrice(MapUtil.getObject(params, "minPrice", Long.class))
                 .setMaxPrice(MapUtil.getObject(params, "maxPrice", Long.class))
+                .setSim(MapUtil.getObject(params, "sim", List.class))
+                .setConnectivity(MapUtil.getObject(params, "connectivity", List.class))
+                .setOs(MapUtil.getObject(params, "os", List.class))
+                .setProcessor(MapUtil.getObject(params, "processor", List.class))
                 .build();
         return productFilterBuilder;
     }
