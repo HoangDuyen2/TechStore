@@ -58,7 +58,7 @@
                                         <span class="acc-title">Account</span>
                                         <div class="account-login">
                                             <a th:if="${#authentication.principal == 'anonymousUser'}" th:href="@{/register}">Register</a>
-                                            <a th:unless="${#authentication.principal == 'anonymousUser'}" th:text="${user.getFullName()}"></a>
+                                            <a th:unless="${#authentication.principal == 'anonymousUser'}" th:href="@{/my-account}" th:text="${user.getFullName()}"></a>
                                             <a th:if="${#authentication.principal == 'anonymousUser'}" th:href="@{/login}">Login</a>
                                             <a th:unless="${#authentication.principal == 'anonymousUser'}" th:href="@{/logout}">Logout</a>
                                         </div>
