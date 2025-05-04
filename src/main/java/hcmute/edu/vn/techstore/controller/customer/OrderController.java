@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.controller.customer;
 
+import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import hcmute.edu.vn.techstore.Enum.EPayment;
 import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
@@ -7,10 +8,7 @@ import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -52,5 +50,17 @@ public class OrderController {
             model.addAttribute("paymentMethods", EPayment.values());
             return "web/checkout-style1";
         }
+    }
+
+    @GetMapping("/orders/{orderId}/cancel")
+    public String cancelOrder(Model model, @PathVariable Long orderId) {
+        orderService.changeStatusOrder(orderId, EOrderStatus.CANCELLED);
+        return "redirect:/order-history";
+    }
+
+    @GetMapping("/orders/{orderId}/received")
+    public String receivedOrder(Model model, @PathVariable Long orderId) {
+        orderService.changeStatusOrder(orderId, EOrderStatus.DELIVERED_SUCCESSFULLY);
+        return "redirect:/order-history";
     }
 }

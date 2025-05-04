@@ -2,7 +2,9 @@ package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.Enum.EDiscountType;
 import hcmute.edu.vn.techstore.Enum.EOrderStatus;
+import hcmute.edu.vn.techstore.convert.OrderConverter;
 import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
+import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.entity.*;
 import hcmute.edu.vn.techstore.repository.*;
 import hcmute.edu.vn.techstore.service.interfaces.ICartService;
@@ -14,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -27,7 +31,9 @@ public class OrderServiceImpl implements IOrderService {
     private final DiscountRepository discountRepository;
     private final PaymentRepository paymentRepository;
     private final ProductRepository productRepository;
+    private final OrderDetailRepository orderDetailRepository;
     private final PriceUtil priceUtil;
+    private final OrderConverter orderConverter;
 
     @Override
     public CheckoutRequest getCheckoutRequest(String email) {
@@ -123,6 +129,7 @@ public class OrderServiceImpl implements IOrderService {
             productEntity.setStockQuantity(productEntity.getStockQuantity() - productCheckout.getQuantity());
             productRepository.save(productEntity);
         }
+
         // Create order
         OrderEntity orderEntity = new OrderEntity();
         orderEntity.setOrderDate(java.time.LocalDateTime.now());
@@ -134,19 +141,42 @@ public class OrderServiceImpl implements IOrderService {
             DiscountEntity discountEntity = discountRepository.findByCode(checkoutRequest.getDiscountCode());
             orderEntity.setDiscount(discountEntity);
         }
-        PaymentEntity paymentEntity = paymentRepository.findByName(checkoutRequest.getPaymentMethod().name()).orElse(null);
-        orderEntity.setPayment(paymentEntity);
-        orderEntity.setOrderDetails(checkoutRequest.getProductCheckouts().stream()
-                .map(productCheckout -> {
-                    OrderDetailEntity orderDetail = new OrderDetailEntity();
-                    orderDetail.setOrder(orderEntity);
-                    orderDetail.setProduct(productRepository.findById(productCheckout.getId()).orElse(null));
-                    orderDetail.setQuantity(productCheckout.getQuantity());
-                    return orderDetail;
-                }).toList());
-        orderRepository.save(orderEntity);
-        cartService.deleteAllCartDetails(checkoutRequest.getEmail());
+        orderEntity.setPayment(paymentRepository.findByName(checkoutRequest.getPaymentMethod().name()).orElse(null));
+
+        // Save order first to get generated ID
+        orderEntity = orderRepository.save(orderEntity);
+
+        // Create and save order details
+        List<OrderDetailEntity> orderDetails = new ArrayList<>();
+        for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
+            OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+            orderDetailEntity.setProduct(productRepository.findById(productCheckout.getId()).orElse(null));
+            orderDetailEntity.setQuantity(productCheckout.getQuantity());
+            orderDetailEntity.setOrder(orderEntity);
+            orderDetails.add(orderDetailEntity);
+        }
+
+        // Explicitly save all order details
+        orderDetailRepository.saveAll(orderDetails);
+//        cartService.deleteAllCartDetails(checkoutRequest.getEmail());
         return true;
+    }
+
+    @Override
+    public boolean changeStatusOrder(Long orderId, EOrderStatus status){
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
+        if (orderEntity != null) {
+            orderEntity.setOrderStatus(status);
+            orderRepository.save(orderEntity);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<OrderResponse> getAllOrdersByUserEmail(String email) {
+        List<OrderEntity> orderEntities = orderRepository.findAllByUserAccount_Email(email);
+        return orderEntities.stream().map(orderEntity -> orderConverter.toResponse(orderEntity)).toList();
     }
 
     private boolean checkDiscount(DiscountEntity discountEntity) {
