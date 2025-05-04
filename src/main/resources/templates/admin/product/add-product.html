@@ -163,7 +163,7 @@
 
                                             <fieldset class="price">
                                                 <div class="body-title mb-10">Price <span class="tf-color-1">*</span></div>
-                                                <input type="number" th:field="*{price}"  placeholder="Enter price" >
+                                                <input type="number" th:field="*{price}"  placeholder="Enter price" step="1" >
                                                 <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="error-message"></div>
                                             </fieldset>
                                         </div>
@@ -229,7 +229,7 @@
                                         <!-- Description -->
                                         <fieldset class="description">
                                             <div class="body-title mb-10">Description <span class="tf-color-1">*</span></div>
-                                            <textarea  th:field="*{description}" placeholder="Enter product description" ></textarea>
+                                            <textarea  th:field="*{description}" placeholder="Enter product description" style="height: 200px; overflow-y: auto;"></textarea>
                                             <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="error-message"></div>
 
                                         </fieldset>
