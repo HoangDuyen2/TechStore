@@ -7,11 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("")
 public class Test {
-    @GetMapping("")
+    @GetMapping("/error")
     public String index() {
-        return "web/index1";
+        return "web/404";
     }
-
-
-
 }

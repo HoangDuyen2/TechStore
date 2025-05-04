@@ -21,7 +21,7 @@
                     <li class="cart-item" th:data-product-id="${eachCart.product.id}">
                         <div class="cart-item-wrap">
                             <div class="cart-item-image">
-                                <a href="product-template.html">
+                                <a th:href="@{/products/{id}(id=${eachCart.product.id})}">
                                     <img th:src="${eachCart.product.getThumbnail()}"
                                          alt="Ảnh người dùng mặc định" class="img-fluid">
                                 </a>
@@ -29,7 +29,7 @@
                             <div class="cart-item-details">
                                 <div class="cart-item-info">
                                     <div class="cart-item-name">
-                                        <a href="product-template.html" th:text="${eachCart.product.name}"></a>
+                                        <a th:href="@{/products/{id}(id=${eachCart.product.id})}" th:text="${eachCart.product.name}"></a>
                                     </div>
                                     <div class="cart-item-variants">
                                         <h6>OS:</h6>
