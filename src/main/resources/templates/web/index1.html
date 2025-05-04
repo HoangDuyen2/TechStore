@@ -41,9 +41,28 @@
     <section class="slider-category section-pt">
         <div class="section-capture">
             <div class="section-title">
-                <h2 data-animate="animate__fadeInUp">Popular category</h2>
+                <h2 data-animate="animate__fadeInUp">Popular brand</h2>
             </div>
         </div>
+        <!-- brand-slider start -->
+        <div class="brand-area section-pb">
+            <div class="container">
+                <div class="testi-category">
+                    <div class="testi-wrap">
+                        <div class="brand-slider owl-carousel owl-theme" id="brand-slider">
+                            <div class="item" data-animate="animate__fadeInUp" th:each="brand : ${brands}">
+                                <div class="brand-img">
+                                    <a th:href="@{/products(brandNames=${brand.name})}" class="brand-img"><img
+                                            th:src="*{brand.getImage()}" class="img-fluid"
+                                            alt="brand"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- brand-slider end -->
         <div class="container">
             <div class="cat-category">
                 <div class="cat-wrap">
@@ -269,7 +288,7 @@
                             </div>
                         </div>
                         <div class="collection-button" data-animate="animate__fadeInUp">
-                            <a href="collection.html" class="btn-style3">view more</a>
+                            <a th:href="@{/products}" class="btn-style3">view more</a>
                         </div>
                     </div>
                     <div class="swiper-buttons">
@@ -428,25 +447,7 @@
         </div>
     </section>
     <!-- testimonials-slider end -->
-    <!-- brand-slider start -->
-    <div class="brand-area section-pb">
-        <div class="container">
-            <div class="testi-category">
-                <div class="testi-wrap">
-                    <div class="brand-slider owl-carousel owl-theme" id="brand-slider">
-                        <div class="item" data-animate="animate__fadeInUp" th:each="brand : ${brands}">
-                            <div class="brand-img">
-                                <a th:href="@{/products(brandNames=${brand.name})}" class="brand-img"><img
-                                        th:src="*{brand.getImage()}" class="img-fluid"
-                                        alt="brand"></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- brand-slider end -->
+
     <!-- offer-text-section start -->
     <div class="offer-text-area section-tb-padding">
         <div class="offer-text-wrap">
