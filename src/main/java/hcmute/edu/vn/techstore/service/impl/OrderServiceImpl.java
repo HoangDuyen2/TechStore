@@ -154,10 +154,10 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public boolean changeStatusOrder(Long orderId){
+    public boolean changeStatusOrder(Long orderId, EOrderStatus status){
         OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
         if (orderEntity != null) {
-            orderEntity.setOrderStatus(EOrderStatus.CANCELLED);
+            orderEntity.setOrderStatus(status);
             orderRepository.save(orderEntity);
             return true;
         }

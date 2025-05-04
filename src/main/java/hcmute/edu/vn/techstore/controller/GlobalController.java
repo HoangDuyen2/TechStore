@@ -1,8 +1,10 @@
 package hcmute.edu.vn.techstore.controller;
 
 import hcmute.edu.vn.techstore.dto.response.CartResponse;
+import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.service.interfaces.ICartService;
+import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -11,12 +13,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.List;
+
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalController {
 
     private final IUserService userService;
     private final ICartService cartService;
+    private final IOrderService orderService;
 
     @ModelAttribute("user")
     public UserResponse getCurrentUser(Authentication authentication) {
@@ -37,6 +42,16 @@ public class GlobalController {
                 String email = SecurityUtils.getCurrentUsername();
                 return cartService.getCart(email);
             }
+        }
+        return null;
+    }
+
+    @ModelAttribute("orderResponseList")
+    public List<OrderResponse> getAllOrders(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = SecurityUtils.getCurrentUsername();
+            List<OrderResponse> orderResponseList = orderService.getAllOrdersByUserEmail(SecurityUtils.getCurrentUsername());
+            return orderResponseList;
         }
         return null;
     }

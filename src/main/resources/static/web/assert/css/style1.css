@@ -6605,3 +6605,132 @@ a.np-product:hover img {
 .disabled-item .item-remove {
     pointer-events: auto; /* Nhưng riêng nút Remove vẫn cho phép click */
 }
+
+/*Order History*/
+
+/*Order status*/
+.status-pending,
+.status-pickup,
+.status-shipping,
+.status-delivered,
+.status-cancelled,
+.status-failed {
+    display: inline-flex;
+    justify-content: center;
+    border-radius: 5px;
+    font-weight: 500;
+    width: max-content;
+    white-space: nowrap;
+}
+
+.status-pending {
+    background-color: #fff3cd !important;
+    border: 1px solid #f1c84b !important;
+    color: #856404 !important;
+}
+
+.status-pickup {
+    background-color: #d1ecf1 !important;
+    border: 1px solid #17a2b8 !important;
+    color: #0c5460 !important;
+}
+
+.status-shipping {
+    background-color: #cce5ff !important;
+    border: 1px solid #469bfd !important;
+    color: #004085 !important;
+}
+
+.status-delivered {
+    background-color: #d4edda !important;
+    border: 1px solid #28a745 !important;
+    color: #155724 !important;
+}
+
+.status-cancelled {
+    background-color: #f8d7da !important;
+    border: 1px solid #dc3545 !important;
+    color: #721c24 !important;
+}
+
+.status-failed {
+    background-color: #e2e3e5 !important;
+    border: 1px solid #6c757d !important;
+    color: #383d41 !important;
+}
+
+.order-hidden { display: none; }
+.order-wrap {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.order-item-info {
+    display: grid;
+    /* cấu trúc cột: ảnh cố định, tên linh hoạt, qty cố định, giá cố định, tổng cố định */
+    grid-template-columns: 60px 1fr 150px 150px 150px;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+.order-item-img img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+.order-item-name {
+    color: #333;
+}
+
+.order-item-price,
+.order-item-total {
+    font-size: 14px;
+    text-align: right;
+}
+
+
+/*Button in Order History*/
+.btn-order-tab{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
+    user-select: none;
+}
+
+/* nút View (primary) */
+.btn-order-view {
+    background-color: #2563eb;    /* xanh dương */
+    color: #ffffff;
+    border: 1px solid #2563eb;
+}
+.btn-order-view:hover {
+    background-color: #1e40af;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.btn-order-view:active {
+    background-color: #1e3a8a;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* nút Cancel (danger outline) */
+.btn-order-cancel {
+    background-color: transparent;
+    color: #dc2626;               /* đỏ */
+    border: 1px solid #dc2626;
+}
+.btn-order-cancel:hover {
+    background-color: rgba(220,38,38,0.1);
+}
+.btn-order-cancel:active {
+    background-color: rgba(220,38,38,0.2);
+    color: #b91c1c;
+}
