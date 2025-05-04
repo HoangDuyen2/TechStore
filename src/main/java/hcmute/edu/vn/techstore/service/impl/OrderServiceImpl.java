@@ -2,7 +2,9 @@ package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.Enum.EDiscountType;
 import hcmute.edu.vn.techstore.Enum.EOrderStatus;
+import hcmute.edu.vn.techstore.convert.OrderConverter;
 import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
+import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.entity.*;
 import hcmute.edu.vn.techstore.repository.*;
 import hcmute.edu.vn.techstore.service.interfaces.ICartService;
@@ -31,6 +33,7 @@ public class OrderServiceImpl implements IOrderService {
     private final ProductRepository productRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final PriceUtil priceUtil;
+    private final OrderConverter orderConverter;
 
     @Override
     public CheckoutRequest getCheckoutRequest(String email) {
@@ -157,6 +160,23 @@ public class OrderServiceImpl implements IOrderService {
         orderDetailRepository.saveAll(orderDetails);
 //        cartService.deleteAllCartDetails(checkoutRequest.getEmail());
         return true;
+    }
+
+    @Override
+    public boolean changeStatusOrder(Long orderId, EOrderStatus status){
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
+        if (orderEntity != null) {
+            orderEntity.setOrderStatus(status);
+            orderRepository.save(orderEntity);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<OrderResponse> getAllOrdersByUserEmail(String email) {
+        List<OrderEntity> orderEntities = orderRepository.findAllByUserAccount_Email(email);
+        return orderEntities.stream().map(orderEntity -> orderConverter.toResponse(orderEntity)).toList();
     }
 
     private boolean checkDiscount(DiscountEntity discountEntity) {
