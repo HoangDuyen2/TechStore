@@ -2,6 +2,7 @@ package hcmute.edu.vn.techstore.service.interfaces;
 
 import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
+import hcmute.edu.vn.techstore.dto.request.ChangePasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
@@ -22,4 +23,6 @@ public interface IUserService {
     ProfileRequest getProfileById(String email);
 
     boolean updateProfile(String email, ProfileRequest profileRequest) throws IOException;
+
+    boolean changePassword(ChangePasswordRequest changePasswordRequest) throws IOException;
 }

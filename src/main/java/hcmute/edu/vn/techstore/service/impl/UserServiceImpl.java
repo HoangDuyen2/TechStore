@@ -2,6 +2,7 @@ package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.convert.UserResponseConverter;
+import hcmute.edu.vn.techstore.dto.request.ChangePasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
@@ -197,5 +198,22 @@ public class UserServiceImpl implements IUserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean changePassword(ChangePasswordRequest changePasswordRequest) {
+        UserEntity userEntity = emailExists(changePasswordRequest.getEmail());
+
+        if (userEntity == null) {
+            throw new BadCredentialsException("Email does not exist");
+        }
+
+        if (!isPasswordConfirmed(changePasswordRequest.getPassword(), changePasswordRequest.getConfirmPassword())) {
+            throw new BadCredentialsException("Password not match");
+        }
+
+        userEntity.getAccount().setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getPassword()));
+        userRepository.save(userEntity);
+        return true;
     }
 }

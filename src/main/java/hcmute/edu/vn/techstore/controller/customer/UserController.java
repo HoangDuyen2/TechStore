@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.controller.customer;
 
+import hcmute.edu.vn.techstore.dto.request.ChangePasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
@@ -36,7 +37,7 @@ public class UserController {
             return "web/profile";
         }
         try {
-            if(userService.updateProfile(SecurityUtils.getCurrentUsername(), profileRequest)) {
+            if (userService.updateProfile(SecurityUtils.getCurrentUsername(), profileRequest)) {
                 return "redirect:/my-account";
             }
         } catch (Exception e) {
@@ -51,5 +52,27 @@ public class UserController {
         List<OrderResponse> orderResponseList = orderService.getAllOrdersByUserEmail(SecurityUtils.getCurrentUsername());
         model.addAttribute("orderResponseList", orderResponseList);
         return "web/order-history";
+    }
+
+    @GetMapping("/change-password")
+    public String changePassword(Model model) {
+        model.addAttribute("changePasswordRequest", new ChangePasswordRequest());
+        return "web/change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(Model model, @Validated @ModelAttribute("changePasswordRequest") ChangePasswordRequest changePasswordRequest,
+                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "web/change-password";
+        }
+        try {
+            userService.changePassword(changePasswordRequest);
+            model.addAttribute("message", "Change password successfully");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        model.addAttribute("changePasswordRequest", new ChangePasswordRequest());
+        return "web/change-password";
     }
 }
