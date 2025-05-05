@@ -170,6 +170,21 @@ public class OrderServiceImpl implements IOrderService {
         return orderEntities.stream().map(orderEntity -> orderConverter.toResponse(orderEntity)).toList();
     }
 
+    @Override
+    public List<OrderResponse> getAllOrders() {
+        List<OrderEntity> orderEntities = orderRepository.findAll();
+        return orderEntities.stream().map(orderEntity -> orderConverter.toResponse(orderEntity)).toList();
+    }
+
+    @Override
+    public OrderResponse getOrderById(Long orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
+        if (orderEntity != null) {
+            return orderConverter.toResponse(orderEntity);
+        }
+        return null;
+    }
+
 
     private boolean checkDiscount(DiscountEntity discountEntity) {
         if (discountEntity != null && discountEntity.getQuantity() > 0 && discountEntity.getExpiredDate().isAfter(java.time.LocalDate.now())) {

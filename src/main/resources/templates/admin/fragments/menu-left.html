@@ -1,7 +1,7 @@
 <div class="section-menu-left" th:fragment="section-menu-left">
     <div class="box-logo">
         <a th:href="@{/admin/dashboard}" id="site-logo-inner">
-            <img class="" id="logo_header" alt="" th:src="@{/admin/images/logo/logo.png}" th:data-light="@{/admin/images/logo/logo.png}" th:data-dark="@{/admin/images/logo/logo-dark.png}" >
+            <img class="" id="logo_header" alt="" th:src="@{/admin/asset/images/logo/logo.png}" th:data-light="@{/admin/asset/images/logo/logo.png}" th:data-dark="@{/admin/asset/images/logo/logo-dark.png}" >
         </a>
         <div class="button-show-hide">
             <i class="icon-menu-left"></i>
@@ -30,8 +30,8 @@
                         </a>
                         <ul class="sub-menu">
                             <li class="sub-menu-item">
-                                <a href="add-product.html" class="">
-                                    <div class="text">Add Product</div>
+                                <a th:href="@{/staff/orders}" class="">
+                                    <div class="text">Order List</div>
                                 </a>
                             </li>
                             <li class="sub-menu-item">
@@ -290,7 +290,7 @@
         <div class="bot text-center">
             <div class="wrap">
                 <div class="mb-20">
-                    <img th:src="@{/admin/images/menu-left/img-bot.png}" alt="">
+                    <img th:src="@{/admin/asset/images/menu-left/img-bot.png}" alt="">
                 </div>
                 <div class="mb-20">
                     <h6>Hi, how can we help?</h6>

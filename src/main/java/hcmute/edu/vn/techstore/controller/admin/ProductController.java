@@ -22,7 +22,7 @@ import java.util.List;
 
 @Controller("adminProductController")
 @RequiredArgsConstructor
-@RequestMapping("/admin/products")
+@RequestMapping({"/admin/products","/staff/products"})
 public class ProductController {
 
     // Inject any required services here
