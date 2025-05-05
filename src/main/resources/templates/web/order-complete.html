@@ -1,26 +1,8 @@
 <html lang="en">
 
-<!-- Added by HTTrack -->
-<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-<div th:insert="~{web/fragments/head::head}"></div>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head th:replace="web/fragments/head :: head('TechStore - Đặt hàng thành công')"></head><title>TechStore - Home</title>
     <body>
-        <!-- top notification start -->
-        <div class="top-notification-bar">
-            <div class="container">
-                <ul class="notification-entry">
-                    <li class="notify-wrap notify-mail">
-                        <div class="notify-text">
-                            <ul class="grid-wrap">
-                                <li class="grid-wrapper">
-                                    <p class="notification-free"><span class="top-c">Free delivery</span> on orders over $100 discount</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- top notification end -->
         <!-- header-area start -->
         <div th:insert="~{web/fragments/header::header}"></div>
         <!-- header end -->
@@ -836,6 +818,4 @@
         <!-- theme js -->
         <script th:src="@{/web/assert/js/main.js}"></script>
     </body>
-
-<!-- Mirrored from spacingtech.com/html/etro/etro/order-complete.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Mar 2025 13:01:48 GMT -->
 </html>
