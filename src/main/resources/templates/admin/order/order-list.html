@@ -89,7 +89,7 @@
                                             <li class="user-item gap14" th:each="eachOrder : ${orderResponseList}">
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="body-text" style="width: 10%; min-width: 120px;margin-left: 10px" th:text="${eachOrder.getOrderDate()}"></div>
-                                                    <div class="body-text" style="width: 15%; min-width: 150px" th:text="${eachOrder.getCustomerName()}"></div>
+                                                    <div class="body-text body-title-2" style="width: 15%; min-width: 150px" th:text="${eachOrder.getCustomerName()}"></div>
                                                     <div class="body-text" style="width: 33%; min-width: 150px" th:text="${eachOrder.getAddress()}"></div>
                                                     <div class="body-text" style="width: 32%; min-width: 120px" th:switch="${eachOrder.orderStatus.name()}">
                                                         <div
@@ -170,7 +170,8 @@
     <div th:insert="~{admin/fragments/script::script}"></div>
 
 </body>
-
+<script th:src="@{/admin/asset/js/pagination.js}"></script>
+<script th:src="@{/admin/asset/js/search.js}"></script>
 
 <!-- Mirrored from themesflat.co/html/remos/order-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:48 GMT -->
 </html>
