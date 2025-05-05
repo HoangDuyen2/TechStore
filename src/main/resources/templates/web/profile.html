@@ -53,19 +53,16 @@
                                     <div class="account-detail">
                                         <ul class="profile-ul">
                                             <li class="profile-li" data-animate="animate__fadeInUp">
-                                                <a th:href="@{/order-history}" class="active">
+                                                <a th:href="@{/my-account}" class="active">Profile</a>
+                                            </li>
+                                            <li class="profile-li" data-animate="animate__fadeInUp">
+                                                <a th:href="@{/order-history}">
                                                     <span>Orders</span>
                                                     <span
                                                             class="pro-count"
                                                             th:text="${orderResponseList.size()}"
                                                     ></span>
                                                 </a>
-                                            </li>
-                                            <li class="profile-li" data-animate="animate__fadeInUp">
-                                                <a th:href="@{/my-account}">Profile</a>
-                                            </li>
-                                            <li class="profile-li" data-animate="animate__fadeInUp">
-                                                <a href="pro-address.html">Address</a>
                                             </li>
                                             <li class="profile-li" data-animate="animate__fadeInUp">
                                                 <a href="change-password.html">
@@ -84,47 +81,54 @@
                                 <!-- order info start -->
                                 <div class="profile-form profile-address">
                                     <div class="billing-area">
-                                        <form>
+                                        <form method="post" th:action="@{/update-profile}" th:object="${profileRequest}">
                                             <div class="pro-add-title">
                                                 <h6 data-animate="animate__fadeInUp">Profile</h6>
                                             </div>
+
+                                            <!-- Add error message for BadCredentialsException -->
+                                            <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
+
                                             <div class="billing-form">
                                                 <ul class="input-2">
                                                     <li class="billing-li" data-animate="animate__fadeInUp">
-                                                        <label>First name</label>
-                                                        <input type="text" name="name" placeholder="First name">
+                                                        <label>Firstname</label>
+                                                        <input type="text" th:field="*{firstName}" placeholder="Văn A">
+                                                        <span class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
                                                     </li>
                                                     <li class="billing-li" data-animate="animate__fadeInUp">
-                                                        <label>Last name</label>
-                                                        <input type="text" name="name" placeholder="Last name">
-                                                    </li>
-                                                    <li class="billing-li" data-animate="animate__fadeInUp">
-                                                        <label>Email address</label>
-                                                        <input type="text" name="name" placeholder="Email address" required>
+                                                        <label>Lastname</label>
+                                                        <input type="text" th:field="*{lastName}" placeholder="Nguyễn">
+                                                        <span class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
                                                     </li>
                                                     <li class="billing-li" data-animate="animate__fadeInUp">
                                                         <label>Phone number</label>
-                                                        <input type="text" name="name" placeholder="Phone number">
+                                                        <input type="tel" th:field="*{phoneNumber}" placeholder="Please enter a 10-digit phone number!">
+                                                        <span class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
                                                     </li>
                                                     <li class="billing-li" data-animate="animate__fadeInUp">
-                                                        <label>New password</label>
-                                                        <input type="text" name="name" placeholder="New password">
+                                                        <label>Date of birth</label>
+                                                        <input type="date" th:field="*{dateOfBirth}" placeholder="Please enter your date of birth!">
+                                                        <span class="text-danger" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></span>
                                                     </li>
                                                     <li class="billing-li" data-animate="animate__fadeInUp">
-                                                        <label>Confirm password</label>
-                                                        <input type="text" name="name" placeholder="Confirm password">
+                                                        <label>Gender</label>
+                                                        <select th:field="*{gender}" class="form-control">
+                                                            <option value="">Select gender</option>
+                                                            <option th:each="gender : ${T(hcmute.edu.vn.techstore.Enum.EGender).values()}"
+                                                                    th:value="${gender}"
+                                                                    th:text="${gender}"></option>
+                                                        </select>
+                                                    </li>
+                                                    <li class="billing-li" data-animate="animate__fadeInUp">
+                                                        <label>Address</label>
+                                                        <input type="tel" th:field="*{address}" placeholder="Please enter your address!">
+                                                        <span class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
                                                     </li>
                                                 </ul>
                                                 <ul class="pro-submit">
-                                                    <li class="label-info" data-animate="animate__fadeInUp">
-                                                        <label class="box-area">
-                                                            <span class="text">Subscribe me to newsletter</span>
-                                                            <input type="checkbox" class="cust-checkbox" id="subscribeCheckbox">
-                                                            <span class="cust-check"></span>
-                                                        </label>
-                                                    </li>
                                                     <li data-animate="animate__fadeInUp">
-                                                        <a href="pro-wishlist.html" class="btn btn-style2 checkout disabled" id="updateProfileBtn">Update profile</a>
+                                                        <button type="submit" class="btn btn-style2 checkout" id="updateProfileBtn">Update profile</button>
                                                     </li>
                                                 </ul>
                                             </div>

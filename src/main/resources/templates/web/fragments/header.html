@@ -51,7 +51,10 @@
                             </li>
                             <li class="side-wrap user-wrap">
                                 <div class="user-info">
-                                    <a href="javascript:void(0)">
+                                    <a th:if="${#authentication.principal == 'anonymousUser'}" th:href="@{/login}">
+                                        <span class="user-icon"><i class="feather-user"></i></span>
+                                    </a>
+                                    <a th:unless="${#authentication.principal == 'anonymousUser'}" th:href="@{/my-account}">
                                         <span class="user-icon"><i class="feather-user"></i></span>
                                     </a>
                                     <div class="account-main">

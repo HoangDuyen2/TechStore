@@ -1,9 +1,8 @@
 package hcmute.edu.vn.techstore.service.impl;
 
-import hcmute.edu.vn.techstore.Enum.EGender;
 import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.convert.UserResponseConverter;
-import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
+import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.entity.AccountEntity;
@@ -11,7 +10,6 @@ import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
-import hcmute.edu.vn.techstore.service.interfaces.IImageService;
 import hcmute.edu.vn.techstore.service.interfaces.IUserFactory;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.ImageUtil;
@@ -19,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -154,5 +151,35 @@ public class UserServiceImpl implements IUserService {
         userEntity.getAccount().setPassword(bCryptPasswordEncoder.encode(userRequest.getPassword()));
         userRepository.save(userEntity);
         return true;
+    }
+
+    @Override
+    public ProfileRequest getProfileById(String email) {
+        UserEntity userEntity = userRepository.findByAccount_Email(email).orElseThrow(null);
+        ProfileRequest profileRequest = new ProfileRequest();
+        profileRequest.setFirstName(userEntity.getFirstName());
+        profileRequest.setLastName(userEntity.getLastName());
+        profileRequest.setPhoneNumber(userEntity.getPhoneNumber());
+        profileRequest.setAddress(userEntity.getAddress());
+        profileRequest.setGender(userEntity.getGender());
+        profileRequest.setDateOfBirth(userEntity.getDateOfBirth());
+        return profileRequest;
+    }
+
+    @Override
+    public boolean updateProfile(String email, ProfileRequest profileRequest) {
+        UserEntity userEntity = userRepository.findByAccount_Email(email).orElseThrow(null);
+        if (userEntity != null) {
+            userEntity.setFirstName(profileRequest.getFirstName());
+            userEntity.setLastName(profileRequest.getLastName());
+            userEntity.setPhoneNumber(profileRequest.getPhoneNumber());
+            userEntity.setAddress(profileRequest.getAddress());
+            userEntity.setGender(profileRequest.getGender());
+            userEntity.setDateOfBirth(profileRequest.getDateOfBirth());
+
+            userRepository.save(userEntity);
+            return true;
+        }
+        return false;
     }
 }
