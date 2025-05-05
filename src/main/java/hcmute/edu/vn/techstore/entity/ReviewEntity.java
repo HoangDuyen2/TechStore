@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Table(name = "reviews")
-public class ReviewEntity {
+public class ReviewEntity extends TrackingDate{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +25,6 @@ public class ReviewEntity {
 
     @Column(nullable = false)
     private int rating;
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDate createdAt;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false, referencedColumnName = "id")
