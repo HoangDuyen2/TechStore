@@ -42,14 +42,21 @@ public class OrderController {
         checkoutRequest.setPaymentMethod(EPayment.valueOf(paymentMethod));
 
         try {
-            orderService.createOrder(checkoutRequest);
-            return "redirect:/order-complete";
+            Long orderId = orderService.createOrder(checkoutRequest);
+            return "redirect:/order-complete?orderId=" + orderId;
         } catch (Exception e) {
             model.addAttribute("error", "Failed to create order: " + e.getMessage());
             model.addAttribute("checkoutRequest", checkoutRequest);
             model.addAttribute("paymentMethods", EPayment.values());
             return "web/checkout-style1";
         }
+    }
+
+    @GetMapping("/order-complete")
+    public String orderComplete(@RequestParam Long orderId, Model model) {
+        model.addAttribute("orderCompleteResponse", orderService.getOrderCompleteResponse(orderId));
+        model.addAttribute("message", "Order completed successfully!");
+        return "web/order-complete";
     }
 
     @GetMapping("/orders/{orderId}/cancel")

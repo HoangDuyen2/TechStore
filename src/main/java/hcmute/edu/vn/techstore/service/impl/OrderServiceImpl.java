@@ -4,6 +4,7 @@ import hcmute.edu.vn.techstore.Enum.EDiscountType;
 import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import hcmute.edu.vn.techstore.convert.OrderConverter;
 import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
+import hcmute.edu.vn.techstore.dto.response.OrderCompleteRespone;
 import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.entity.*;
 import hcmute.edu.vn.techstore.repository.*;
@@ -93,7 +94,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public boolean createOrder(CheckoutRequest checkoutRequest) {
+    public Long createOrder(CheckoutRequest checkoutRequest) {
         // Check discount
         if (checkoutRequest.getDiscountCode() != null && !checkoutRequest.getDiscountCode().isEmpty()) {
             DiscountEntity discountEntity = discountRepository.findByCode(checkoutRequest.getDiscountCode());
@@ -159,7 +160,7 @@ public class OrderServiceImpl implements IOrderService {
         // Explicitly save all order details
         orderDetailRepository.saveAll(orderDetails);
 //        cartService.deleteAllCartDetails(checkoutRequest.getEmail());
-        return true;
+        return orderEntity.getId();
     }
 
     @Override
@@ -200,5 +201,21 @@ public class OrderServiceImpl implements IOrderService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public OrderCompleteRespone getOrderCompleteResponse(Long orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
+        if (orderEntity != null) {
+            OrderCompleteRespone orderCompleteRespone = new OrderCompleteRespone();
+            orderCompleteRespone.setOrderId(orderEntity.getId());
+            orderCompleteRespone.setOrderDate(orderEntity.getOrderDate().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+            orderCompleteRespone.setTotalPrice(priceUtil.formatPrice(orderEntity.getTotalPrice()));
+            orderCompleteRespone.setPaymentMethod(orderEntity.getPayment().getName());
+            orderCompleteRespone.setAddress(orderEntity.getAddress());
+            orderCompleteRespone.setPhoneNumber(orderEntity.getUser().getPhoneNumber());
+            return orderCompleteRespone;
+        }
+        return null;
     }
 }
