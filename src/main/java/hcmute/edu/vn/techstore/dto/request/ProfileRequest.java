@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -31,4 +32,10 @@ public class ProfileRequest {
     @ValidDateOfBirth(message = "Date of birth must be in the past and age must be between 18 and 100")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
+
+    private String createdAt;
+
+    private String avatar;
+
+    private MultipartFile image;
 }

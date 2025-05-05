@@ -21,5 +21,5 @@ public interface IUserService {
 
     ProfileRequest getProfileById(String email);
 
-    boolean updateProfile(String email, ProfileRequest profileRequest);
+    boolean updateProfile(String email, ProfileRequest profileRequest) throws IOException;
 }

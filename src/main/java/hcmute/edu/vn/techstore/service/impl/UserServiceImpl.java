@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -163,11 +164,13 @@ public class UserServiceImpl implements IUserService {
         profileRequest.setAddress(userEntity.getAddress());
         profileRequest.setGender(userEntity.getGender());
         profileRequest.setDateOfBirth(userEntity.getDateOfBirth());
+        profileRequest.setCreatedAt(userEntity.getCreatedAt().toString());
+        profileRequest.setAvatar(userEntity.getImage());
         return profileRequest;
     }
 
     @Override
-    public boolean updateProfile(String email, ProfileRequest profileRequest) {
+    public boolean updateProfile(String email, ProfileRequest profileRequest) throws IOException {
         UserEntity userEntity = userRepository.findByAccount_Email(email).orElseThrow(null);
         if (userEntity != null) {
             userEntity.setFirstName(profileRequest.getFirstName());
@@ -176,6 +179,19 @@ public class UserServiceImpl implements IUserService {
             userEntity.setAddress(profileRequest.getAddress());
             userEntity.setGender(profileRequest.getGender());
             userEntity.setDateOfBirth(profileRequest.getDateOfBirth());
+            if (profileRequest.getImage() != null && !profileRequest.getImage().isEmpty()) {
+                // Nếu có ảnh cũ và không phải ảnh mặc định, xóa ảnh cũ
+                if (profileRequest.getImage() != null && !profileRequest.getImage().isEmpty() && !profileRequest.getImage().equals("default-brand.jpg")) {
+                    imageUtil.deleteImage(profileRequest.getAddress()); // ✅ Gọi qua bean
+                }
+                // Lưu ảnh mới
+                if (imageUtil.isValidSuffixImage(Objects.requireNonNull(profileRequest.getImage().getOriginalFilename()))) {
+                    profileRequest.setAvatar(imageUtil.saveImage(profileRequest.getImage())); // ✅ Gọi qua bean
+                } else {
+                    throw new IllegalArgumentException("Invalid image format. Only JPG, JPEG, PNG, GIF, BMP are allowed.");
+                }
+            }
+            userEntity.setImage(profileRequest.getAvatar());
 
             userRepository.save(userEntity);
             return true;
