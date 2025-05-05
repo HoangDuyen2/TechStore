@@ -26,6 +26,8 @@ public class OrderConverter {
         List<OrderDetailEntity> orderDetails = order.getOrderDetails();
         List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
         orderResponse.setTotalPrice(priceUtil.formatPrice(order.getTotalPrice()));
+        orderResponse.setCustomerName(order.getUser().getLastName() + " " + order.getUser().getFirstName());
+        orderResponse.setPaymentName(order.getPayment().getName());
         if (discount != null) {
             orderResponse.setDiscountName(discount.getName());
             orderResponse.setDiscountType(discount.getDiscountType());

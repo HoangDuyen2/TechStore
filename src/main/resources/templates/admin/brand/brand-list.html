@@ -37,7 +37,7 @@
                                 <h3>All brand</h3>
                                 <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                     <li>
-                                        <a href="../index.html">
+                                        <a th:href="@{/admin/dashboard}">
                                             <div class="text-tiny">Dashboard</div>
                                         </a>
                                     </li>
@@ -183,7 +183,7 @@
 
 <!-- Javascript -->
 <div th:insert="~{admin/fragments/script::script}"></div>
-<script th:src="@{/admin/plugins/sweetalert/sweetalert2.all.min.js}"></script>
+<script th:src="@{/admin/asset/sweetalert/sweetalert2.all.min.js}"></script>
 <script>
     $(document).ready(function () {
         $(".confirm-text-delete").on("click", function () {

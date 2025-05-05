@@ -15,4 +15,6 @@ public interface IOrderService {
     boolean changeStatusOrder(Long orderId, EOrderStatus status);
     List<OrderResponse> getAllOrdersByUserEmail(String email);
 
+    List<OrderResponse> getAllOrders();
+    OrderResponse getOrderById(Long orderId);
 }

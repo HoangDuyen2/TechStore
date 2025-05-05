@@ -28,5 +28,6 @@ public class OrderResponse {
     private EDiscountType discountType;
     private String paymentName;
     private List<OrderDetailResponse> orderDetails;
+    private String customerName;
 
 }
