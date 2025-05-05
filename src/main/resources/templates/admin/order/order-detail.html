@@ -37,19 +37,22 @@
                                     <h3>Order</h3>
                                     <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                         <li>
-                                            <a th:href="@{/staff/home}"><div class="text-tiny">Home</div></a>
+                                            <a th:href="@{/staff/home}" th:if="${user.roleName == 'ROLE_ADMIN'}"><div class="text-tiny">Home</div></a>
+                                            <a th:href="@{/admin/dashboard}" th:unless="${user.roleName == 'ROLE_ADMIN'}"><div class="text-tiny">Dashboard</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a th:href="@{/staff/orders}"><div class="text-tiny">Order</div></a>
+                                            <a th:href="@{/staff/orders}" th:if="${user.roleName == 'ROLE_ADMIN'}"><div class="text-tiny">Order</div></a>
+                                            <a th:href="@{/admin/orders}" th:unless="${user.roleName == 'ROLE_ADMIN'}"><div class="text-tiny">Order</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
                                         </li>
                                         <li>
-                                            <a th:href="@{/staff/orders/{id}(id=${orderResponse.id})}"><div class="text-tiny">Order detail</div></a>
+                                            <a th:href="@{/admin/orders/{id}(id=${orderResponse.id})}" th:if="${user.roleName == 'ROLE_ADMIN'}"><div class="text-tiny">Order detail</div></a>
+                                            <a th:href="@{/staff/orders/{id}(id=${orderResponse.id})}" th:unless="${user.roleName == 'ROLE_ADMIN'}"><div class="text-tiny">Order detail</div></a>
                                         </li>
                                         <li>
                                             <i class="icon-chevron-right"></i>
@@ -95,7 +98,8 @@
                                                         <div class="flex items-center justify-between gap40 flex-grow">
                                                             <div class="name">
                                                                 <div class="text-tiny mb-1">Product name</div>
-                                                                <a th:href="@{/staff/products/{id}(id=${eachOrderDetail.productResponse.id})}" class="body-title-2" th:text="${eachOrderDetail.productResponse.name}"></a>
+                                                                <a th:href="@{/admin/products/{id}(id=${eachOrderDetail.productResponse.id})}" th:if="${user.roleName == 'ROLE_ADMIN'}" class="body-title-2" th:text="${eachOrderDetail.productResponse.name}"></a>
+                                                                <a th:href="@{/staff/products/{id}(id=${eachOrderDetail.productResponse.id})}" th:unless="${user.roleName == 'ROLE_ADMIN'}" class="body-title-2" th:text="${eachOrderDetail.productResponse.name}"></a>
                                                             </div>
                                                             <div class="name">
                                                                 <div class="text-tiny mb-1">Quantity</div>
