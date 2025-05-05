@@ -68,7 +68,7 @@
                                         </li>
                                         <li class="billing-li" data-animate="animate__fadeInUp">
                                             <label>Address</label>
-                                            <input type="text" name="address"
+                                            <input type="text" name="address" id="visible-address"
                                                    th:value="${checkoutRequest.getAddress()}">
                                         </li>
                                     </ul>
@@ -201,7 +201,7 @@
                                     <input type="hidden" name="lastName" th:value="${checkoutRequest.lastName}">
                                     <input type="hidden" name="email" th:value="${checkoutRequest.email}">
                                     <input type="hidden" name="phone" th:value="${checkoutRequest.phone}">
-                                    <input type="hidden" name="address" th:value="${checkoutRequest.address}">
+                                    <input type="hidden" name="address" id="hidden-address" th:value="${checkoutRequest.address}">
                                     <input type="hidden" name="discountCode" th:value="${checkoutRequest.discountCode}">
                                     <input type="hidden" name="discountName" th:value="${checkoutRequest.discountName}">
                                     <input type="hidden" name="discountValue"
@@ -1025,6 +1025,38 @@
                     placeOrderBtn.classList.add('disabled');
                 }
             });
+        });
+    });
+</script>
+<script>
+    // Add this to your checkout page JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the form that submits the order
+        const orderForm = document.querySelector('form[action*="create-order"]');
+
+        // Get the address input field (assuming it has id="address" or name="address")
+        const addressInput = document.querySelector('input[name="address"]');
+
+        // Before form submission, make sure the address is included
+        orderForm.addEventListener('submit', function(event) {
+            // Check if there's a separate address field that needs to be synced
+            const billingAddressField = document.querySelector('.billing-area input[name="address"]');
+
+            if (billingAddressField && billingAddressField.value) {
+                // Update the address field in the main form
+                let hiddenAddressField = orderForm.querySelector('input[name="address"]');
+
+                // If no hidden field exists, create one
+                if (!hiddenAddressField) {
+                    hiddenAddressField = document.createElement('input');
+                    hiddenAddressField.type = 'hidden';
+                    hiddenAddressField.name = 'address';
+                    orderForm.appendChild(hiddenAddressField);
+                }
+
+                // Set the value from the billing address field
+                hiddenAddressField.value = billingAddressField.value;
+            }
         });
     });
 </script>
