@@ -160,15 +160,23 @@
                                             <div class="body-text" th:text="${orderResponse.paymentName}"></div>
                                         </div>
                                         <div class="wg-box mb-20 gap10">
-                                            <div class="body-title">Order Status</div>
-                                            <div class="body-text" th:text="${orderResponse.orderStatus.name()}"></div>
+                                            <!-- Ẩn orderId để gửi lên -->
+                                            <input type="hidden" id="order-id" th:value="${orderResponse.id}" />
+                                            <label for="order-status" class="body-title block mb-1">Order Status</label>
+                                            <select id="order-status" name="orderStatus" class="form-select p-2 rounded border w-full" th:disabled="${status == false||orderResponse.orderStatus.name() == 'CANCELLED'||orderResponse.orderStatus.name() == 'CANCELLED'||orderResponse.orderStatus.name() == 'DELIVERED_SUCCESSFULLY'||orderResponse.orderStatus.name() == 'DELIVERY_FAILED'}" onchange="submitOrderStatusChange()">
+                                                <option th:each="status : ${orderStatus}"
+                                                        th:if="${status.name() != 'DELIVERED_SUCCESSFULLY'}"
+                                                        th:value="${status}"
+                                                        th:text="${status}"
+                                                        th:selected="${status == orderResponse.orderStatus}">
+                                                </option>
+                                            </select>
                                         </div>
                                         <div class="wg-box gap10">
                                             <div class="body-title">Expected Date Of Delivery</div>
                                             <div id="order-date"
                                                  th:attr="data-order-date=${orderResponse.orderDate}"></div>
-                                            <div class="body-title-2 tf-color-2" id="delivery-date" >20 Nov 2023</div>
-                                            <a class="tf-button style-1 w-full" href="../oder-tracking.html"><i class="icon-truck"></i>Track order</a>
+                                            <div class="body-title-2 tf-color-2" id="delivery-date" ></div>
                                         </div>
                                     </div>
                                 </div>
@@ -217,6 +225,33 @@
         `${dayName}, ${monthName} ${day} ${year}`;
 </script>
 
+<script>
+    function submitOrderStatusChange() {
+        const orderId = document.getElementById("order-id").value;
+        const orderStatus = document.getElementById("order-status").value;
+
+        fetch(`/staff/orders/update-status`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: orderId, // 👈 cần đúng tên là id
+                orderStatus: orderStatus
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Order status updated successfully.");
+                } else {
+                    alert("Failed to update order status.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    }
+</script>
 
 <!-- Mirrored from themesflat.co/html/remos/order-detail.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:48 GMT -->
 </html>

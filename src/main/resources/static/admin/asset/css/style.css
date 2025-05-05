@@ -6943,3 +6943,63 @@ select.h40 {
   font-size: 12px;
   margin-top: 10px;
 }
+
+/*Order List*/
+.form-select {
+  padding: 8px;
+  font-size: 1.25rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-width: 200px;
+}
+
+/*Order status*/
+.status-pending,
+.status-pickup,
+.status-shipping,
+.status-delivered,
+.status-cancelled,
+.status-failed {
+  display: inline-flex;
+  justify-content: center;
+  border-radius: 5px;
+  font-weight: 500;
+  width: max-content;
+  white-space: nowrap;
+}
+
+.status-pending {
+  background-color: #fff3cd !important;
+  border: 1px solid #f1c84b !important;
+  color: #856404 !important;
+}
+
+.status-pickup {
+  background-color: #d1ecf1 !important;
+  border: 1px solid #17a2b8 !important;
+  color: #0c5460 !important;
+}
+
+.status-shipping {
+  background-color: #cce5ff !important;
+  border: 1px solid #469bfd !important;
+  color: #004085 !important;
+}
+
+.status-delivered {
+  background-color: #d4edda !important;
+  border: 1px solid #28a745 !important;
+  color: #155724 !important;
+}
+
+.status-cancelled {
+  background-color: #f8d7da !important;
+  border: 1px solid #dc3545 !important;
+  color: #721c24 !important;
+}
+
+.status-failed {
+  background-color: #e2e3e5 !important;
+  border: 1px solid #6c757d !important;
+  color: #383d41 !important;
+}
