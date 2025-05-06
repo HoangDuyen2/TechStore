@@ -18,8 +18,12 @@ public class OrderController {
     private final IOrderService orderService;
 
     @GetMapping("")
-    public String getOrders(Model model) {
-        List<OrderResponse> orderResponseList = orderService.getAllOrders();
+    public String getOrders(Model model, @RequestParam(value = "status", required = false) EOrderStatus status) {
+        List<OrderResponse> orderResponseList;
+        if (status != null) {
+            orderResponseList = orderService.getOrdersByStatus(status);
+        }
+        else orderResponseList = orderService.getAllOrders();
         model.addAttribute("orderResponseList", orderResponseList);
         return "admin/order/order-list";
     }

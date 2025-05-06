@@ -66,6 +66,20 @@
                                                     <button class="" type="submit"><i class="icon-search"></i></button>
                                                 </div>
                                             </form>
+                                            <form method="get" th:action="${user.roleName == 'ROLE_ADMIN'} ? @{/admin/orders} : @{/staff/orders}" class="flex items-center" style="width: 500px; height: 50px">
+                                                <label for="statusFilter" class="text-tiny" style="font-size: 15px; margin-right: 10px">Status:</label>
+                                                <select id="statusFilter" name="status" class="form-select" style="width: 100px; margin-right: 10px">
+                                                    <option value="">All</option>
+                                                    <option value="PENDING_CONFIRMATION" th:selected="${param.status == 'PENDING_CONFIRMATION'}">Pending Confirmation</option>
+                                                    <option value="WAITING_FOR_PICKUP" th:selected="${param.status == 'WAITING_FOR_PICKUP'}">Waiting for Pickup</option>
+                                                    <option value="SHIPPING" th:selected="${param.status == 'SHIPPING'}">Shipping</option>
+                                                    <option value="DELIVERED_SUCCESSFULLY" th:selected="${param.status == 'DELIVERED_SUCCESSFULLY'}">Delivered Successfully</option>
+                                                    <option value="CANCELLED" th:selected="${param.status == 'CANCELLED'}">Cancelled</option>
+                                                    <option value="DELIVERY_FAILED" th:selected="${param.status == 'DELIVERY_FAILED'}">Delivery Failed</option>
+                                                    <!-- Add other statuses if needed -->
+                                                </select>
+                                                <button type="submit" class="btn btn-sm btn-primary" style="width: 80px; height: 35px; font-size: 14px">Filter</button>
+                                            </form>
                                         </div>
                                     </div>
                                     <div class="wg-table table-all-user">

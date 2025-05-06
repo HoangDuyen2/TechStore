@@ -182,7 +182,7 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public List<OrderResponse> getAllOrders() {
-        List<OrderEntity> orderEntities = orderRepository.findAll();
+        List<OrderEntity> orderEntities = orderRepository.findAllOrderByOrderDateDesc();
         return orderEntities.stream().map(orderEntity -> orderConverter.toResponse(orderEntity)).toList();
     }
 
@@ -228,5 +228,11 @@ public class OrderServiceImpl implements IOrderService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<OrderResponse> getOrdersByStatus(EOrderStatus status) {
+        List<OrderEntity> orderResponseList = orderRepository.findAllOrderByOrderStatusAndDateDesc(EOrderStatus.valueOf(status.name()));
+        return orderResponseList.stream().map(orderEntity -> orderConverter.toResponse(orderEntity)).toList();
     }
 }
