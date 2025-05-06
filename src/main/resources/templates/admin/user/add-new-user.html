@@ -176,8 +176,10 @@
                                                     <div class="select">
                                                         <select name="role" required th:field="*{roleName}" id="roleSelect" onchange="toggleExtraFields()" th:disabled="${status != true}">
                                                             <option th:each="role : ${T(hcmute.edu.vn.techstore.Enum.ERole).values()}"
+                                                                    th:if="${role.name() == 'ROLE_CUSTOMER' or role.name() == 'ROLE_STAFF'}"
                                                                     th:value="${role}"
-                                                                    th:text="${role}"></option>
+                                                                    th:text="${role}">
+                                                            </option>
                                                         </select>
                                                     </div>
                                                 </fieldset>
