@@ -216,4 +216,10 @@ public class UserServiceImpl implements IUserService {
         userRepository.save(userEntity);
         return true;
     }
+
+    @Override
+    public UserEntity findByEmail(String email) {
+        userRepository.findByAccount_Email(email).orElseThrow(null);
+        return userRepository.findByAccount_Email(email).orElseThrow(null);
+    }
 }

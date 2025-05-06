@@ -1,6 +1,9 @@
 <html lang="en">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-<head th:replace="web/fragments/head :: head('TechStore - Lịch sử mua hàng')"></head><title>TechStore - Home</title>
+
+<head th:replace="~{web/fragments/head :: head('TechStore - Lịch sử mua hàng')}">
+</head>
+
     <body>
         <!-- header-area start -->
         <div th:insert="~{web/fragments/header::header}"></div>
@@ -173,8 +176,14 @@
                                                                      th:text="${detail.totalPrice}">
                                                                 </div>
                                                                 <div th:if="${order.orderStatus.name() == 'DELIVERED_SUCCESSFULLY'}">
-                                                                    <button class="btn-order-tab btn-order-view flex-center">Review</button>
+                                                                    <button class="btn-order-tab btn-order-view flex-center"
+                                                                            th:attr="data-product-id=${detail.productResponse.id}"
+                                                                            th:attrappend="data-order-id=${order.id}"
+                                                                            onclick="showReviewModal(this)">
+                                                                        Review
+                                                                    </button>
                                                                 </div>
+
                                                             </li>
                                                         </ul>
                                                     </td>
@@ -721,6 +730,35 @@
                 </div>
             </div>
         </div>
+
+        <div id="reviewModal" class="modal-overlay-address" style="display: none;">
+            <div class="modal-box-address">
+                <h3>Write Your Review</h3>
+
+                <div class="rating-section">
+                    <label>Rating:</label>
+                    <div id="starRating">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+
+                <div class="comment-section">
+                    <label>Comment:</label>
+                    <textarea id="reviewContent" rows="4" placeholder="Write your review..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button onclick="submitReview()">Submit</button>
+                    <button onclick="closeReviewModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+
         <!--End Show dialog-->
         <!-- fullscreen start -->
         <div class="bg-screen"></div>
@@ -732,8 +770,73 @@
         <script th:src="@{/web/assert/js/plugin.js}"></script>
         <!-- theme js -->
         <script th:src="@{/web/assert/js/main.js}"></script>
-    </body>
-<script>
+        <script>
+            let selectedRating = 0;
+            let currentProductId = null;
+            let currentOrderId = null;
+
+            function showReviewModal(button) {
+                currentProductId = button.getAttribute('data-product-id');
+                currentOrderId = button.getAttribute('data-order-id');
+                console.log("Review for Product:", currentProductId, "in Order:", currentOrderId);
+                document.getElementById("reviewModal").style.display = "flex";
+            }
+
+            function closeReviewModal() {
+                document.getElementById("reviewModal").style.display = "none";
+                selectedRating = 0;
+                currentProductId = null;
+                currentOrderId = null;
+                document.querySelectorAll('#starRating svg').forEach(i => i.classList.remove('selected'));
+                document.getElementById("reviewContent").value = "";
+            }
+
+            document.querySelectorAll('#starRating .star').forEach(star => {
+                star.addEventListener('click', function () {
+                    const rating = parseInt(this.getAttribute('data-value'));
+                    selectedRating = rating;
+
+                    document.querySelectorAll('#starRating .star').forEach(s => {
+                        s.classList.remove('selected');
+                        s.style.color = '#ccc';
+                    });
+                    for (let i = 0; i < rating; i++) {
+                        const starEl = document.querySelectorAll('#starRating .star')[i];
+                        starEl.classList.add('selected');
+                        starEl.style.color = 'gold';
+                    }
+                });
+            });
+
+
+            function submitReview() {
+                const comment = document.getElementById("reviewContent").value;
+                if (!selectedRating || !comment.trim()) {
+                    alert("Please fill in rating and comment.");
+                    return;
+                }
+
+                fetch("/api/reviews", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        productId: currentProductId,
+                        orderId: currentOrderId,
+                        rating: selectedRating,
+                        comment: comment.trim()
+                    })
+                }).then(res => {
+                    if (res.ok) {
+                        alert("Thank you for your review!");
+                        closeReviewModal();
+                    } else {
+                        res.text().then(msg => alert("Error: " + msg));
+                    }
+                });
+            }
+        </script>
+
+        <script>
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.btn-toggle').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -807,5 +910,6 @@
     }
 
 </script>
+
 
 </html>

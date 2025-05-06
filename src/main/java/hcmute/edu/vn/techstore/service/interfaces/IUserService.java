@@ -6,6 +6,7 @@ import hcmute.edu.vn.techstore.dto.request.ChangePasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
+import hcmute.edu.vn.techstore.entity.UserEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -25,4 +26,6 @@ public interface IUserService {
     boolean updateProfile(String email, ProfileRequest profileRequest) throws IOException;
 
     boolean changePassword(ChangePasswordRequest changePasswordRequest) throws IOException;
+
+    UserEntity findByEmail(String email);
 }
