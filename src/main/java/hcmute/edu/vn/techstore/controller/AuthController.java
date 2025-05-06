@@ -70,7 +70,7 @@ public class AuthController {
     @GetMapping("/forgot-password")
     public String getForgotPasswordPage(Model model) {
         UserRequest userRequest = new UserRequest();
-        model.addAttribute("userRequest", userRequest);
+        model.addAttribute("changePasswordRequest", userRequest);
         return "web/change-password";
     }
 

@@ -81,7 +81,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="menu-item has-children" th:unless="${user.roleName == 'ROLE_ADMIN'}">
+                    <li class="menu-item has-children" th:if="${user.roleName == 'ROLE_ADMIN'}">
                         <a href="javascript:void(0);" class="menu-item-button">
                             <div class="icon"><i class="icon-gift"></i></div>
                             <div class="text">Discount</div>
