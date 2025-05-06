@@ -6734,3 +6734,125 @@ a.np-product:hover img {
     background-color: rgba(220,38,38,0.2);
     color: #b91c1c;
 }
+/* nút Change Address (neutral outline) */
+.btn-order-change {
+    background-color: transparent;
+    color: #374151;               /* xám đậm */
+    border: 1px solid #9ca3af;    /* viền xám */
+}
+.btn-order-change:hover {
+    background-color: rgba(156,163,175,0.1);
+}
+.btn-order-change:active {
+    background-color: rgba(156,163,175,0.2);
+    color: #1f2937;
+}
+
+/*Dialog order-history*/
+.modal-order-history {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+.modal-content-order-history {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    border-radius: 8px;
+}
+.modal-actions-order-history {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.btn-confirm-order-history, .btn-cancel-order-history {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-confirm-order-history { background-color: #e74c3c; color: white; }
+.btn-cancel-order-history { background-color: #ccc; }
+
+/*Modal đổi địa chỉ đơn hàng*/
+.modal-overlay-address {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-box-address {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-box-address h2 {
+    font-size: 23px;
+    margin-bottom: 20px;
+}
+
+.modal-box-address textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.modal-actions-address {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancel-address, .btn-confirm-address {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-cancel-address {
+    background-color: #e5e7eb;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.btn-cancel-address:hover {
+    background-color: #d1d5db;
+}
+
+.btn-confirm-address {
+    background-color: #2563eb;
+    border: 1px solid #2563eb;
+    color: white;
+}
+
+.btn-confirm-address:hover {
+    background-color: #1e40af;
+}
+
+/* Optional fade-in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}

@@ -138,7 +138,17 @@
                                                     <td>
                                                         <button class="btn-order-tab btn-order-view flex-center btn-toggle">View</button>
                                                         <div th:if="${order.orderStatus.name()=='PENDING_CONFIRMATION'}">
-                                                            <a class="btn-order-tab btn-order-cancel flex-center" th:href="@{/orders/{id}/cancel(id=${order.id})}">Cancel</a>
+                                                            <button class="btn-order-tab btn-order-cancel flex-center"
+                                                                    th:attr="data-url=@{/orders/{id}/cancel(id=${order.id})}"
+                                                                    onclick="showCancelModal(this.getAttribute('data-url'))">
+                                                                Cancel
+                                                            </button>
+                                                            <br>
+                                                            <button class="btn-order-tab btn-order-change flex-center"
+                                                                    th:attr="data-order-id=${order.id}"
+                                                                    onclick="showChangeAddressModal(this.getAttribute('data-order-id'))">
+                                                                Change Address
+                                                            </button>
                                                         </div>
                                                         <div th:if="${order.orderStatus.name() == 'SHIPPING'}">
                                                             <a class="btn-order-tab btn-order-cancel flex-center" th:href="@{/orders/{id}/received(id=${order.id})}">Received</a>
@@ -688,6 +698,30 @@
             </ul>
         </div>
         <!-- bottom-menu end -->
+        <!--Start Show dialog-->
+        <!-- Modal xác nhận hủy -->
+        <!-- Modal cancel order-->
+        <div id="cancelModal" class="modal-order-history">
+            <div class="modal-content-order-history">
+                <p>Are you sure you want to cancel the order?</p>
+                <div class="modal-actions-order-history">
+                    <button id="confirmCancel" class="btn-confirm-order-history">Yes</button>
+                    <button id="cancelModalClose" class="btn-cancel-order-history">No</button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal đổi địa chỉ đơn hàng-->
+        <div id="changeAddressModal" class="modal-overlay-address" style="display: none;">
+            <div class="modal-box-address">
+                <h2>Change the order addres</h2>
+                <textarea id="newAddress" placeholder="Enter new address..." rows="4"></textarea>
+                <div class="modal-actions-address">
+                    <button class="btn-cancel-address" onclick="closeAddressModal()">Cancel</button>
+                    <button class="btn-confirm-address" onclick="submitNewAddress()">Save</button>
+                </div>
+            </div>
+        </div>
+        <!--End Show dialog-->
         <!-- fullscreen start -->
         <div class="bg-screen"></div>
         <!-- fullscreen end -->
@@ -714,4 +748,64 @@
         });
     });
 </script>
+<script>
+    let targetCancelUrl = '';
+
+    function showCancelModal(url) {
+        targetCancelUrl = url;
+        document.getElementById("cancelModal").style.display = "block";
+    }
+
+    document.getElementById("confirmCancel").addEventListener("click", function () {
+        window.location.href = targetCancelUrl;
+    });
+
+    document.getElementById("cancelModalClose").addEventListener("click", function () {
+        document.getElementById("cancelModal").style.display = "none";
+        targetCancelUrl = '';
+    });
+</script>
+<script>
+    let currentOrderId = null;
+
+    function showChangeAddressModal(orderId) {
+        currentOrderId = orderId;
+        document.getElementById('newAddress').value = '';
+        document.getElementById('changeAddressModal').style.display = 'flex';
+    }
+
+    function closeAddressModal() {
+        document.getElementById('changeAddressModal').style.display = 'none';
+    }
+
+    function submitNewAddress() {
+        const newAddress = document.getElementById('newAddress').value.trim();
+        if (!newAddress) {
+            alert('Please enter new address.');
+            return;
+        }
+
+        fetch(`/orders/${currentOrderId}/change-address`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ address: newAddress })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Address updated!');
+                    location.reload();
+                } else {
+                    throw new Error('Error updating address!');
+                }
+            })
+            .catch(error => {
+                alert(error.message);
+            })
+            .finally(() => closeAddressModal());
+    }
+
+</script>
+
 </html>

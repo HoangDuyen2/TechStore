@@ -218,4 +218,15 @@ public class OrderServiceImpl implements IOrderService {
         }
         return null;
     }
+
+    @Override
+    public boolean updateOrderAddress(Long orderId, String address) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
+        if (orderEntity != null){
+            orderEntity.setAddress(address);
+            orderRepository.save(orderEntity);
+            return true;
+        }
+        return false;
+    }
 }

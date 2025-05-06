@@ -20,4 +20,5 @@ public interface IOrderService {
     OrderResponse getOrderById(Long orderId);
 
     OrderCompleteRespone getOrderCompleteResponse(Long orderId);
+    boolean updateOrderAddress(Long orderId, String address);
 }

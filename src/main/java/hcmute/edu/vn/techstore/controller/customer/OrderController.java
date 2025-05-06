@@ -6,9 +6,12 @@ import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
 import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @Controller("userOrderController")
 @RequiredArgsConstructor
@@ -69,5 +72,13 @@ public class OrderController {
     public String receivedOrder(Model model, @PathVariable Long orderId) {
         orderService.changeStatusOrder(orderId, EOrderStatus.DELIVERED_SUCCESSFULLY);
         return "redirect:/order-history";
+    }
+
+    @PostMapping("/orders/{id}/change-address")
+    @ResponseBody
+    public ResponseEntity<?> changeOrderAddress(@PathVariable Long id, @RequestBody Map<String, String> body){
+        String newAddress = body.get("address");
+        orderService.updateOrderAddress(id, newAddress);
+        return ResponseEntity.ok().build();
     }
 }
