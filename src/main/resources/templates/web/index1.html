@@ -223,6 +223,8 @@
                                                 <span class="tooltip-text">quickview</span>
                                             </a>
                                         </div>
+                                        <!-- Thêm thuộc tính xác thực -->
+                                        <div th:attr="data-authenticated=${user != null}"></div>
                                         <div class="product-cart">
                                             <button type="button" class="add-to-cart"
                                                     th:attr="data-product-id=${product.id}"
@@ -808,6 +810,12 @@
 <script th:src="@{/web/assert/js/main.js}"></script>
 <script>
     function addToCart(button) {
+        const isAuthenticated = [[${#authentication.principal != 'anonymousUser'}]];
+        if (!isAuthenticated) {
+            window.location.href = "/login";
+            return;
+        }
+
         const productId = button.getAttribute('data-product-id');
 
         fetch(`/add-cart?productId=${productId}`, {
@@ -815,14 +823,14 @@
         })
             .then(response => {
                 if (response.ok) {
-                    return response.text(); // lấy nội dung phản hồi
+                    return response.text();
                 } else {
                     throw new Error('Thêm thất bại!');
                 }
             })
             .then(data => {
-                alert(data); // Hiện thông báo "Thêm sản phẩm vào giỏ hàng thành công!"
-                location.reload(); // Sau đó reload lại trang
+                alert(data);
+                location.reload();
             })
             .catch(error => {
                 console.error('Error:', error);

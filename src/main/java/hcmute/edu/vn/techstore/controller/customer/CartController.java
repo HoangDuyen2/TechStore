@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -33,7 +34,7 @@ public class CartController {
 
     @GetMapping("/add-cart")
     @ResponseBody
-    public String addCart(@RequestParam("productId") Long productId) {
+    public String addCart(@RequestParam("productId") Long productId, Principal principal) {
         cartService.addCart(productId, SecurityUtils.getCurrentUsername());
         return "Thêm sản phẩm vào giỏ hàng thành công!";
     }
