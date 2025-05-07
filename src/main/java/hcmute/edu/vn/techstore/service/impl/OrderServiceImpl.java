@@ -8,10 +8,7 @@ import hcmute.edu.vn.techstore.dto.response.OrderCompleteRespone;
 import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.entity.*;
 import hcmute.edu.vn.techstore.repository.*;
-import hcmute.edu.vn.techstore.service.interfaces.ICartService;
-import hcmute.edu.vn.techstore.service.interfaces.IDiscountService;
-import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
-import hcmute.edu.vn.techstore.service.interfaces.OrderPriceCalculator;
+import hcmute.edu.vn.techstore.service.interfaces.*;
 import hcmute.edu.vn.techstore.utils.PriceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +25,7 @@ public class OrderServiceImpl implements IOrderService {
     private final IDiscountService discountService;
     private final CartRepository cartRepository;
     private final ICartService cartService;
+    private final ICartDetailService cartDetailService;
     private final UserRepository userRepository;
     private final DiscountRepository discountRepository;
     private final PaymentRepository paymentRepository;
@@ -165,12 +163,18 @@ public class OrderServiceImpl implements IOrderService {
 
         // Explicitly save all order details
         orderDetailRepository.saveAll(orderDetails);
-//        cartService.deleteAllCartDetails(checkoutRequest.getEmail());
+
+        // Clear cart details after order is created
+        CartEntity cartEntity = cartRepository.findByCart_User_Account_Email(checkoutRequest.getEmail()).orElse(null);
+        for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
+            cartDetailService.deleteCartDetail(productCheckout.getId(), cartEntity.getId());
+        }
+
         return orderEntity.getId();
     }
 
     @Override
-    public boolean changeStatusOrder(Long orderId, EOrderStatus status){
+    public boolean changeStatusOrder(Long orderId, EOrderStatus status) {
         OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
         if (orderEntity != null) {
             orderEntity.setOrderStatus(status);
@@ -228,7 +232,7 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public boolean updateOrderAddress(Long orderId, String address) {
         OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
-        if (orderEntity != null){
+        if (orderEntity != null) {
             orderEntity.setAddress(address);
             orderRepository.save(orderEntity);
             return true;
