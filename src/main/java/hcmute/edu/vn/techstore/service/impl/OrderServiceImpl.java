@@ -37,7 +37,7 @@ public class OrderServiceImpl implements IOrderService {
     private final OrderConverter orderConverter;
 
     @Override
-    public CheckoutRequest getCheckoutRequest(String email) {
+    public CheckoutRequest getCheckoutRequest(String email, List<Long> selectedProductIds) {
         CheckoutRequest checkoutRequest = new CheckoutRequest();
         checkoutRequest.setFirstName(Objects.requireNonNull(userRepository.findByAccount_Email(email).orElse(null)).getFirstName());
         checkoutRequest.setLastName(Objects.requireNonNull(userRepository.findByAccount_Email(email).orElse(null)).getLastName());
@@ -47,6 +47,7 @@ public class OrderServiceImpl implements IOrderService {
         CartEntity cartEntity = cartRepository.findByCart_User_Account_Email(email).orElse(null);
         if (cartEntity != null) {
             checkoutRequest.setProductCheckouts(cartEntity.getCartDetails().stream()
+                    .filter(cartDetail -> selectedProductIds == null || selectedProductIds.isEmpty() || selectedProductIds.contains(cartDetail.getProduct().getId()))
                     .map(cartDetail -> {
                         CheckoutRequest.ProductCheckout productCheckout = new CheckoutRequest.ProductCheckout();
                         productCheckout.setId(cartDetail.getProduct().getId());
@@ -58,7 +59,12 @@ public class OrderServiceImpl implements IOrderService {
                         return productCheckout;
                     }).toList());
         }
-        checkoutRequest.setTotalPrice(priceUtil.formatPrice(cartEntity.getTotalPrice()));
+        // Calculate total price
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
+            totalPrice = totalPrice.add(priceUtil.parsePrice(productCheckout.getTotalPrice()));
+        }
+        checkoutRequest.setTotalPrice(priceUtil.formatPrice(totalPrice));
         return checkoutRequest;
     }
 

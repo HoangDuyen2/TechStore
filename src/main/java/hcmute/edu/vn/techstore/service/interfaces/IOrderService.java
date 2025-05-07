@@ -8,7 +8,7 @@ import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import java.util.List;
 
 public interface IOrderService {
-    CheckoutRequest getCheckoutRequest(String email);
+    CheckoutRequest getCheckoutRequest(String email, List<Long> selectedProductIds);
 
     CheckoutRequest applyDiscount(CheckoutRequest checkoutRequest);
 

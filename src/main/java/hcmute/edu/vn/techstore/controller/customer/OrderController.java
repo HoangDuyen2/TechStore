@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller("userOrderController")
@@ -19,8 +20,8 @@ public class OrderController {
     private final IOrderService orderService;
 
     @GetMapping("/checkout")
-    public String orderPage(Model model) {
-        model.addAttribute("checkoutRequest", orderService.getCheckoutRequest(SecurityUtils.getCurrentUsername()));
+    public String orderPage(Model model, @RequestParam(value = "selectedProductIds", required = false) List<Long> selectedProductIds) {
+        model.addAttribute("checkoutRequest", orderService.getCheckoutRequest(SecurityUtils.getCurrentUsername(), selectedProductIds));
         model.addAttribute("paymentMethods", EPayment.values());
         return "web/checkout-style1";
     }
@@ -76,7 +77,7 @@ public class OrderController {
 
     @PostMapping("/orders/{id}/change-address")
     @ResponseBody
-    public ResponseEntity<?> changeOrderAddress(@PathVariable Long id, @RequestBody Map<String, String> body){
+    public ResponseEntity<?> changeOrderAddress(@PathVariable Long id, @RequestBody Map<String, String> body) {
         String newAddress = body.get("address");
         orderService.updateOrderAddress(id, newAddress);
         return ResponseEntity.ok().build();
