@@ -1,8 +1,6 @@
 package hcmute.edu.vn.techstore.service.impl;
 
-import hcmute.edu.vn.techstore.convert.CartDetailConverter;
 import hcmute.edu.vn.techstore.dto.response.*;
-import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.entity.CartDetailEntity;
 import hcmute.edu.vn.techstore.entity.CartEntity;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
@@ -13,9 +11,9 @@ import hcmute.edu.vn.techstore.service.interfaces.ICartDetailService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -89,6 +87,16 @@ public class CartDetailServiceImpl implements ICartDetailService {
         for (CartDetailEntity cartDetailEntity : cartDetailEntities) {
             cartDetailRepository.delete(cartDetailEntity);
         }
+    }
+
+    @Override
+    public void deleteCartDetail(String email, Long productId) {
+        Long cartId = Objects.requireNonNull(cartRepository.findByCart_User_Account_Email(email).orElse(null)).getId();
+        CartDetailEntity cartDetailEntity = cartDetailRepository.findByCart_IdAndAndProduct_Id(cartId, productId);
+        if (cartDetailEntity == null) {
+            throw new RuntimeException("Not found this product");
+        }
+        cartDetailRepository.delete(cartDetailEntity);
     }
 
 }

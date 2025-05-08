@@ -22,15 +22,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements IOrderService {
     private final OrderRepository orderRepository;
-    private final IDiscountService discountService;
-    private final CartRepository cartRepository;
-    private final ICartService cartService;
-    private final ICartDetailService cartDetailService;
-    private final UserRepository userRepository;
-    private final DiscountRepository discountRepository;
-    private final PaymentRepository paymentRepository;
-    private final ProductRepository productRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final CartRepository cartRepository;
+    private final ICartDetailService cartDetailService;
+    private final IDiscountService discountService;
+    private final UserRepository userRepository;
+    private final PaymentRepository paymentRepository;
+    private final IProductService productService;
     private final PriceUtil priceUtil;
     private final OrderConverter orderConverter;
 
@@ -69,8 +67,8 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public CheckoutRequest applyDiscount(CheckoutRequest checkoutRequest) {
         if (checkoutRequest.getDiscountCode() != null && !checkoutRequest.getDiscountCode().isEmpty()) {
-            DiscountEntity discountEntity = discountRepository.findByCode(checkoutRequest.getDiscountCode());
-            if (checkDiscount(discountEntity)) {
+            if (discountService.checkDiscount(checkoutRequest.getDiscountCode())) {
+                DiscountEntity discountEntity = discountService.findByCode(checkoutRequest.getDiscountCode());
                 checkoutRequest.setDiscountName(discountEntity.getName());
                 if (discountEntity.getDiscountType().equals(EDiscountType.COUPON)) {
                     checkoutRequest.setDiscountValue(discountEntity.getAmount().toString() + "%");
@@ -87,9 +85,9 @@ public class OrderServiceImpl implements IOrderService {
         OrderPriceCalculator calculator = new BaseOrderPriceCalculator();
 
         if (request.getDiscountCode() != null) {
-            if (discountRepository.findByCode(request.getDiscountCode()).getDiscountType().equals(EDiscountType.COUPON)) {
+            if (discountService.findByCode(request.getDiscountCode()).getDiscountType().equals(EDiscountType.COUPON)) {
                 calculator = new CouponDecorator(calculator);
-            } else if (discountRepository.findByCode(request.getDiscountCode()).getDiscountType().equals(EDiscountType.VOUCHER)) {
+            } else if (discountService.findByCode(request.getDiscountCode()).getDiscountType().equals(EDiscountType.VOUCHER)) {
                 calculator = new VoucherDecorator(calculator);
             }
         }
@@ -101,12 +99,7 @@ public class OrderServiceImpl implements IOrderService {
     public Long createOrder(CheckoutRequest checkoutRequest) {
         // Check discount
         if (checkoutRequest.getDiscountCode() != null && !checkoutRequest.getDiscountCode().isEmpty()) {
-            DiscountEntity discountEntity = discountRepository.findByCode(checkoutRequest.getDiscountCode());
-            if (checkDiscount(discountEntity)) {
-                discountService.decreaseQuantity(discountEntity.getId(), 1);
-            } else {
-                throw new IllegalArgumentException("Discount code is invalid or expired");
-            }
+            discountService.decreaseQuantity(checkoutRequest.getDiscountCode(), 1);
         }
         // Check payment method
         if (checkoutRequest.getPaymentMethod() == null) {
@@ -115,24 +108,9 @@ public class OrderServiceImpl implements IOrderService {
         if (paymentRepository.findByName(checkoutRequest.getPaymentMethod().name()).isEmpty()) {
             throw new IllegalArgumentException("Payment method is invalid");
         }
-        // Check product
+        // Check product quantity and decrease quantity
         for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
-            ProductEntity productEntity = productRepository.findById(productCheckout.getId()).orElse(null);
-            if (productEntity == null) {
-                throw new IllegalArgumentException("Product is invalid");
-            }
-            if (productEntity.getStockQuantity() < productCheckout.getQuantity()) {
-                throw new IllegalArgumentException("Product quantity is not enough");
-            }
-            if (!productEntity.isActived()) {
-                throw new IllegalArgumentException("Product is not available");
-            }
-            if (!productEntity.getBrand().getIsActived()) {
-                throw new IllegalArgumentException("Product brand is not available");
-            }
-            // Decrease product quantity
-            productEntity.setStockQuantity(productEntity.getStockQuantity() - productCheckout.getQuantity());
-            productRepository.save(productEntity);
+            productService.decreaseQuantity(productCheckout.getId(), productCheckout.getQuantity());
         }
 
         // Create order
@@ -142,12 +120,8 @@ public class OrderServiceImpl implements IOrderService {
         orderEntity.setOrderStatus(EOrderStatus.PENDING_CONFIRMATION);
         orderEntity.setTotalPrice(priceUtil.parsePrice(checkoutRequest.getTotalPrice()));
         orderEntity.setUser(userRepository.findByAccount_Email(checkoutRequest.getEmail()).orElse(null));
-        if (checkoutRequest.getDiscountCode() != null && !checkoutRequest.getDiscountCode().isEmpty()) {
-            DiscountEntity discountEntity = discountRepository.findByCode(checkoutRequest.getDiscountCode());
-            orderEntity.setDiscount(discountEntity);
-        }
+        orderEntity.setDiscount(discountService.findByCode(checkoutRequest.getDiscountCode()));
         orderEntity.setPayment(paymentRepository.findByName(checkoutRequest.getPaymentMethod().name()).orElse(null));
-
         // Save order first to get generated ID
         orderEntity = orderRepository.save(orderEntity);
 
@@ -155,19 +129,17 @@ public class OrderServiceImpl implements IOrderService {
         List<OrderDetailEntity> orderDetails = new ArrayList<>();
         for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
             OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
-            orderDetailEntity.setProduct(productRepository.findById(productCheckout.getId()).orElse(null));
+            orderDetailEntity.setProduct(productService.findById(productCheckout.getId()).orElse(null));
             orderDetailEntity.setQuantity(productCheckout.getQuantity());
             orderDetailEntity.setOrder(orderEntity);
             orderDetails.add(orderDetailEntity);
         }
-
         // Explicitly save all order details
         orderDetailRepository.saveAll(orderDetails);
 
         // Clear cart details after order is created
-        CartEntity cartEntity = cartRepository.findByCart_User_Account_Email(checkoutRequest.getEmail()).orElse(null);
         for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
-            cartDetailService.deleteCartDetail(productCheckout.getId(), cartEntity.getId());
+            cartDetailService.deleteCartDetail(checkoutRequest.getEmail(), productCheckout.getId());
         }
 
         return orderEntity.getId();
@@ -203,14 +175,6 @@ public class OrderServiceImpl implements IOrderService {
             return orderConverter.toResponse(orderEntity);
         }
         return null;
-    }
-
-
-    private boolean checkDiscount(DiscountEntity discountEntity) {
-        if (discountEntity != null && discountEntity.getQuantity() > 0 && discountEntity.getExpiredDate().isAfter(java.time.LocalDate.now())) {
-            return true;
-        }
-        return false;
     }
 
     @Override

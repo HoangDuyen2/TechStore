@@ -12,4 +12,6 @@ public interface ICartDetailService {
     void deleteCartDetail(Long productId, Long cartId);
     void decreaseCartDetail(Long productId, Long cartId);
     void deleteAllCartDetail(String email);
+
+    void deleteCartDetail(String email, Long productId);
 }

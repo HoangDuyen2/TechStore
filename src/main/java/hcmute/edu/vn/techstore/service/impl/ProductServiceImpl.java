@@ -11,7 +11,6 @@ import hcmute.edu.vn.techstore.dto.response.ProductResponse;
 import hcmute.edu.vn.techstore.dto.response.ProductSearchSuggestion;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
-import hcmute.edu.vn.techstore.entity.ReviewEntity;
 import hcmute.edu.vn.techstore.repository.BrandRepository;
 import hcmute.edu.vn.techstore.repository.ProductRepository;
 import hcmute.edu.vn.techstore.repository.custome.ProductRepositoryCustom;
@@ -200,5 +199,32 @@ public class ProductServiceImpl implements IProductService {
                 p.getThumbnail(),
                 formatter.format(p.getPrice())
         )).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean decreaseQuantity(Long id, int quantity) {
+        ProductEntity product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            throw new IllegalArgumentException("Product is invalid");
+        }
+        if (product.getStockQuantity() < quantity) {
+            throw new IllegalArgumentException("Product quantity is not enough");
+        }
+        if (!product.isActived()) {
+            throw new IllegalArgumentException("Product is not available");
+        }
+        if (!product.getBrand().getIsActived()) {
+            throw new IllegalArgumentException("Product brand is not available");
+        }
+
+        // Decrease product quantity
+        product.setStockQuantity(product.getStockQuantity() - quantity);
+        productRepository.save(product);
+        return true;
+    }
+
+    @Override
+    public Optional<ProductEntity> findById(Long aLong) {
+        return productRepository.findById(aLong);
     }
 }

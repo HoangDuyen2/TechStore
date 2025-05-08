@@ -21,5 +21,7 @@ public interface IDiscountService {
 
     boolean deleteDiscount(Long id);
 
-    boolean decreaseQuantity(Long id, int quantity);
+    boolean decreaseQuantity(String code, int quantity);
+
+    boolean checkDiscount(String code);
 }

@@ -29,4 +29,8 @@ public interface IProductService {
     Optional<ProductResponse> findProductResponseById(Long id);
 
     List<ProductSearchSuggestion> searchSuggestions(String keyword);
+
+    boolean decreaseQuantity(Long id, int quantity);
+
+    Optional<ProductEntity> findById(Long aLong);
 }
