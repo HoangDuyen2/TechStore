@@ -201,11 +201,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean changePassword(ChangePasswordRequest changePasswordRequest) {
+    public boolean changePassword(String email, ChangePasswordRequest changePasswordRequest) {
         UserEntity userEntity = emailExists(changePasswordRequest.getEmail());
 
-        if (userEntity == null) {
-            throw new BadCredentialsException("Email does not exist");
+        if (email == null || !email.equals(userEntity.getAccount().getEmail())) {
+            throw new BadCredentialsException("Email does not match");
         }
 
         if (!isPasswordConfirmed(changePasswordRequest.getPassword(), changePasswordRequest.getConfirmPassword())) {

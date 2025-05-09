@@ -67,7 +67,7 @@ public class UserController {
             return "web/change-password";
         }
         try {
-            userService.changePassword(changePasswordRequest);
+            userService.changePassword(SecurityUtils.getCurrentUsername(), changePasswordRequest);
             model.addAttribute("message", "Change password successfully");
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());

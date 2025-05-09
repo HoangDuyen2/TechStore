@@ -25,7 +25,7 @@ public interface IUserService {
 
     boolean updateProfile(String email, ProfileRequest profileRequest) throws IOException;
 
-    boolean changePassword(ChangePasswordRequest changePasswordRequest) throws IOException;
+    boolean changePassword(String email, ChangePasswordRequest changePasswordRequest) throws IOException;
 
     UserEntity findByEmail(String email);
 }
