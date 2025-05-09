@@ -4,7 +4,9 @@ import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
 import hcmute.edu.vn.techstore.dto.response.OrderCompleteRespone;
 import hcmute.edu.vn.techstore.dto.response.OrderResponse;
+import hcmute.edu.vn.techstore.dto.response.ReportResponse;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IOrderService {
@@ -26,4 +28,6 @@ public interface IOrderService {
     String getTotalPurchaseDue();
 
     String getTotalProductsSold();
+
+    ReportResponse getReport(LocalDate startDate, LocalDate endDate);
 }

@@ -117,7 +117,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item" th:if="${user.roleName == 'ROLE_ADMIN'}">
                         <a th:href="@{/admin/sale-report}" class="">
                             <div class="icon"><i class="icon-pie-chart"></i></div>
                             <div class="text">Report</div>
