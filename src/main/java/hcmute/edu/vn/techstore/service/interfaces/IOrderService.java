@@ -22,4 +22,8 @@ public interface IOrderService {
     OrderCompleteRespone getOrderCompleteResponse(Long orderId);
     boolean updateOrderAddress(Long orderId, String address);
     List<OrderResponse> getOrdersByStatus(EOrderStatus status);
+
+    String getTotalPurchaseDue();
+
+    String getTotalProductsSold();
 }

@@ -1,10 +1,7 @@
 package hcmute.edu.vn.techstore.service.interfaces;
 
 import hcmute.edu.vn.techstore.dto.ProductDTO;
-import hcmute.edu.vn.techstore.dto.response.ProductHomeSlider;
-import hcmute.edu.vn.techstore.dto.response.ProductHomeTrending;
-import hcmute.edu.vn.techstore.dto.response.ProductResponse;
-import hcmute.edu.vn.techstore.dto.response.ProductSearchSuggestion;
+import hcmute.edu.vn.techstore.dto.response.*;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,4 +30,8 @@ public interface IProductService {
     boolean decreaseQuantity(Long id, int quantity);
 
     Optional<ProductEntity> findById(Long aLong);
+
+    String getTotalAvailableProducts();
+
+    List<AdminDashboardTopSellingProduct> getTopSellingProducts();
 }

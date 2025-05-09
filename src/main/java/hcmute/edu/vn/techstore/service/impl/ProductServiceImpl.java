@@ -5,11 +5,9 @@ import hcmute.edu.vn.techstore.convert.ProductFilterBuilderConverter;
 import hcmute.edu.vn.techstore.convert.ProductMapper;
 import hcmute.edu.vn.techstore.convert.ProductResponseConvert;
 import hcmute.edu.vn.techstore.dto.ProductDTO;
-import hcmute.edu.vn.techstore.dto.response.ProductHomeSlider;
-import hcmute.edu.vn.techstore.dto.response.ProductHomeTrending;
-import hcmute.edu.vn.techstore.dto.response.ProductResponse;
-import hcmute.edu.vn.techstore.dto.response.ProductSearchSuggestion;
+import hcmute.edu.vn.techstore.dto.response.*;
 import hcmute.edu.vn.techstore.entity.BrandEntity;
+import hcmute.edu.vn.techstore.entity.OrderDetailEntity;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
 import hcmute.edu.vn.techstore.repository.BrandRepository;
 import hcmute.edu.vn.techstore.repository.ProductRepository;
@@ -226,5 +224,44 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public Optional<ProductEntity> findById(Long aLong) {
         return productRepository.findById(aLong);
+    }
+
+    @Override
+    public String getTotalAvailableProducts() {
+        List<ProductEntity> products = productRepository.findAll();
+        int totalAvailableProducts = 0;
+        for (ProductEntity product : products) {
+            if (product.isActived() && product.getBrand().getIsActived()) {
+                totalAvailableProducts++;
+            }
+        }
+        return String.valueOf(totalAvailableProducts);
+    }
+
+    @Override
+    public List<AdminDashboardTopSellingProduct> getTopSellingProducts() {
+        List<ProductEntity> products = productRepository.findAll();
+        List<AdminDashboardTopSellingProduct> topSellingProducts = new ArrayList<>();
+        for (ProductEntity product : products) {
+            if (product.isActived() && product.getBrand().getIsActived()) {
+                AdminDashboardTopSellingProduct topSellingProduct = new AdminDashboardTopSellingProduct();
+                topSellingProduct.setProductId(product.getId());
+                topSellingProduct.setProductName(product.getName());
+                topSellingProduct.setProductImage(product.getThumbnail());
+                int totalSold = product.getOrderDetails().stream()
+                        .mapToInt(OrderDetailEntity::getQuantity)
+                        .sum();
+                topSellingProduct.setTotalSold(String.valueOf(totalSold));
+                topSellingProduct.setStock(String.valueOf(product.getStockQuantity()));
+                topSellingProduct.setBrand(product.getBrand().getName());
+                topSellingProducts.add(topSellingProduct);
+            }
+        }
+        // Sort by total sold descending
+        topSellingProducts.sort((p1, p2) -> Integer.compare(
+                Integer.parseInt(p2.getTotalSold()),
+                Integer.parseInt(p1.getTotalSold())
+        ));
+        return topSellingProducts;
     }
 }

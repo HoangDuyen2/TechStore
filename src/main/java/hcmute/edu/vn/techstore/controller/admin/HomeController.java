@@ -7,6 +7,9 @@ import hcmute.edu.vn.techstore.dto.interfaces.StaffGroup;
 import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
+import hcmute.edu.vn.techstore.service.interfaces.IDiscountService;
+import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
+import hcmute.edu.vn.techstore.service.interfaces.IProductService;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import jakarta.validation.ConstraintViolation;
@@ -31,9 +34,17 @@ import java.util.Set;
 public class HomeController {
     private final IUserService userService;
     private final Validator validator;
+    private final IOrderService orderService;
+    private final IDiscountService discountService;
+    private final IProductService productService;
 
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(Model model) {
+        model.addAttribute("totalPurchaseDue", orderService.getTotalPurchaseDue());
+        model.addAttribute("totalProductsSold", orderService.getTotalProductsSold());
+        model.addAttribute("totalAvailableDiscounts", discountService.getTotalAvailableDiscount());
+        model.addAttribute("totalAvailableProducts", productService.getTotalAvailableProducts());
+        model.addAttribute("topSellingProducts", productService.getTopSellingProducts());
         return "admin/index";
     }
 

@@ -209,4 +209,30 @@ public class OrderServiceImpl implements IOrderService {
         List<OrderEntity> orderResponseList = orderRepository.findAllOrderByOrderStatusAndDateDesc(EOrderStatus.valueOf(status.name()));
         return orderResponseList.stream().map(orderEntity -> orderConverter.toResponse(orderEntity)).toList();
     }
+
+    @Override
+    public String getTotalPurchaseDue() {
+        List<OrderEntity> orderEntities = orderRepository.findAllOrderByOrderDateDesc();
+        BigDecimal totalPurchaseDue = BigDecimal.ZERO;
+        for (OrderEntity orderEntity : orderEntities) {
+            if (orderEntity.getOrderStatus().equals(EOrderStatus.DELIVERED_SUCCESSFULLY)) {
+                totalPurchaseDue = totalPurchaseDue.add(orderEntity.getTotalPrice());
+            }
+        }
+        return priceUtil.formatPrice(totalPurchaseDue);
+    }
+
+    @Override
+    public String getTotalProductsSold() {
+        List<OrderEntity> orderEntities = orderRepository.findAllOrderByOrderDateDesc();
+        int totalProductsSold = 0;
+        for (OrderEntity orderEntity : orderEntities) {
+            if (orderEntity.getOrderStatus().equals(EOrderStatus.DELIVERED_SUCCESSFULLY)) {
+                for (OrderDetailEntity orderDetail : orderEntity.getOrderDetails()) {
+                    totalProductsSold += orderDetail.getQuantity();
+                }
+            }
+        }
+        return String.valueOf(totalProductsSold);
+    }
 }

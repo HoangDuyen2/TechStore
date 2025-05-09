@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DiscountServiceImpl implements IDiscountService {
@@ -114,5 +116,17 @@ public class DiscountServiceImpl implements IDiscountService {
     public boolean checkDiscount(String code) {
         DiscountEntity discountEntity = discountRepository.findByCode(code);
         return discountEntity != null && discountEntity.getQuantity() > 0 && discountEntity.getExpiredDate().isAfter(java.time.LocalDate.now());
+    }
+
+    @Override
+    public String getTotalAvailableDiscount() {
+        List<DiscountEntity> discountEntities = discountRepository.findAll();
+        int totalAvailableDiscount = 0;
+        for (DiscountEntity discount : discountEntities) {
+            if (checkDiscount(discount.getCode())) {
+                totalAvailableDiscount++;
+            }
+        }
+        return String.valueOf(totalAvailableDiscount);
     }
 }

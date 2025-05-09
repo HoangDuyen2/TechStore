@@ -24,4 +24,6 @@ public interface IDiscountService {
     boolean decreaseQuantity(String code, int quantity);
 
     boolean checkDiscount(String code);
+
+    String getTotalAvailableDiscount();
 }
