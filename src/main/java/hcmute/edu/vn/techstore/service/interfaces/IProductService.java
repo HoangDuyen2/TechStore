@@ -18,7 +18,7 @@ public interface IProductService {
 
     List<ProductDTO> findAllProduct();
 
-    Page<ProductEntity> filterProducts(Map<String, Object> params, Pageable pageable);
+    Page<ProductCollectionResponse> filterProducts(Map<String, Object> params, Pageable pageable);
 
     List<ProductHomeSlider> getProductHomeSlider();
 
