@@ -14,7 +14,7 @@ public abstract class OrderPriceDecorator implements OrderPriceCalculator {
     }
 
     @Override
-    public abstract BigDecimal calculateTotal(List<CheckoutRequest.ProductCheckout> products,
+    public abstract BigDecimal calculateTotal(BigDecimal totalPrice,
                                               CheckoutRequest.DiscountCheckout discount);
 }
 

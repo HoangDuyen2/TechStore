@@ -17,6 +17,7 @@ public class CheckoutRequest {
     private String phone;
     private String address;
     private List<DiscountCheckout> discounts;
+    private String discountCode;
     private List<ProductCheckout> productCheckouts;
     private String totalPrice;
     private EPayment paymentMethod;

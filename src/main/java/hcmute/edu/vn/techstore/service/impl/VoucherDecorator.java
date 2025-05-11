@@ -12,9 +12,9 @@ public class VoucherDecorator extends OrderPriceDecorator {
     }
 
     @Override
-    public BigDecimal calculateTotal(List<CheckoutRequest.ProductCheckout> products,
+    public BigDecimal calculateTotal(BigDecimal totalPrice,
                                      CheckoutRequest.DiscountCheckout discountCheckout) {
-        BigDecimal total = wrapped.calculateTotal(products, discountCheckout);
+        BigDecimal total = wrapped.calculateTotal(totalPrice, discountCheckout);
         BigDecimal fixedAmount = new BigDecimal(discountCheckout.getDiscountValue().replace(" VND", ""));
         return total.subtract(fixedAmount).max(BigDecimal.ZERO);
     }

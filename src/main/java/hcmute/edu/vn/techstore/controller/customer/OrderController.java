@@ -28,6 +28,14 @@ public class OrderController {
 
     @PostMapping("/apply-discount")
     public String applyDiscount(@ModelAttribute("checkoutRequest") CheckoutRequest checkoutRequest, Model model) {
+        for (CheckoutRequest.DiscountCheckout discount : checkoutRequest.getDiscounts()) {
+            if (discount.getDiscountCode().equals(checkoutRequest.getDiscountCode())) {
+                model.addAttribute("error", "Discount code already applied");
+                model.addAttribute("checkoutRequest", checkoutRequest);
+                model.addAttribute("paymentMethods", EPayment.values());
+                return "web/checkout-style1";
+            }
+        }
         checkoutRequest = orderService.applyDiscount(checkoutRequest);
         if (checkoutRequest.getDiscounts().isEmpty()) {
             model.addAttribute("error", "Invalid discount code");

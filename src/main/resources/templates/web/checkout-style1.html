@@ -2,7 +2,8 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
-<head th:replace="web/fragments/head :: head('TechStore - Đặt hàng')"></head><title>TechStore - Home</title>
+<head th:replace="web/fragments/head :: head('TechStore - Đặt hàng')"></head>
+<title>TechStore - Home</title>
 <body>
 <!-- header-area start -->
 <div th:insert="~{web/fragments/header::header}"></div>
@@ -97,7 +98,12 @@
                                         <input type="hidden" name="phone" th:value="${checkoutRequest.phone}">
                                         <input type="hidden" name="address" th:value="${checkoutRequest.address}">
                                         <input type="hidden" name="totalPrice" th:value="${checkoutRequest.totalPrice}">
-
+                                        <!-- For each existing discount, include as hidden field -->
+                                        <div th:each="discount, stat : *{checkoutRequest.discounts}">
+                                            <input type="hidden" th:field="*{checkoutRequest.discounts[__${stat.index}__].discountCode}" />
+                                            <input type="hidden" th:field="*{checkoutRequest.discounts[__${stat.index}__].discountName}" />
+                                            <input type="hidden" th:field="*{checkoutRequest.discounts[__${stat.index}__].discountValue}" />
+                                        </div>
                                         <!-- Hidden inputs for products -->
                                         <div th:each="product, stat : ${checkoutRequest.productCheckouts}">
                                             <input type="hidden" th:name="'productCheckouts[' + ${stat.index} + '].id'"
@@ -163,9 +169,10 @@
                                     <span th:text="${productCheckout.getTotalPrice()}"></span>
                                 </li>
                                 <li class="order-details" data-animate="animate__fadeInUp"
-                                    th:if="${checkoutRequest.getDiscountValue() != null}">
-                                    <span th:text="${checkoutRequest.getDiscountName()}"></span>
-                                    <span th:text="${checkoutRequest.getDiscountValue()}"></span>
+                                    th:if="${checkoutRequest.getDiscounts() != null}"
+                                    th:each="discount : ${checkoutRequest.getDiscounts()}">
+                                    <span th:text="${discount.getDiscountName()}"></span>
+                                    <span th:text="${discount.getDiscountValue()}"></span>
                                 </li>
                                 <li class="order-details" data-animate="animate__fadeInUp">
                                     <span>Shipping Charge</span>
@@ -201,14 +208,17 @@
                                     <input type="hidden" name="lastName" th:value="${checkoutRequest.lastName}">
                                     <input type="hidden" name="email" th:value="${checkoutRequest.email}">
                                     <input type="hidden" name="phone" th:value="${checkoutRequest.phone}">
-                                    <input type="hidden" name="address" id="hidden-address" th:value="${checkoutRequest.address}">
-                                    <input type="hidden" name="discountCode" th:value="${checkoutRequest.discountCode}">
-                                    <input type="hidden" name="discountName" th:value="${checkoutRequest.discountName}">
-                                    <input type="hidden" name="discountValue"
-                                           th:value="${checkoutRequest.discountValue}">
+                                    <input type="hidden" name="address" id="hidden-address"
+                                           th:value="${checkoutRequest.address}">
                                     <input type="hidden" name="totalPrice" th:value="${checkoutRequest.totalPrice}">
+                                    <input type="hidden" name="discountCode" th:value="${checkoutRequest.discountCode}">
+                                    <!-- For each existing discount, include as hidden field -->
+                                    <div th:each="discount, stat : *{checkoutRequest.discounts}">
+                                        <input type="hidden" th:field="*{checkoutRequest.discounts[__${stat.index}__].discountCode}" />
+                                        <input type="hidden" th:field="*{checkoutRequest.discounts[__${stat.index}__].discountName}" />
+                                        <input type="hidden" th:field="*{checkoutRequest.discounts[__${stat.index}__].discountValue}" />
+                                    </div>
                                     <input type="hidden" name="paymentMethod" id="selectedPaymentMethod">
-
                                     <!-- Add hidden inputs for products -->
                                     <div th:each="product, stat : ${checkoutRequest.productCheckouts}">
                                         <input type="hidden" th:name="'productCheckouts[' + ${stat.index} + '].id'"
@@ -1030,7 +1040,7 @@
 </script>
 <script>
     // Add this to your checkout page JavaScript
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Get the form that submits the order
         const orderForm = document.querySelector('form[action*="create-order"]');
 
@@ -1038,7 +1048,7 @@
         const addressInput = document.querySelector('input[name="address"]');
 
         // Before form submission, make sure the address is included
-        orderForm.addEventListener('submit', function(event) {
+        orderForm.addEventListener('submit', function (event) {
             // Check if there's a separate address field that needs to be synced
             const billingAddressField = document.querySelector('.billing-area input[name="address"]');
 
@@ -1058,6 +1068,51 @@
                 hiddenAddressField.value = billingAddressField.value;
             }
         });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the discount form
+        const discountForm = document.querySelector('form[action*="/apply-discount"]');
+
+        if (discountForm) {
+            discountForm.addEventListener('submit', function(event) {
+                // Get the entered discount code
+                const discountCodeInput = discountForm.querySelector('input[name="discountCode"]');
+                const newDiscountCode = discountCodeInput.value.trim();
+
+                if (!newDiscountCode) {
+                    return; // No discount code entered, let form submit normally
+                }
+
+                // Get all existing discount codes from hidden fields
+                const existingDiscountInputs = document.querySelectorAll('input[name$=".discountCode"]');
+                let isDuplicate = false;
+
+                existingDiscountInputs.forEach(input => {
+                    if (input.value.trim().toLowerCase() === newDiscountCode.toLowerCase()) {
+                        isDuplicate = true;
+                    }
+                });
+
+                // If duplicate found, prevent form submission and show message
+                if (isDuplicate) {
+                    event.preventDefault();
+
+                    // Create or find error message element
+                    let errorElement = document.querySelector('#discount-error-message');
+                    if (!errorElement) {
+                        errorElement = document.createElement('div');
+                        errorElement.id = 'discount-error-message';
+                        errorElement.style.color = 'red';
+                        errorElement.style.marginTop = '10px';
+                        discountCodeInput.parentNode.appendChild(errorElement);
+                    }
+
+                    errorElement.textContent = 'This discount code has already been applied';
+                }
+            });
+        }
     });
 </script>
 </body>

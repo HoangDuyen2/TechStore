@@ -125,9 +125,10 @@
                                                     </li>    
                                                 </ul>
                                                 <ul class="flex flex-column gap14">
-                                                    <li class="cart-totals-item">
+                                                    <li class="cart-totals-item" th:if="${orderResponse.getDiscounts() != null}"
+                                                        th:each="discount : ${orderResponse.getDiscounts()}">
                                                         <span class="body-text">Discount:</span>
-                                                        <span class="body-title-2" th:text="${orderResponse.discountName != null ? orderResponse.discountName : 'None'}"></span>
+                                                        <span class="body-title-2" th:text="${discount.discountName != null ? discount.discountName : 'None'}"></span>
                                                     </li>
                                                     <li class="divider"></li>
                                                     <li class="cart-totals-item">

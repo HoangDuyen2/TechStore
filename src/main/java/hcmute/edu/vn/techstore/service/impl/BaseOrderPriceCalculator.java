@@ -12,10 +12,8 @@ public class BaseOrderPriceCalculator implements OrderPriceCalculator {
     private final PriceUtil priceUtil = new PriceUtil();
 
     @Override
-    public BigDecimal calculateTotal(List<CheckoutRequest.ProductCheckout> productCheckouts,
+    public BigDecimal calculateTotal(BigDecimal totalPrice,
                                      CheckoutRequest.DiscountCheckout discountCheckout) {
-        return productCheckouts.stream()
-                .map(product -> priceUtil.parsePrice(product.getPrice()).multiply(BigDecimal.valueOf(product.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return totalPrice;
     }
 }

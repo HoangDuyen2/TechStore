@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderPriceCalculator {
-    BigDecimal calculateTotal(List<CheckoutRequest.ProductCheckout> products, CheckoutRequest.DiscountCheckout discount);
+    BigDecimal calculateTotal(BigDecimal totalPrice, CheckoutRequest.DiscountCheckout discount);
 }
