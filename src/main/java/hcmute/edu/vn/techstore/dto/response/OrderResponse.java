@@ -23,11 +23,16 @@ public class OrderResponse {
     private String address;
     private EOrderStatus orderStatus;
     private String totalPrice;
-    private String discountName;
-    private String discountCode;
-    private EDiscountType discountType;
+    private List<DiscountOrderResponse> discounts;
     private String paymentName;
     private List<OrderDetailResponse> orderDetails;
     private String customerName;
 
+    @Setter
+    @Getter
+    public static class DiscountOrderResponse {
+        private String discountName;
+        private String discountCode;
+        private EDiscountType discountType;
+    }
 }

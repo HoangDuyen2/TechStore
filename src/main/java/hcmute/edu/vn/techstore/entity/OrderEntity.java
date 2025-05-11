@@ -6,7 +6,9 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -38,9 +40,13 @@ public class OrderEntity{
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name = "discountId", referencedColumnName = "id")
-    private DiscountEntity discount;
+    @ManyToMany
+    @JoinTable(
+            name = "order_discount",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "discount_id")
+    )
+    private Set<DiscountEntity> discounts;
 
     @ManyToOne
     @JoinColumn(name = "paymentId", referencedColumnName = "id")

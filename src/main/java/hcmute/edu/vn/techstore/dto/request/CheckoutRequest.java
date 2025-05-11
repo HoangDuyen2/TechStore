@@ -1,6 +1,7 @@
 package hcmute.edu.vn.techstore.dto.request;
 
 
+import hcmute.edu.vn.techstore.Enum.EDiscountType;
 import hcmute.edu.vn.techstore.Enum.EPayment;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,9 +16,7 @@ public class CheckoutRequest {
     private String email;
     private String phone;
     private String address;
-    private String discountCode;
-    private String discountName;
-    private String discountValue;
+    private List<DiscountCheckout> discounts;
     private List<ProductCheckout> productCheckouts;
     private String totalPrice;
     private EPayment paymentMethod;
@@ -31,5 +30,13 @@ public class CheckoutRequest {
         private String price;
         private String image;
         private String totalPrice;
+    }
+
+    @Setter
+    @Getter
+    public static class DiscountCheckout {
+        private String discountCode;
+        private String discountName;
+        private String discountValue;
     }
 }

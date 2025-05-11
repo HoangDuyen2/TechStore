@@ -4,6 +4,7 @@ import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
 import hcmute.edu.vn.techstore.service.interfaces.OrderPriceCalculator;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class CouponDecorator extends OrderPriceDecorator {
     public CouponDecorator(OrderPriceCalculator wrapped) {
@@ -11,9 +12,10 @@ public class CouponDecorator extends OrderPriceDecorator {
     }
 
     @Override
-    public BigDecimal calculateTotal(CheckoutRequest request) {
-        BigDecimal total = wrapped.calculateTotal(request);
-        BigDecimal percent = new BigDecimal(request.getDiscountValue().replace("%", "")); // e.g., 10 means 10%
+    public BigDecimal calculateTotal(List<CheckoutRequest.ProductCheckout> products,
+                                     CheckoutRequest.DiscountCheckout discountCheckout) {
+        BigDecimal total = wrapped.calculateTotal(products, discountCheckout);
+        BigDecimal percent = new BigDecimal(discountCheckout.getDiscountValue().replace("%", ""));
         BigDecimal discount = total.multiply(percent).divide(BigDecimal.valueOf(100));
         return total.subtract(discount).max(BigDecimal.ZERO);
     }

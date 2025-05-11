@@ -12,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class DiscountServiceImpl implements IDiscountService {
                 .amount(discount.getAmount())
                 .expiredDate(discount.getExpiredDate())
                 .quantity(discount.getQuantity())
-                .usedQuantity(orderRepository.countAllByDiscount_Code(discount.getCode()))
+                .usedQuantity(orderRepository.countAllByDiscountsContains(Set.of(discount)))
                 .build());
     }
 

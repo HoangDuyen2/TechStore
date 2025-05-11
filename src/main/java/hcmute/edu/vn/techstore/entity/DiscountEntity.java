@@ -7,6 +7,7 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -41,6 +42,6 @@ public class DiscountEntity {
     @Column(name = "quantity")  
     private int quantity;
 
-    @OneToMany(mappedBy = "discount")
-    private List<OrderEntity> orders;
+    @ManyToMany(mappedBy = "discounts")
+    private Set<OrderEntity> orders;
 }

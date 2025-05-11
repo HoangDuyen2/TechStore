@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -22,17 +23,21 @@ public class OrderConverter {
 
     public OrderResponse toResponse(OrderEntity order) {
         OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
-        DiscountEntity discount = order.getDiscount();
+        Set<DiscountEntity> discounts = order.getDiscounts();
         List<OrderDetailEntity> orderDetails = order.getOrderDetails();
         List<OrderDetailResponse> orderDetailResponses = new ArrayList<>();
         orderResponse.setTotalPrice(priceUtil.formatPrice(order.getTotalPrice()));
         orderResponse.setCustomerName(order.getUser().getLastName() + " " + order.getUser().getFirstName());
         orderResponse.setPaymentName(order.getPayment().getName());
-        if (discount != null) {
-            orderResponse.setDiscountName(discount.getName());
-            orderResponse.setDiscountType(discount.getDiscountType());
-            orderResponse.setDiscountCode(discount.getCode());
+        List<OrderResponse.DiscountOrderResponse> discountOrderResponses = new ArrayList<>();
+        for (DiscountEntity discount : discounts) {
+            OrderResponse.DiscountOrderResponse discountResponse = new OrderResponse.DiscountOrderResponse();
+            discountResponse.setDiscountName(discount.getName());
+            discountResponse.setDiscountCode(discount.getCode());
+            discountResponse.setDiscountType(discount.getDiscountType());
+            discountOrderResponses.add(discountResponse);
         }
+        orderResponse.setDiscounts(discountOrderResponses);
         orderResponse.setOrderDate(order.getOrderDate().toLocalDate());
         for (OrderDetailEntity orderDetail : orderDetails) {
             orderDetailResponses.add(orderDetailConverter.toOrderDetailResponse(orderDetail));
