@@ -32,7 +32,4 @@ public class HomeController {
         model.addAttribute("brands", brandService.findAllByIsActivedTrue());
         return "web/index1";
     }
-
-
-
 }

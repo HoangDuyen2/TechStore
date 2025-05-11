@@ -104,8 +104,6 @@
                                     <!-- shop-item-filter-list start -->
                                     <a href="javascript:void(0)" class="list-change-view grid-three active"
                                        data-grid-view="3"><i class="fa-solid fa-border-all"></i></a>
-                                    <a href="javascript:void(0)" data-grid-view="1" class="list-change-view list-one"><i
-                                            class="fa-solid fa-list"></i></a>
                                     <!-- shop-item-filter-list end -->
                                 </div>
                                 <!-- product-short start -->
@@ -141,92 +139,70 @@
                                                         <li class="pro-item-li" data-animate="animate__fadeInUp">
                                                             <div class="single-product-wrap">
                                                                 <div class="product-image">
-                                                                    <a th:href="@{/product/{id}(id=${product.id})}"
-                                                                       class="pro-img">
-                                                                        <img th:src="${product.getThumbnail()}"
-                                                                             class="img-fluid img1 resp-img1"
-                                                                             th:alt="${product.name}">
-                                                                        <!-- Nếu có ảnh phụ, bạn có thể xử lý thêm ở đây -->
+                                                                    <a th:href="@{/product/{id}(id=${product.id})}" class="pro-img">
+                                                                        <img th:src="${product.thumbnail}" class="img-fluid img1 resp-img1" th:alt="${product.name}">
+                                                                        <img th:src="${product.thumbnail}" class="img-fluid img2 resp-img2" th:alt="${product.name}">
                                                                     </a>
                                                                     <div class="product-action">
-                                                                        <a href="wishlist-product.html"
-                                                                           class="add-to-wishlist">
-                                                                            <span class="product-icon"><i
-                                                                                    class="feather-heart"></i></span>
-                                                                            <span class="tooltip-text">wishlist</span>
-                                                                        </a>
-                                                                        <a href="#quickview-modal"
-                                                                           data-bs-toggle="modal" class="quick-view">
-                                                                            <span class="product-icon"><i
-                                                                                    class="feather-eye"></i></span>
+                                                                        <a href="#" class="quickview" th:data-product-id="${product.getId()}">
+                                                                            <span class="product-icon"><i class="feather-eye"></i></span>
                                                                             <span class="tooltip-text">quickview</span>
                                                                         </a>
                                                                     </div>
+                                                                    <div th:attr="data-authenticated=${user != null}"></div>
+                                                                    <div th:attr="data-authenticated=${user != null}"></div>
                                                                     <div class="product-cart">
-                                                                        <button type="button" class="add-to-cart">
-                            <span class="product-icon">
-                                <span class="product-bag-icon"><i class="feather-shopping-bag"></i></span>
-                                <span class="product-loader-icon"><i class="feather-loader"></i></span>
-                                <span class="product-check-icon"><i class="feather-check"></i></span>
-                            </span>
+                                                                        <button type="button" class="add-to-cart"
+                                                                                th:attr="data-product-id=${product.id}"
+                                                                                onclick="addToCart(this)">
+                                                                        <span class="product-icon">
+                                                                            <span class="product-bag-icon"><i class="feather-shopping-bag"></i></span>
+                                                                            <span class="product-loader-icon"><i class="feather-loader"></i></span>
+                                                                            <span class="product-check-icon"><i class="feather-check"></i></span>
+                                                                        </span>
                                                                         </button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="product-caption">
                                                                     <div class="product-content">
                                                                         <div class="product-title">
-                                                                            <h6>
-                                                                                <a th:href="@{/products/{id}(id=${product.id})}"
-                                                                                   th:text="${product.name}">Product
-                                                                                    Name</a>
-                                                                            </h6>
+                                                                            <h6><a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.name}"></a></h6>
                                                                         </div>
                                                                         <div class="price-box">
-                                                                            <span class="new-price"
-                                                                                  th:text="'$' + ${product.price}">Price</span>
+                                                                            <span class="new-price" th:text="${product.price}"></span>
                                                                         </div>
                                                                         <div class="product-ratting">
-                            <span class="review-ratting">
-                                <span class="review-star">
-                                    <!-- Có thể tạo rating động ở đây -->
-                                    <i class="feather-star"></i>
-                                    <i class="feather-star"></i>
-                                    <i class="feather-star"></i>
-                                    <i class="feather-star"></i>
-                                    <i class="feather-star"></i>
-                                </span>
-                                <span class="review-caption"
-                                      th:text="'(' + ${#lists.size(product.reviews)} + ' reviews)'">
-                                    No reviews
-                                </span>
-                            </span>
-                                                                        </div>
-                                                                        <div class="product-description">
-                                                                            <p th:text="${product.description}">
-                                                                                Description here...</p>
+                                                                            <span class="review-ratting">
+                                                                                <span class="review-star">
+                                                                                    <span th:if="${product.getStars() > 0}">
+                                                                                        <span th:each="i : ${#numbers.sequence(1, product.stars)}">
+                                                                                            <i class="fas fa-star"></i>
+                                                                                        </span>
+                                                                                    </span>
+                                                                                    <span th:if="${product.getStars() < 5}">
+                                                                                        <span th:each="i : ${#numbers.sequence(1, 5 - product.stars)}">
+                                                                                            <i class="feather-star"></i>
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </span>
+                                                                                <span class="review-caption">No reviews</span>
+                                                                            </span>
                                                                         </div>
                                                                         <div class="product-action">
-                                                                            <a href="javascript:void(0)"
-                                                                               class="add-to-cart">
-                                <span class="product-icon">
-                                    <span class="product-bag-icon"><i class="feather-shopping-bag"></i></span>
-                                    <span class="product-loader-icon"><i class="feather-loader"></i></span>
-                                    <span class="product-check-icon"><i class="feather-check"></i></span>
-                                </span>
+                                                                            <a th:href="@{/add-cart}" class="add-to-cart">
+                                                                                <span class="product-icon">
+                                                                                    <span class="product-bag-icon"><i
+                                                                                            class="feather-shopping-bag"></i></span>
+                                                                                    <span class="product-loader-icon"><i
+                                                                                            class="feather-loader"></i></span>
+                                                                                    <span class="product-check-icon"><i
+                                                                                            class="feather-check"></i></span>
+                                                                                </span>
                                                                                 <span class="tooltip-text">add to cart</span>
                                                                             </a>
-                                                                            <a href="#quickview-modal"
-                                                                               data-bs-toggle="modal"
-                                                                               class="quick-view">
-                                                                                <span class="product-icon"><i
-                                                                                        class="feather-eye"></i></span>
+                                                                            <a href="#quickview-modal" data-bs-toggle="modal" class="quick-view">
+                                                                                <span class="product-icon"><i class="feather-eye"></i></span>
                                                                                 <span class="tooltip-text">quickview</span>
-                                                                            </a>
-                                                                            <a href="wishlist-product.html"
-                                                                               class="add-to-wishlist">
-                                                                                <span class="product-icon"><i
-                                                                                        class="feather-heart"></i></span>
-                                                                                <span class="tooltip-text">wishlist</span>
                                                                             </a>
                                                                         </div>
                                                                     </div>
@@ -878,6 +854,7 @@
 <!-- theme js -->
 <script th:src="@{/web/assert/js/main.js}"></script>
 <script th:src="@{/web/assert/js/search-autocomplete.js}"></script>
+
 <script>
     const rangeMin = document.getElementById('range1');
     const rangeMax = document.getElementById('range2');
@@ -1017,6 +994,150 @@
             if (!dropdown.contains(event.target) && !trigger.contains(event.target)) {
                 dropdown.classList.remove("show");
             }
+        });
+    });
+</script>
+<script>
+    function addToCart(button) {
+        const isAuthenticated = [[${#authentication.principal != 'anonymousUser'}]];
+        if (!isAuthenticated) {
+            window.location.href = "/login";
+            return;
+        }
+
+        const productId = button.getAttribute('data-product-id');
+
+        fetch(`/add-cart?productId=${productId}`, {
+            method: 'GET'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Thêm thất bại!');
+                }
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra!');
+            });
+    }
+</script>
+<script>
+    function increaseQuantity(button) {
+        console.log("increaseQuantity called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/add-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Tăng số lượng thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function decreaseQuantity(button) {
+        console.log("decreaseQuantity called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/decrease-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Giảm số lượng thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function deleteItem(button) {
+        console.log("deleteItem called");
+        const productId = getProductId(button);
+        fetch(window.location.origin + "/delete-cart?productId=" + productId)
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                throw new Error('Xóa sản phẩm thất bại!');
+            })
+            .then(data => {
+                alert(data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+    }
+
+    function getProductId(button) {
+        const cartItem = button.closest('.cart-item');
+        return cartItem ? cartItem.getAttribute('data-product-id') : null;
+    }
+</script>
+<script>
+    // Quickview functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const quickviewButtons = document.querySelectorAll('.quickview');
+
+        quickviewButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const productId = this.getAttribute('data-product-id');
+
+                // Load quickview content
+                fetch(`/products/quickview/${productId}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('quickview-content').innerHTML = html;
+
+                        // Initialize modal
+                        const modal = new bootstrap.Modal(document.getElementById('quickview-modal'));
+                        modal.show();
+
+                        // Initialize Swiper for quickview slider
+                        const galleryThumbs = new Swiper('.gallery-thumbs', {
+                            spaceBetween: 10,
+                            slidesPerView: 4,
+                            freeMode: true,
+                            watchSlidesVisibility: true,
+                            watchSlidesProgress: true,
+                        });
+
+                        const galleryTop = new Swiper('.gallery-top', {
+                            spaceBetween: 10,
+                            navigation: {
+                                nextEl: '.quick-next',
+                                prevEl: '.quick-prev',
+                            },
+                            thumbs: {
+                                swiper: galleryThumbs
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra khi tải quickview!');
+                    });
+            });
         });
     });
 </script>

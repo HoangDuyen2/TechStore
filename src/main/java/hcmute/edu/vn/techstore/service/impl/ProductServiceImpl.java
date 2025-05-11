@@ -104,13 +104,24 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Page<ProductEntity> filterProducts(Map<String, Object> params, Pageable pageable) {
+    public Page<ProductCollectionResponse> filterProducts(Map<String, Object> params, Pageable pageable) {
         ProductFilterBuilder builder = ProductFilterBuilderConverter.toProductFilterBuilder(params);
 
         Page<ProductEntity> productPage = productRepository.findAll(
                 ProductRepositoryCustom.filter(builder), pageable);
-        return productPage;
+
+        Page<ProductCollectionResponse> responsePage = productPage.map(product -> ProductCollectionResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .thumbnail(product.getThumbnail())
+                .price(product.getPrice().toPlainString())
+                .stars(product.getStar() != null ? product.getStar() : 0)
+                .build());
+
+        return responsePage;
     }
+
+
 
     @Override
     public List<ProductHomeSlider> getProductHomeSlider() {

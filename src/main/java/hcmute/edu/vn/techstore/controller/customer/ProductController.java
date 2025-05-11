@@ -1,6 +1,7 @@
 package hcmute.edu.vn.techstore.controller.customer;
 
 import hcmute.edu.vn.techstore.dto.ProductImageUpdateDTO;
+import hcmute.edu.vn.techstore.dto.response.ProductCollectionResponse;
 import hcmute.edu.vn.techstore.dto.response.ProductResponse;
 import hcmute.edu.vn.techstore.entity.ProductEntity;
 import hcmute.edu.vn.techstore.service.interfaces.IBrandService;
@@ -40,7 +41,7 @@ public class ProductController {
 
         Sort sort = sortOrder.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        Page<ProductEntity> productPage = productService.filterProducts(params, pageable);
+        Page<ProductCollectionResponse> productPage = productService.filterProducts(params, pageable);
 
         // Tạo baseUrl giữ filter
         String queryParams = params.entrySet().stream()
