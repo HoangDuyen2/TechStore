@@ -114,7 +114,7 @@ public class ProductServiceImpl implements IProductService {
                 .id(product.getId())
                 .name(product.getName())
                 .thumbnail(product.getThumbnail())
-                .price(product.getPrice().toPlainString())
+                .price(priceUtil.formatPrice(product.getPrice()))
                 .stars(product.getStar() != null ? product.getStar() : 0)
                 .build());
 
