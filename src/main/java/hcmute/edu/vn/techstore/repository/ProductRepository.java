@@ -18,10 +18,13 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long>, J
     int countByBrand_Id(Long brandId);
 
     // find product sort by createdAt and updatedAt
-    @Query("SELECT p FROM ProductEntity p ORDER BY p.createdAt DESC")
+    @Query("SELECT p FROM ProductEntity p " +
+            "WHERE p.actived = true AND p.brand.isActived = true " +
+            "ORDER BY p.createdAt DESC")
     List<ProductEntity> findByOrderByCreatedDateDesc();
 
     @Query("SELECT p FROM ProductEntity p JOIN OrderDetailEntity od ON p.id = od.product.id " +
+            "WHERE p.actived = true AND p.brand.isActived = true " +
             "GROUP BY p.id ORDER BY SUM(od.quantity) DESC")
     List<ProductEntity> findTopMostBuyingProductsByOrderDetail();
 
