@@ -4,6 +4,8 @@ import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import hcmute.edu.vn.techstore.Enum.EPayment;
 import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
+import hcmute.edu.vn.techstore.service.payment.PaymentStrategy;
+import hcmute.edu.vn.techstore.service.payment.PaymentStrategyFactory;
 import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OrderController {
     private final IOrderService orderService;
+    private final PaymentStrategyFactory paymentStrategyFactory;
 
     @GetMapping("/checkout")
     public String orderPage(Model model, @RequestParam(value = "selectedProductIds", required = false) List<Long> selectedProductIds) {
@@ -54,18 +58,56 @@ public class OrderController {
     @PostMapping("/create-order")
     public String createOrder(@ModelAttribute("checkoutRequest") CheckoutRequest checkoutRequest,
                               @RequestParam("paymentMethod") String paymentMethod,
-                              Model model) {
+                              Model model, HttpSession session) {
         checkoutRequest.setPaymentMethod(EPayment.valueOf(paymentMethod));
 
         try {
-            Long orderId = orderService.createOrder(checkoutRequest);
-            return "redirect:/order-complete?orderId=" + orderId;
+            // Get the appropriate payment strategy
+            PaymentStrategy paymentStrategy = paymentStrategyFactory.getStrategy(checkoutRequest.getPaymentMethod());
+            
+            // Process payment
+            String paymentResult = paymentStrategy.processPayment(checkoutRequest);
+            
+            if (checkoutRequest.getPaymentMethod() == EPayment.Paypal) {
+                session.setAttribute("checkoutRequest", checkoutRequest);
+            }
+
+            if (paymentResult.equals("success")) {
+                // For non-redirect payment methods (COD, Pay in Store)
+                Long orderId = orderService.createOrder(checkoutRequest);
+                return "redirect:/order-complete?orderId=" + orderId;
+            } else {
+                // For redirect payment methods (PayPal, VNPay)
+                return "redirect:" + paymentResult;
+            }
         } catch (Exception e) {
             model.addAttribute("error", "Failed to create order: " + e.getMessage());
             model.addAttribute("checkoutRequest", checkoutRequest);
             model.addAttribute("paymentMethods", EPayment.values());
             return "web/checkout-style1";
         }
+    }
+
+    @GetMapping("/paypal/success")
+    public String handlePayPalSuccess(@RequestParam("paymentId") String paymentId,
+                                    @RequestParam("PayerID") String payerId,
+                                    HttpSession session) {
+        try {
+            CheckoutRequest checkoutRequest = (CheckoutRequest) session.getAttribute("checkoutRequest");
+            if (checkoutRequest == null) {
+                return "redirect:/checkout?error=Session expired or invalid";
+            }
+            Long orderId = orderService.createOrder(checkoutRequest);
+            session.removeAttribute("checkoutRequest");
+            return "redirect:/order-complete?orderId=" + orderId;
+        } catch (Exception e) {
+            return "redirect:/checkout?error=" + e.getMessage();
+        }
+    }
+
+    @GetMapping("/paypal/cancel")
+    public String handlePayPalCancel() {
+        return "redirect:/checkout?error=Payment cancelled";
     }
 
     @GetMapping("/order-complete")
