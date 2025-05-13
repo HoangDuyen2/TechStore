@@ -72,6 +72,7 @@ public class ProductController {
         ProductResponse productResponse = productService.findProductResponseById(id).orElse(null);
         ProductImageUpdateDTO productImageUpdateDTO = new ProductImageUpdateDTO();
         productImageUpdateDTO.setExistingImagePaths(imageService.getImagePathsByProductId(id));
+        model.addAttribute("productHomeTrending", productService.getProductHomeTrending());
         model.addAttribute("productImages", productImageUpdateDTO);
         model.addAttribute("product", productResponse);
     }

@@ -5,6 +5,7 @@ import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.entity.CartEntity;
 import hcmute.edu.vn.techstore.service.interfaces.ICartDetailService;
 import hcmute.edu.vn.techstore.service.interfaces.ICartService;
+import hcmute.edu.vn.techstore.service.interfaces.IProductService;
 import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -22,10 +23,12 @@ import java.util.List;
 public class CartController {
     private final ICartService cartService;
     private final ICartDetailService cartDetailService;
+    private final IProductService productService;
 
     @GetMapping("/carts")
     public String cartPage(Model model) {
         CartResponse cartResponse = cartService.getAllCartDetailInactive(SecurityUtils.getCurrentUsername());
+        model.addAttribute("productHomeTrending", productService.getProductHomeTrending());
         if (cartResponse != null) {
             model.addAttribute("cartDetailsInActived", cartResponse.getCartDetails());
         }
