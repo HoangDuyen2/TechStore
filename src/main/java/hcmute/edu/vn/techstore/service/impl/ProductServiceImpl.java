@@ -212,20 +212,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public boolean decreaseQuantity(Long id, int quantity) {
-        ProductEntity product = productRepository.findById(id).orElse(null);
-        if (product == null) {
-            throw new IllegalArgumentException("Product is invalid");
-        }
-        if (product.getStockQuantity() < quantity) {
-            throw new IllegalArgumentException("Product quantity is not enough");
-        }
-        if (!product.isActived()) {
-            throw new IllegalArgumentException("Product is not available");
-        }
-        if (!product.getBrand().getIsActived()) {
-            throw new IllegalArgumentException("Product brand is not available");
-        }
-
+        ProductEntity product = productRepository.findById(id).get();
         // Decrease product quantity
         product.setStockQuantity(product.getStockQuantity() - quantity);
         productRepository.save(product);

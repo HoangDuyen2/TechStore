@@ -72,7 +72,6 @@ public class OrderServiceImpl implements IOrderService {
         if (checkoutRequest.getDiscountCode() != null && !checkoutRequest.getDiscountCode().isEmpty()) {
             if (discountService.checkDiscount(checkoutRequest.getDiscountCode())) {
                 DiscountEntity discountEntity = discountService.findByCode(checkoutRequest.getDiscountCode());
-                // add discount to checkout request
                 CheckoutRequest.DiscountCheckout discountCheckout = new CheckoutRequest.DiscountCheckout();
                 discountCheckout.setDiscountCode(discountEntity.getCode());
                 discountCheckout.setDiscountName(discountEntity.getName());
@@ -85,7 +84,9 @@ public class OrderServiceImpl implements IOrderService {
                 if (checkoutRequest.getDiscounts() == null) {
                     checkoutRequest.setDiscounts(new ArrayList<>());
                 }
+                // Add discount to checkout request
                 checkoutRequest.getDiscounts().add(discountCheckout);
+                // Calculate total price with discount
                 checkoutRequest.setTotalPrice(priceUtil.formatPrice(getTotalPriceWithDiscount(checkoutRequest)));
             }
         }
@@ -106,20 +107,13 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public Long createOrder(CheckoutRequest checkoutRequest) {
-        // Check discount
+        // Decrease discount quantity
         if (checkoutRequest.getDiscounts() != null && !checkoutRequest.getDiscounts().isEmpty()) {
             for (CheckoutRequest.DiscountCheckout discountCheckout : checkoutRequest.getDiscounts()) {
                 discountService.decreaseQuantity(discountCheckout.getDiscountCode(), 1);
             }
         }
-        // Check payment method
-        if (checkoutRequest.getPaymentMethod() == null) {
-            throw new IllegalArgumentException("Payment method is required");
-        }
-        if (paymentRepository.findByName(checkoutRequest.getPaymentMethod().name()).isEmpty()) {
-            throw new IllegalArgumentException("Payment method is invalid");
-        }
-        // Check product quantity and decrease quantity
+        // Decrease product quantity
         for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
             productService.decreaseQuantity(productCheckout.getId(), productCheckout.getQuantity());
         }
