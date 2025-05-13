@@ -28,4 +28,5 @@ public interface IBrandService {
     Optional<BrandResponse> findByIdResponse(Long aLong);
 
     Optional<BrandRequest> findByIdRequest(Long aLong);
+    List<BrandResponse> getAllByIsActivedTrue();
 }

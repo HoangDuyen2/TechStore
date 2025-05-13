@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -140,4 +141,19 @@ public class BrandServiceImpl implements IBrandService {
                 .isActive(brand.getIsActived())
                 .build());
     }
+
+    public List<BrandResponse> getAllByIsActivedTrue() {
+        List<BrandEntity> brandEntities = brandRepository.findAllByIsActived(true);
+        List<BrandResponse> brandResponses = new ArrayList<>();
+        for (BrandEntity brand : brandEntities){
+            BrandResponse brandResponse = new BrandResponse();
+            brandResponse.setId(brand.getId());
+            brandResponse.setName(brand.getName());
+            brandResponse.setQuantity(productRepository.countByBrand_Id(brand.getId()));
+            brandResponse.setImage(brand.getImage());
+            brandResponses.add(brandResponse);
+        }
+        return brandResponses;
+    }
+
 }

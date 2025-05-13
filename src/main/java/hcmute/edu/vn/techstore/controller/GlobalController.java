@@ -1,8 +1,11 @@
 package hcmute.edu.vn.techstore.controller;
 
+import hcmute.edu.vn.techstore.dto.response.BrandResponse;
 import hcmute.edu.vn.techstore.dto.response.CartResponse;
 import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
+import hcmute.edu.vn.techstore.entity.BrandEntity;
+import hcmute.edu.vn.techstore.service.interfaces.IBrandService;
 import hcmute.edu.vn.techstore.service.interfaces.ICartService;
 import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
@@ -13,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ControllerAdvice
@@ -22,6 +26,7 @@ public class GlobalController {
     private final IUserService userService;
     private final ICartService cartService;
     private final IOrderService orderService;
+    private final IBrandService brandService;
 
     @ModelAttribute("user")
     public UserResponse getCurrentUser(Authentication authentication) {
@@ -54,5 +59,11 @@ public class GlobalController {
             return orderResponseList;
         }
         return null;
+    }
+
+    @ModelAttribute("brands")
+    public List<BrandResponse> getAllBrands() {
+        List<BrandResponse> brandResponses = brandService.getAllByIsActivedTrue();
+        return brandResponses;
     }
 }
