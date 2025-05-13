@@ -73,7 +73,4 @@ public class UserEntity extends TrackingDate {
 
     @OneToMany(mappedBy = "user")
     private List<ReviewEntity> reviews;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private WalletEntity wallet;
 }
