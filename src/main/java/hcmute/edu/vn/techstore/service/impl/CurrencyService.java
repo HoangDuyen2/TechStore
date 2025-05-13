@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 @Service
-@Profile("dev")
 public class CurrencyService {
 
     @Value("${currency.api.url}")

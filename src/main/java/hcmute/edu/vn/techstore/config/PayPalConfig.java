@@ -14,7 +14,6 @@ import java.util.Map;
 
 @Slf4j
 @Configuration
-@PropertySource("classpath:application-dev.properties")
 public class PayPalConfig {
 
     @Value("${paypal.client.id}")
