@@ -2,11 +2,14 @@ package hcmute.edu.vn.techstore.controller.customer;
 
 import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import hcmute.edu.vn.techstore.Enum.EPayment;
+import hcmute.edu.vn.techstore.config.VNPAYConfig;
 import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
 import hcmute.edu.vn.techstore.service.payment.PaymentStrategy;
 import hcmute.edu.vn.techstore.service.payment.PaymentStrategyFactory;
+import hcmute.edu.vn.techstore.service.payment.VnPayPaymentStrategy;
 import hcmute.edu.vn.techstore.utils.SecurityUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -66,13 +72,14 @@ public class OrderController {
         try {
             // Get the appropriate payment strategy
             PaymentStrategy paymentStrategy = paymentStrategyFactory.getStrategy(checkoutRequest.getPaymentMethod());
-            
-            // Process payment
-            String paymentResult = paymentStrategy.processPayment(checkoutRequest);
-            
-            if (checkoutRequest.getPaymentMethod() == EPayment.Paypal) {
+
+            if (checkoutRequest.getPaymentMethod() == EPayment.Paypal||checkoutRequest.getPaymentMethod() == EPayment.VNPay) {
                 session.setAttribute("checkoutRequest", checkoutRequest);
             }
+
+            // Process payment
+            String paymentResult = paymentStrategy.processPayment(checkoutRequest);
+
 
             if (paymentResult.equals("success")) {
                 // For non-redirect payment methods (COD, Pay in Store)
@@ -110,6 +117,40 @@ public class OrderController {
     @GetMapping("/paypal/cancel")
     public String handlePayPalCancel() {
         return "redirect:/checkout?error=Payment cancelled";
+    }
+
+    @GetMapping("/vnpay-payment-return")
+    public String paymentCompleted(
+            HttpServletRequest request,
+            HttpSession session,
+            Model model) {
+
+        // 2.1 Lấy checkoutRequest đã lưu
+        CheckoutRequest checkoutRequest =
+                (CheckoutRequest) session.getAttribute("checkoutRequest");
+        if (checkoutRequest == null) {
+            return "redirect:/checkout?error=Session expired or invalid";
+        }
+
+        // 2.2 Verify payment và lấy status
+        int paymentStatus =
+                ((VnPayPaymentStrategy)paymentStrategyFactory
+                        .getStrategy(EPayment.VNPay))
+                        .orderReturn(request);
+
+        if (paymentStatus == -1) {
+            return "redirect:/checkout?error=Invalid signature";
+        }
+        if (paymentStatus == 0) {
+            // payment failed -> xóa đơn tạm (nếu có)
+            return "redirect:/checkout?error=Payment failed";
+        }
+
+        // 2.3 Nếu thanh toán thành công, tạo order thật
+        Long orderId = orderService.createOrder(checkoutRequest);
+        session.removeAttribute("checkoutRequest");
+
+        return "redirect:/order-complete?orderId=" + orderId;
     }
 
     @GetMapping("/order-complete")
