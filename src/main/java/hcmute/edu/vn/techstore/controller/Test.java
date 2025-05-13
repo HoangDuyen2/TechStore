@@ -11,4 +11,9 @@ public class Test {
     public String index() {
         return "web/404";
     }
+
+    @GetMapping("/about-us")
+    public String about() {
+        return "web/about-us-2";
+    }
 }

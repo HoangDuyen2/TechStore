@@ -43,12 +43,15 @@
                                     <div class="account-profile">
                                         <div class="pro-img">
                                             <a href="javascript:void(0)" data-animate="animate__fadeInUp">
-                                                <img th:src="@{/web/assert/image/home1/account/customer-img.jpg}" class="img-fluid" alt="testi-1">
+                                                <img th:src="${profileRequest.getAvatar()}"
+                                                     class="img-fluid" alt="testi-1">
                                             </a>
                                         </div>
                                         <div class="profile-text">
-                                            <h6 data-animate="animate__fadeInUp">Miranda joy</h6>
-                                            <span data-animate="animate__fadeInUp">Joined April 06, 2025</span>
+                                            <h6 data-animate="animate__fadeInUp"
+                                                th:text="${profileRequest.getFirstName()} + ' ' + ${profileRequest.getLastName()}"></h6>
+                                            <span data-animate="animate__fadeInUp"
+                                                  th:text="'Joined ' + ${profileRequest.getCreatedAt()}"></span>
                                         </div>
                                     </div>
                                     <div class="account-detail">
@@ -66,10 +69,7 @@
                                                 <a th:href="@{/my-account}">Profile</a>
                                             </li>
                                             <li class="profile-li" data-animate="animate__fadeInUp">
-                                                <a href="pro-address.html">Address</a>
-                                            </li>
-                                            <li class="profile-li" data-animate="animate__fadeInUp">
-                                                <a href="change-password.html">
+                                                <a th:href="@{/change-password}">
                                                     <span>Change password</span>
                                                 </a>
                                             </li>

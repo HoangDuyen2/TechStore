@@ -25,7 +25,7 @@
                         <div class="slider-text-content">
                             <span class="sub-title" th:text="${product.price}"></span>
                             <h2><span th:text="${product.name}"></span></h2>
-                            <a href="collection.html" class="btn-block">
+                            <a th:href="@{/products/{id}(id=${product.id})}" class="btn-block">
                                 <span class="shopnow">Shop now</span>
                             </a>
                         </div>
@@ -61,104 +61,6 @@
             </div>
         </div>
         <!-- brand-slider end -->
-        <div class="container">
-            <div class="cat-category">
-                <div class="cat-wrap">
-                    <div class="cat-slider owl-carousel owl-theme" id="cat-slider">
-                        <div class="item">
-                            <div class="cat-block">
-                                <a href="product-template.html">
-                                    <div class="text-block">
-                                        <span class="offer-count fade-in">18% Off</span>
-                                        <h6 class="cat-title fade-in" data-animate="animate__fadeInUp">Mobile</h6>
-                                        <p class="pro-count fade-in" data-animate="animate__fadeInUp">16+ Items</p>
-                                        <span class="shop-btn fade-in" data-animate="animate__fadeInUp"><i
-                                                class="feather-arrow-right"></i></span>
-                                    </div>
-                                    <div class="cat-img"><img th:src="@{/web/assert/image/home1/categories/cat-1.png}"
-                                                              class="img-fluid" alt="cat-2"></div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="cat-block">
-                                <a href="product-template2.html">
-                                    <div class="text-block">
-                                        <span class="offer-count fade-in">16% off</span>
-                                        <h6 class="cat-title fade-in" data-animate="animate__fadeInUp">Headphone</h6>
-                                        <p class="pro-count fade-in" data-animate="animate__fadeInUp">10+ items</p>
-                                        <span class="shop-btn fade-in" data-animate="animate__fadeInUp"><i
-                                                class="feather-arrow-right"></i></span>
-                                    </div>
-                                    <div class="cat-img"><img th:src="@{/web/assert/image/home1/categories/cat-2.png}"
-                                                              class="img-fluid" alt="cat-2"></div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="cat-block">
-                                <a href="product-template3.html">
-                                    <div class="text-block">
-                                        <span class="offer-count fade-in">21% off</span>
-                                        <h6 class="cat-title fade-in" data-animate="animate__fadeInUp">Mouse</h6>
-                                        <p class="pro-count fade-in" data-animate="animate__fadeInUp">11+ items</p>
-                                        <span class="shop-btn fade-in" data-animate="animate__fadeInUp"><i
-                                                class="feather-arrow-right"></i></span>
-                                    </div>
-                                    <div class="cat-img"><img th:src="@{/web/assert/image/home1/categories/cat-3.png}"
-                                                              class="img-fluid" alt="cat-2"></div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="cat-block">
-                                <a href="product-template4.html">
-                                    <div class="text-block">
-                                        <span class="offer-count fade-in">13% off</span>
-                                        <h6 class="cat-title fade-in" data-animate="animate__fadeInUp">Mini Laptop</h6>
-                                        <p class="pro-count fade-in" data-animate="animate__fadeInUp">16+ items</p>
-                                        <span class="shop-btn fade-in" data-animate="animate__fadeInUp"><i
-                                                class="feather-arrow-right"></i></span>
-                                    </div>
-                                    <div class="cat-img"><img th:src="@{/web/assert/image/home1/categories/cat-4.png}"
-                                                              class="img-fluid" alt="cat-2"></div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="cat-block">
-                                <a href="product-template.html">
-                                    <div class="text-block">
-                                        <span class="offer-count fade-in">18% Off</span>
-                                        <h6 class="cat-title fade-in" data-animate="animate__fadeInUp">Mobile</h6>
-                                        <p class="pro-count fade-in" data-animate="animate__fadeInUp">16+ Items</p>
-                                        <span class="shop-btn fade-in" data-animate="animate__fadeInUp"><i
-                                                class="feather-arrow-right"></i></span>
-                                    </div>
-                                    <div class="cat-img"><img th:src="@{/web/assert/image/home1/categories/cat-1.png}"
-                                                              class="img-fluid" alt="cat-2"></div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="cat-block">
-                                <a href="product-template2.html">
-                                    <div class="text-block">
-                                        <span class="offer-count fade-in">30% off</span>
-                                        <h6 class="cat-title fade-in" data-animate="animate__fadeInUp">Headphone</h6>
-                                        <p class="pro-count fade-in" data-animate="animate__fadeInUp">10+ items</p>
-                                        <span class="shop-btn fade-in" data-animate="animate__fadeInUp"><i
-                                                class="feather-arrow-right"></i></span>
-                                    </div>
-                                    <div class="cat-img"><img th:src="@{/web/assert/image/home1/categories/cat-2.png}"
-                                                              class="img-fluid" alt="cat-2"></div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
     <!-- category-slider end -->
     <!-- product-category start -->

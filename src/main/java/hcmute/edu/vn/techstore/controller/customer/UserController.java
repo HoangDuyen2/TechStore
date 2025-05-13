@@ -50,12 +50,14 @@ public class UserController {
     @GetMapping("/order-history")
     public String manageOrder(Model model) {
         List<OrderResponse> orderResponseList = orderService.getAllOrdersByUserEmail(SecurityUtils.getCurrentUsername());
+        model.addAttribute("profileRequest", userService.getProfileById(SecurityUtils.getCurrentUsername()));
         model.addAttribute("orderResponseList", orderResponseList);
         return "web/order-history";
     }
 
     @GetMapping("/change-password")
     public String changePassword(Model model) {
+        model.addAttribute("profileRequest", userService.getProfileById(SecurityUtils.getCurrentUsername()));
         model.addAttribute("changePasswordRequest", new ChangePasswordRequest());
         return "web/change-password";
     }
