@@ -25,7 +25,6 @@ import java.util.List;
 @RequestMapping({"/admin/products","/staff/products"})
 public class ProductController {
 
-    // Inject any required services here
     private final IBrandService brandService;
     private final IProductService productService;
     private final IImageService imageService;
@@ -88,6 +87,11 @@ public class ProductController {
         redirectAttributes.addFlashAttribute("successMessage", message);
         return "redirect:/admin/products";
     }
+
+
+
+
+
 
     @GetMapping("/images/{productId}")
     public String showProductImages(@PathVariable Long productId, Model model) {

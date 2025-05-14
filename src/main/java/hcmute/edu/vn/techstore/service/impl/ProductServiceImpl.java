@@ -32,11 +32,12 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
-    private final ProductMapper productDTOConverter;
+    private final ProductMapper productConverter;
     private final ProductFilterBuilderConverter productFilterBuilderConverter;
     private final ImageUtil imageUtil;
     private final ProductResponseConvert productResponseConvert;
     private final PriceUtil priceUtil;
+
 
     @Override
     public void saveProduct(ProductDTO product, MultipartFile file, String existingImagePath) {
@@ -48,13 +49,13 @@ public class ProductServiceImpl implements IProductService {
             // Kiểm tra nếu có ảnh mới được tải lên
             if (file != null && !file.isEmpty()) {
                 // Nếu có ảnh cũ và không phải ảnh mặc định, xóa ảnh cũ
-                if (existingImagePath != null && !existingImagePath.isEmpty() && !existingImagePath.equals("default-product.jpg")) {
-                    imageUtil.deleteImage(existingImagePath); // ✅ Gọi qua bean
+                if (existingImagePath != null && !existingImagePath.isEmpty() && !existingImagePath.equals("https://res.cloudinary.com/techstore2025/image/upload/v1745587682/default-phone_p5dcoi.jpg")) {
+                    imageUtil.deleteImage(existingImagePath);
                 }
 
                 // Lưu ảnh mới
                 if (imageUtil.isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
-                    img = imageUtil.saveImage(file); // ✅ Gọi qua bean
+                    img = imageUtil.saveImage(file);
                 } else {
                     throw new IllegalArgumentException("Invalid image format. Only JPG, JPEG, PNG, GIF, BMP are allowed.");
                 }
@@ -63,11 +64,10 @@ public class ProductServiceImpl implements IProductService {
             // Gán lại giá trị đường dẫn ảnh (mới hoặc cũ)
             product.setThumbnail(img);
 
-            // Ánh xạ và lưu vào database
             Optional<BrandEntity> brand = brandRepository.findById(product.getBrandId());
 
             if (brand.isPresent()) {
-                ProductEntity productEntity = productDTOConverter.toEntity(product);
+                ProductEntity productEntity = productConverter.toEntity(product);
                 productEntity.setBrand(brand.get());
                 productRepository.save(productEntity);
             } else {
@@ -84,7 +84,7 @@ public class ProductServiceImpl implements IProductService {
     public ProductDTO findProductById(Long id) {
         return productRepository.findById(id)
                 .map(productEntity -> {
-                    ProductDTO productDTO = productDTOConverter.toDTO(productEntity);
+                    ProductDTO productDTO = productConverter.toDTO(productEntity);
                     productDTO.setBrandId(productEntity.getBrand().getId());
                     return productDTO;
                 })
@@ -96,7 +96,7 @@ public class ProductServiceImpl implements IProductService {
         return productRepository.findAll()
                 .stream()
                 .map(productEntity -> {
-                    ProductDTO productDTO = productDTOConverter.toDTO(productEntity);
+                    ProductDTO productDTO = productConverter.toDTO(productEntity);
                     productDTO.setBrandId(productEntity.getBrand().getId());
                     return productDTO;
                 })
@@ -110,15 +110,13 @@ public class ProductServiceImpl implements IProductService {
         Page<ProductEntity> productPage = productRepository.findAll(
                 ProductRepositoryCustom.filter(builder), pageable);
 
-        Page<ProductCollectionResponse> responsePage = productPage.map(product -> ProductCollectionResponse.builder()
+        return productPage.map(product -> ProductCollectionResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .thumbnail(product.getThumbnail())
                 .price(priceUtil.formatPrice(product.getPrice()))
                 .stars(product.getStar() != null ? product.getStar() : 0)
                 .build());
-
-        return responsePage;
     }
 
 

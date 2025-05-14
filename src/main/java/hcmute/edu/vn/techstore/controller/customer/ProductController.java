@@ -32,7 +32,7 @@ public class ProductController {
     private final IBrandService brandService;
 
     @GetMapping("")
-    public String getAllProducts(@RequestParam Map<String, Object> params,
+    public String getProducts(@RequestParam Map<String, Object> params,
                                  @RequestParam(defaultValue = "0") int pageNumber,
                                  @RequestParam(defaultValue = "9") int pageSize,
                                  @RequestParam(defaultValue = "asc") String sortOrder,
@@ -49,6 +49,7 @@ public class ProductController {
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining("&"));
         String baseUrl = "/products" + (queryParams.isEmpty() ? "?" : "?" + queryParams + "&");
+
 
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("brands", brandService.findAllByIsActivedTrue());
