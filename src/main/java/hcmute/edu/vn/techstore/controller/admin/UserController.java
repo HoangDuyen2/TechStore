@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String showUserDetail(Model model, @PathVariable("id") Long id, @RequestParam(name = "status", required = false, defaultValue = "false") boolean status, Model model1) {
+    public String showUserDetail(Model model, @PathVariable("id") Long id, @RequestParam(name = "status", required = false, defaultValue = "false") boolean status) {
         UserRequest userRequest = userService.getUserById(id);
         model.addAttribute("status",status);
         model.addAttribute("new_user", userRequest);

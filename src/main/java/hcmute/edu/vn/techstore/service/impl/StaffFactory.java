@@ -20,7 +20,7 @@ public class StaffFactory implements IUserFactory {
     @Override
     public UserEntity createUser(UserRequest userRequest, AccountEntity accountEntity, RoleEntity roleEntity) throws IOException {
         UserEntity userEntity = customerFactory.createUser(userRequest, accountEntity, roleEntity);
-        userEntity.setAddress(userRequest.getAddress());
+        userEntity.setRelativePhoneNumber(userRequest.getRelativePhoneNumber());
         userEntity.setCccd(userRequest.getCccd());
         userEntity.setRelativeName(userRequest.getRelativeName());
         return userEntity;
