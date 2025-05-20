@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.controller.customer;
 
+import hcmute.edu.vn.techstore.convert.CartConverter;
 import hcmute.edu.vn.techstore.dto.response.CartResponse;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.entity.CartEntity;
@@ -45,16 +46,16 @@ public class CartController {
     @GetMapping("/decrease-cart")
     @ResponseBody
     public String decreaseCartDetail(@RequestParam("productId") Long productId, Model model) {
-        Long cartId = cartService.getCartId(SecurityUtils.getCurrentUsername());
-        cartDetailService.decreaseCartDetail(productId, cartId);
+        CartEntity cartEntity = cartService.getCartEntity(SecurityUtils.getCurrentUsername());
+        cartDetailService.decreaseCartDetail(productId, cartEntity);
         return "Giảm sản phẩm trong giỏ hàng thành công!";
     }
 
     @GetMapping("/delete-cart")
     @ResponseBody
     public String deleteCartDetail(@RequestParam("productId") Long productId) {
-        Long cartId = cartService.getCartId(SecurityUtils.getCurrentUsername());
-        cartDetailService.deleteCartDetail(productId, cartId);
+        CartEntity cartEntity = cartService.getCartEntity(SecurityUtils.getCurrentUsername());
+        cartDetailService.deleteCartDetail(productId, cartEntity);
         return "Xóa sản phẩm trong giỏ hàng thành công!";
     }
     @GetMapping("/delete-all")

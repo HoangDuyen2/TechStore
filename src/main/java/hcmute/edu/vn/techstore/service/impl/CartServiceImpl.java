@@ -65,7 +65,7 @@ public class CartServiceImpl implements ICartService {
             userRepository.save(user);
         }
         if (cartEntity != null) {
-            cartDetailService.addCartDetail(productId, cartEntity.getId());
+            cartDetailService.addCartDetail(productId, cartEntity);
         }
     }
 
@@ -84,10 +84,13 @@ public class CartServiceImpl implements ICartService {
     }
 
     public void deleteAllCartDetails(String email){
-        cartDetailService.deleteAllCartDetail(email);
         CartEntity cartEntity = cartRepository.findByCart_User_Account_Email(email).orElse(null);
+        cartDetailService.deleteAllCartDetail(cartEntity);
         cartEntity.setTotalPrice(BigDecimal.ZERO);
         cartRepository.save(cartEntity);
+    }
+    public CartEntity getCartEntity(String email) {
+        return cartRepository.findByCart_User_Account_Email(email).orElse(null);
     }
 
 }

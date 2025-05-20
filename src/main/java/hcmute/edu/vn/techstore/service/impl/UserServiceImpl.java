@@ -11,7 +11,7 @@ import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
-import hcmute.edu.vn.techstore.service.interfaces.IUserFactory;
+import hcmute.edu.vn.techstore.service.interfaces.IUserRegistrationStrategy;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -30,7 +31,7 @@ public class UserServiceImpl implements IUserService {
     private final RoleRepository roleRepository;
     private final UserResponseConverter userResponseConverter;
     private final ImageUtil imageUtil;
-    private final UserFactoryProducer userFactoryProducer;
+    private final RegistrationContext context;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -51,9 +52,26 @@ public class UserServiceImpl implements IUserService {
         RoleEntity role = roleRepository.findByName(ERole.valueOf(userRequest.getRoleName()))
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
-        IUserFactory userFactory = userFactoryProducer.getFactory(userRequest.getRoleName());
-        UserEntity user = userFactory.createUser(userRequest,accountEntity, role);
+        // select strategy and build UserEntity
+        context.setStrategy(userRequest.getRoleName());
 
+        // 5. Build UserEntity theo strategy
+        UserEntity user = context.executeRegistration(userRequest);
+        user.setAccount(accountEntity);
+        user.setRole(role);
+
+        // 6. Xử lý ảnh (nếu có)
+        if (userRequest.getImage() != null && !userRequest.getImage().isEmpty()) {
+            if (imageUtil.isValidSuffixImage(userRequest.getImage().getOriginalFilename())) {
+                user.setImage(imageUtil.saveImage(userRequest.getImage()));
+            } else {
+                throw new IllegalArgumentException("Invalid image format.");
+            }
+        } else {
+            user.setImage("https://res.cloudinary.com/techstore2025/image/upload/v1745396615/default-user_g7vsyp.jpg");
+        }
+
+        // 7. Lưu vào DB
         userRepository.save(user);
         return true;
     }

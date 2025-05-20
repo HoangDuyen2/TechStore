@@ -152,8 +152,9 @@ public class OrderServiceImpl implements IOrderService {
         orderDetailRepository.saveAll(orderDetails);
 
         // Clear cart details after order is created
+        CartEntity cartEntity = cartRepository.findByCart_User_Account_Email(checkoutRequest.getEmail()).orElse(null);
         for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
-            cartDetailService.deleteCartDetail(checkoutRequest.getEmail(), productCheckout.getId());
+            cartDetailService.deleteCartDetail(productCheckout.getId(),cartEntity);
         }
 
         return orderEntity.getId();

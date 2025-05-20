@@ -17,10 +17,6 @@ public class CartDetailEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "cartId", referencedColumnName = "id")
-    private CartEntity cart;
-
-    @ManyToOne
     @JoinColumn(name = "productId", referencedColumnName = "id")
     private ProductEntity product;
 

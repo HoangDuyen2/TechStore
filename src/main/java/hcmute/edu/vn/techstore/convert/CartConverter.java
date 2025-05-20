@@ -21,14 +21,14 @@ public class CartConverter {
 
     public CartResponse toCartResponseActived(CartEntity cartEntity) {
         CartResponse cartResponse = new CartResponse();
-        CartDetailWrapper cartDetailWrapper = cartDetailService.getAllCartDetail(cartEntity.getUser().getAccount().getEmail());
+        CartDetailWrapper cartDetailWrapper = cartDetailService.getAllCartDetail(cartEntity);
         cartResponse.setCartDetails(cartDetailWrapper.getActiveCartDetails());
         return cartResponse;
     }
 
     public CartResponse toCartResponseInActived(CartEntity cartEntity) {
         CartResponse cartResponse = new CartResponse();
-        CartDetailWrapper cartDetailWrapper = cartDetailService.getAllCartDetail(cartEntity.getUser().getAccount().getEmail());
+        CartDetailWrapper cartDetailWrapper = cartDetailService.getAllCartDetail(cartEntity);
         cartResponse.setCartDetails(cartDetailWrapper.getInactiveCartDetails());
         return cartResponse;
     }

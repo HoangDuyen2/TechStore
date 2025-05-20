@@ -22,7 +22,8 @@ public class CartEntity {
     @OneToOne(mappedBy = "cart")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "cart_id")
     private List<CartDetailEntity> cartDetails;
 
     @Column(name = "total_price",nullable = false, columnDefinition = "DECIMAL(10, 2) DEFAULT 0")

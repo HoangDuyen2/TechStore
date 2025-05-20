@@ -20,12 +20,12 @@ import java.util.Objects;
 public class CartDetailServiceImpl implements ICartDetailService {
     private final CartDetailFactory cartDetailFactory;
     private final CartDetailRepository cartDetailRepository;
-    private final ProductRepository productRepository;
     private final CartRepository cartRepository;
+    private final ProductRepository productRepository;
 
     @Override
-    public CartDetailWrapper getAllCartDetail(String email) {
-        List<CartDetailEntity> cartDetailEntities = cartDetailRepository.findAllByCart_User_Account_Email(email);
+    public CartDetailWrapper getAllCartDetail(CartEntity cartEntity) {
+        List<CartDetailEntity> cartDetailEntities = cartEntity.getCartDetails();
 
         List<CartDetailEntity> cartDetailEntitiesActived = new ArrayList<>();
         List<CartDetailEntity> cartDetailEntitiesInactive = new ArrayList<>();
@@ -45,58 +45,65 @@ public class CartDetailServiceImpl implements ICartDetailService {
         return new CartDetailWrapper(activeResponses, inactiveResponses);
     }
 
-
-
     @Override
-    public void addCartDetail(Long productId, Long cartId) {
-        CartDetailEntity cartDetailEntity = cartDetailRepository.findByCart_IdAndAndProduct_Id(cartId, productId);
-        CartEntity cartEntity = cartRepository.findById(cartId).orElse(null);
+    public void addCartDetail(Long productId, CartEntity cartEntity) {
+        CartDetailEntity cartDetailEntity = null;
+        if (cartEntity.getCartDetails() != null) {
+            for (CartDetailEntity cartDetail : cartEntity.getCartDetails()) {
+                if (cartDetail.getProduct().getId().equals(productId)) {
+                    cartDetailEntity = cartDetail;
+                    break;
+                }
+            }
+        }
+        else cartEntity.setCartDetails(new ArrayList<>());
         ProductEntity product = productRepository.findById(productId).orElse(null);
         if (cartDetailEntity == null) {
             cartDetailEntity = new CartDetailEntity();
             cartDetailEntity.setQuantity(1);
             cartDetailEntity.setProduct(product);
-            cartDetailEntity.setCart(cartEntity);
         }
         else cartDetailEntity.setQuantity(cartDetailEntity.getQuantity()+1);
-        cartDetailRepository.save(cartDetailEntity);
+        cartEntity.getCartDetails().add(cartDetailEntity);
+        cartRepository.save(cartEntity);
     }
 
     @Override
-    public void deleteCartDetail(Long productId, Long cartId) {
-        CartDetailEntity cartDetailEntity = cartDetailRepository.findByCart_IdAndAndProduct_Id(cartId, productId);
+    public void deleteCartDetail(Long productId, CartEntity cartEntity) {
+        CartDetailEntity cartDetailEntity = null;
+        for (CartDetailEntity cartDetail : cartEntity.getCartDetails()) {
+            if (cartDetail.getProduct().getId().equals(productId)) {
+                cartDetailEntity = cartDetail;
+                break;
+            }
+        }
         if (cartDetailEntity == null) {
             throw new RuntimeException("Not found this product");
         }
-        cartDetailRepository.delete(cartDetailEntity);
+        cartEntity.getCartDetails().remove(cartDetailEntity);
+        cartRepository.save(cartEntity);
     }
 
     @Override
-    public void decreaseCartDetail(Long productId, Long cartId) {
-        CartDetailEntity cartDetailEntity = cartDetailRepository.findByCart_IdAndAndProduct_Id(cartId, productId);
+    public void decreaseCartDetail(Long productId, CartEntity cartEntity) {
+        CartDetailEntity cartDetailEntity = null;
+        for (CartDetailEntity cartDetail : cartEntity.getCartDetails()) {
+            if (cartDetail.getProduct().getId().equals(productId)) {
+                cartDetailEntity = cartDetail;
+                break;
+            }
+        }
         if (cartDetailEntity == null) {
             throw new RuntimeException("Not found this product");
         }
         else cartDetailEntity.setQuantity(cartDetailEntity.getQuantity()-1);
-        cartDetailRepository.save(cartDetailEntity);
+        cartRepository.save(cartEntity);
     }
 
     @Override
-    public void deleteAllCartDetail(String email){
-        List<CartDetailEntity> cartDetailEntities = cartDetailRepository.findAllByCart_User_Account_Email(email);
-        for (CartDetailEntity cartDetailEntity : cartDetailEntities) {
-            cartDetailRepository.delete(cartDetailEntity);
-        }
-    }
-
-    @Override
-    public void deleteCartDetail(String email, Long productId) {
-        Long cartId = Objects.requireNonNull(cartRepository.findByCart_User_Account_Email(email).orElse(null)).getId();
-        CartDetailEntity cartDetailEntity = cartDetailRepository.findByCart_IdAndAndProduct_Id(cartId, productId);
-        if (cartDetailEntity == null) {
-            throw new RuntimeException("Not found this product");
-        }
-        cartDetailRepository.delete(cartDetailEntity);
+    public void deleteAllCartDetail(CartEntity cartEntity){
+        List<CartDetailEntity> cartDetailEntities = cartEntity.getCartDetails();
+        cartDetailRepository.deleteAll(cartDetailEntities);
     }
 
 }

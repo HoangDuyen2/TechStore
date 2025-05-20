@@ -7,6 +7,6 @@ import hcmute.edu.vn.techstore.entity.UserEntity;
 
 import java.io.IOException;
 
-public interface IUserFactory {
-    UserEntity createUser(UserRequest userRequest, AccountEntity accountEntity, RoleEntity roleEntity) throws IOException;
+public interface IUserRegistrationStrategy {
+    UserEntity createUser(UserRequest userRequest) throws IOException;
 }
