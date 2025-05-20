@@ -33,7 +33,7 @@
     <!-- breadcrumb end -->
     <!-- cart-page start -->
     <section class="cart-page section-ptb"
-             th:if="${cart == null||(cart.cartDetails.size() + cartDetailsInActived.size() == 0)}">
+             th:if="${cart == null||(cart.activeDetails.size() + cart.inactiveDetails.size() == 0)}">
         <div class="container">
             <div class="row">
                 <div class="col">
@@ -56,7 +56,7 @@
     </section>
 
     <section class="cart-page section-ptb"
-             th:unless="${cart == null||(cart.cartDetails.size() + cartDetailsInActived.size() == 0)}">
+             th:unless="${cart == null||(cart.activeDetails.size() + cart.inactiveDetails.size() == 0)}">
         <form>
             <div class="container">
                 <div class="row">
@@ -68,11 +68,11 @@
                                         <h6>My cart:</h6>
                                         <span class="cart-count">
                                                     <span class="cart-counter"
-                                                          th:text="${cart.cartDetails.size()  + cartDetailsInActived.size()} "></span>
+                                                          th:text="${cart.activeDetails.size()  + cart.inactiveDetails.size()} "></span>
                                                     <span class="cart-item-title"> Item</span>
                                                 </span>
                                     </div>
-                                    <div class="item-wrap" th:each="eachCart : ${cart.cartDetails}">
+                                    <div class="item-wrap" th:each="eachCart : ${cart.activeDetails}">
                                         <ul class="cart-wrap" th:data-product-id="${eachCart.product.id}">
                                             <!-- cart-info start -->
                                             <li class="item-info" data-animate="animate__fadeInUp">
@@ -139,7 +139,7 @@
                                             <!-- cart-price end -->
                                         </ul>
                                     </div>
-                                    <div class="item-wrap" th:each="eachCart : ${cartDetailsInActived}">
+                                    <div class="item-wrap" th:each="eachCart : ${cart.inactiveDetails}">
                                         <ul class="cart-wrap disabled-item" th:data-product-id="${eachCart.product.id}">
                                             <!-- cart-info start -->
                                             <li class="item-info" data-animate="animate__fadeInUp">

@@ -8,7 +8,7 @@
                 </div>
             </div>
         </div>
-        <div class="drawer-cart-empty drawer-inner" th:if="${cart == null||cart.cartDetails.size() == 0}">
+        <div class="drawer-cart-empty drawer-inner" th:if="${cart == null||cart.activeDetails.size() == 0}">
             <div class="drawer-scrollable">
                 <img th:src="@{/web/assert/image/home1/cart/empty-cart.png}">
                 <h5 style="color: #8a0032">Your cart is currently empty</h5>
@@ -17,7 +17,7 @@
         </div>
         <div class="drawer-inner cart-fill" th:if="${cart} != null">
             <div class="drawer-scrollable">
-                <ul class="cart-items" th:each="eachCart : ${cart.cartDetails}">
+                <ul class="cart-items" th:each="eachCart : ${cart.activeDetails}">
                     <li class="cart-item" th:data-product-id="${eachCart.product.id}">
                         <div class="cart-item-wrap">
                             <div class="cart-item-image">

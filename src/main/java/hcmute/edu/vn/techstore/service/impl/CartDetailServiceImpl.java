@@ -24,28 +24,6 @@ public class CartDetailServiceImpl implements ICartDetailService {
     private final ProductRepository productRepository;
 
     @Override
-    public CartDetailWrapper getAllCartDetail(CartEntity cartEntity) {
-        List<CartDetailEntity> cartDetailEntities = cartEntity.getCartDetails();
-
-        List<CartDetailEntity> cartDetailEntitiesActived = new ArrayList<>();
-        List<CartDetailEntity> cartDetailEntitiesInactive = new ArrayList<>();
-
-        for (CartDetailEntity cartDetailEntity : cartDetailEntities) {
-            ProductEntity product = cartDetailEntity.getProduct();
-            if (!product.isActived() || !product.getBrand().getIsActived()) {
-                cartDetailEntitiesInactive.add(cartDetailEntity);
-            } else {
-                cartDetailEntitiesActived.add(cartDetailEntity);
-            }
-        }
-
-        List<CartDetailResponse> activeResponses = cartDetailFactory.createCartDetailResponse(cartDetailEntitiesActived);
-        List<CartDetailResponse> inactiveResponses = cartDetailFactory.createCartDetailResponse(cartDetailEntitiesInactive);
-
-        return new CartDetailWrapper(activeResponses, inactiveResponses);
-    }
-
-    @Override
     public void addCartDetail(Long productId, CartEntity cartEntity) {
         CartDetailEntity cartDetailEntity = null;
         if (cartEntity.getCartDetails() != null) {

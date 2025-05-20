@@ -75,7 +75,7 @@
                                             <span class="cart-icon"><i class="feather-shopping-bag"></i></span>
                                             <span class="cart-count cart-counter"
                                                   th:if="${#authentication.principal != 'anonymousUser'}"
-                                                  th:text="'(' + ${cart != null and cart.cartDetails != null ? cart.cartDetails.size() : 0} + ')'">
+                                                  th:text="'(' + ${cart != null and cart.activeDetails != null ? cart.activeDetails.size() : 0} + ')'">
                                             </span>
                                         </span>
                                     </a>

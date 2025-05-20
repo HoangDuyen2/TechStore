@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CartResponse {
-    private List<CartDetailResponse> cartDetails;
-
+    private List<CartDetailResponse> activeDetails;
+    private List<CartDetailResponse> inactiveDetails;
     private String totalPrice;
 }
