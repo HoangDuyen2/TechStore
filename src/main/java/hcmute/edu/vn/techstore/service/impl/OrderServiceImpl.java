@@ -9,6 +9,7 @@ import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.dto.response.ReportResponse;
 import hcmute.edu.vn.techstore.entity.*;
 import hcmute.edu.vn.techstore.repository.*;
+import hcmute.edu.vn.techstore.service.impl.strategy.ReportContext;
 import hcmute.edu.vn.techstore.service.interfaces.*;
 import hcmute.edu.vn.techstore.utils.PriceUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,6 +33,7 @@ public class OrderServiceImpl implements IOrderService {
     private final IProductService productService;
     private final PriceUtil priceUtil;
     private final OrderConverter orderConverter;
+    private final ReportContext reportContext;
 
     @Override
     public CheckoutRequest getCheckoutRequest(String email, List<Long> selectedProductIds) {
@@ -252,79 +252,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public ReportResponse getReport(LocalDate startDate, LocalDate endDate) {
-        // Convert dates to LocalDateTime for query
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
-
-        // Get all orders in the date range
-        List<OrderEntity> orders = orderRepository.findAllByOrderDateBetween(startDateTime, endDateTime);
-
-        // Calculate revenue and total orders
-        BigDecimal totalRevenue = BigDecimal.ZERO;
-        int totalProductsSold = 0;
-
-        // Maps to track product sales
-        Map<ProductEntity, Integer> productQuantityMap = new HashMap<>();
-        Map<ProductEntity, BigDecimal> productRevenueMap = new HashMap<>();
-
-        // Process each order
-        for (OrderEntity order : orders) {
-            totalRevenue = totalRevenue.add(order.getTotalPrice());
-
-            for (OrderDetailEntity detail : order.getOrderDetails()) {
-                ProductEntity product = detail.getProduct();
-                int quantity = detail.getQuantity();
-                BigDecimal itemRevenue = detail.getProduct().getPrice().multiply(BigDecimal.valueOf(quantity));
-
-                totalProductsSold += quantity;
-
-                // Update product maps
-                productQuantityMap.put(product, productQuantityMap.getOrDefault(product, 0) + quantity);
-                productRevenueMap.put(product, productRevenueMap.getOrDefault(product, BigDecimal.ZERO).add(itemRevenue));
-            }
-        }
-
-        // Get top selling products
-        List<ReportResponse.TopSellingProduct> topProducts = productQuantityMap.entrySet().stream()
-                .sorted(Map.Entry.<ProductEntity, Integer>comparingByValue().reversed())
-                .limit(20) // Top 20 products
-                .map(entry -> {
-                    ProductEntity product = entry.getKey();
-                    int quantity = entry.getValue();
-                    BigDecimal revenue = productRevenueMap.get(product);
-
-                    return ReportResponse.TopSellingProduct.builder()
-                            .id(product.getId())
-                            .name(product.getName())
-                            .image(product.getThumbnail())
-                            .quantitySold(quantity)
-                            .revenue(revenue)
-                            .build();
-                })
-                .collect(Collectors.toList());
-
-        // Get recent orders
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
-        List<ReportResponse.RecentOrder> recentOrders = orders.stream()
-                .sorted(Comparator.comparing(OrderEntity::getOrderDate).reversed())
-                .limit(8) // Show 8 recent orders
-                .map(order -> ReportResponse.RecentOrder.builder()
-                        .orderId(order.getId().toString())
-                        .customerName(order.getUser().getFirstName())
-                        .orderDate(order.getOrderDate().format(formatter))
-                        .amount(order.getTotalPrice())
-                        .status(order.getOrderStatus().name())
-                        .build())
-                .collect(Collectors.toList());
-
-        // Build and return the report
-        return ReportResponse.builder()
-                .totalRevenue(totalRevenue)
-                .totalOrders(orders.size())
-                .totalProductsSold(totalProductsSold)
-                .topSellingProducts(topProducts)
-                .recentOrders(recentOrders)
-                .build();
+    public ReportResponse getReport(LocalDate startDate, LocalDate endDate, String reportType) {
+        return reportContext.generateReport(reportType, startDate, endDate);
     }
 }

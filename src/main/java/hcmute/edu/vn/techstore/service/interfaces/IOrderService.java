@@ -29,5 +29,5 @@ public interface IOrderService {
 
     String getTotalProductsSold();
 
-    ReportResponse getReport(LocalDate startDate, LocalDate endDate);
+    ReportResponse getReport(LocalDate startDate, LocalDate endDate, String reportType);
 }

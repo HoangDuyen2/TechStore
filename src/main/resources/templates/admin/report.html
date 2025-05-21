@@ -66,6 +66,16 @@
                                                    th:value="${endDate}"
                                                    onchange="this.form.submit()">
                                         </fieldset>
+                                        <fieldset class="name">
+                                            <div class="body-title">Report Type</div>
+                                            <select class="flex-grow" name="reportType" onchange="this.form.submit()">
+                                                <option th:each="type : ${availableReportTypes}"
+                                                        th:value="${type}"
+                                                        th:text="${type}"
+                                                        th:selected="${type == reportType}">
+                                                </option>
+                                            </select>
+                                        </fieldset>
                                     </form>
                                 </div>
                             </div>
@@ -183,7 +193,10 @@
 
                             <div class="tf-section mb-30">
                                 <div class="wg-box">
-                                    <h5 class="mb-20">Top Selling Products</h5>
+                                    <h5 class="mb-20" th:text="${reportType == 'default' ? 'Top Selling Products' : 
+                                                                  reportType == 'categoryReport' ? 'Top Selling Categories' :
+                                                                  reportType == 'dailySalesReport' ? 'Top Selling Days' :
+                                                                  'Top Customers'}">Top Selling Products</h5>
                                     <div class="flex items-center justify-between gap10 flex-wrap">
                                         <div class="wg-filter flex-grow">
                                             <div class="show">
