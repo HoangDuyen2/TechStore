@@ -11,6 +11,9 @@ import hcmute.edu.vn.techstore.entity.*;
 import hcmute.edu.vn.techstore.repository.*;
 import hcmute.edu.vn.techstore.service.impl.strategy.ReportContext;
 import hcmute.edu.vn.techstore.service.interfaces.*;
+import hcmute.edu.vn.techstore.service.mail.EmailNotificationObserver;
+import hcmute.edu.vn.techstore.service.mail.EmailSender;
+import hcmute.edu.vn.techstore.service.mail.OrderConcreteSubject;
 import hcmute.edu.vn.techstore.utils.PriceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,9 @@ public class OrderServiceImpl implements IOrderService {
     private final PriceUtil priceUtil;
     private final OrderConverter orderConverter;
     private final ReportContext reportContext;
+    private final EmailSender emailSender;
+
+
 
     @Override
     public CheckoutRequest getCheckoutRequest(String email, List<Long> selectedProductIds) {
@@ -166,6 +172,11 @@ public class OrderServiceImpl implements IOrderService {
         if (orderEntity != null) {
             orderEntity.setOrderStatus(status);
             orderRepository.save(orderEntity);
+
+            OrderConcreteSubject orderSubject = new OrderConcreteSubject(orderEntity);
+            orderSubject.attach(new EmailNotificationObserver(emailSender));
+            orderSubject.setOrderStatus(status);
+
             return true;
         }
         return false;
