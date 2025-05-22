@@ -19,15 +19,9 @@ public class PaymentStrategyFactory {
     public PaymentStrategy getStrategy(EPayment method) {
         try {
             return switch (method) {
-                case Pay_In_Store -> {
-                    yield new PayInStorePaymentStrategy();
-                }
-                case Cod -> {
-                    yield new CodPaymentStrategy();
-                }
-                case VNPay -> {
-                    yield new VnPayPaymentStrategy();
-                }
+                case Pay_In_Store -> new PayInStorePaymentStrategy();
+                case Cod -> new CodPaymentStrategy();
+                case VNPay -> new VnPayPaymentStrategy();
                 case Paypal -> {
                     String returnUrl = applicationContext.getBean("paypalReturnUrl", String.class);
                     String cancelUrl = applicationContext.getBean("paypalCancelUrl", String.class);
