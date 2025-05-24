@@ -851,7 +851,7 @@
         });
     });
 </script>
-<script>
+        <script>
     let targetCancelUrl = '';
 
     function showCancelModal(url) {
@@ -868,47 +868,47 @@
         targetCancelUrl = '';
     });
 </script>
-<script>
-    let currentOrderId = null;
+        <script>
+            currentOrderId = null;
 
-    function showChangeAddressModal(orderId) {
-        addressOrderId = orderId;
-        document.getElementById('newAddress').value = '';
-        document.getElementById('changeAddressModal').style.display = 'flex';
-    }
+            function showChangeAddressModal(orderId) {
+                console.log('showChangeAddressModal called for order', orderId);
+                currentOrderId = orderId;
+                document.getElementById('newAddress').value = '';
+                document.getElementById('changeAddressModal').style.display = 'flex';
+            }
 
-    function closeAddressModal() {
-        document.getElementById('changeAddressModal').style.display = 'none';
-    }
+            function closeAddressModal() {
+                document.getElementById('changeAddressModal').style.display = 'none';
+            }
 
-    function submitNewAddress() {
-        const newAddress = document.getElementById('newAddress').value.trim();
-        if (!newAddress) {
-            alert('Please enter new address.');
-            return;
-        }
-
-        fetch(`/orders/${addressOrderId}/change-address`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ address: newAddress })
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('Address updated!');
-                    location.reload();
-                } else {
-                    throw new Error('Error updating address!');
+            function submitNewAddress() {
+                const newAddress = document.getElementById('newAddress').value.trim();
+                if (!newAddress) {
+                    alert('Please enter new address.');
+                    return;
                 }
-            })
-            .catch(error => {
-                alert(error.message);
-            })
-            .finally(() => closeAddressModal());
-    }
 
-</script>
+                fetch(`/orders/${currentOrderId}/change-address`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ address: newAddress })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Address updated!');
+                            location.reload();
+                        } else {
+                            throw new Error('Error updating address!');
+                        }
+                    })
+                    .catch(error => {
+                        alert(error.message);
+                    })
+                    .finally(() => closeAddressModal());
+            }
+        </script>
     </body>
 </html>
