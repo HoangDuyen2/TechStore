@@ -1,16 +1,20 @@
 package hcmute.edu.vn.techstore.builder;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class ProductFilterBuilder {
-    private String name;
-    private List<String> brandNames;
-    private List<String> sim;
-    private List<String> connectivity;
-    private List<String> os;
-    private List<String> processor;
-    private Long minPrice;
-    private Long maxPrice;
+    // Getter methods
+    private final String name;
+    private final List<String> brandNames;
+    private final List<String> sim;
+    private final List<String> connectivity;
+    private final List<String> os;
+    private final List<String> processor;
+    private final Long minPrice;
+    private final Long maxPrice;
 
 
     // Constructor private để đảm bảo chỉ sử dụng Builder
@@ -37,7 +41,6 @@ public class ProductFilterBuilder {
         private List<String> processor;
 
 
-        // Setter cho name
         public Builder setName(String name) {
             this.name = name;
             return this;
@@ -78,39 +81,6 @@ public class ProductFilterBuilder {
         public ProductFilterBuilder build() {
             return new ProductFilterBuilder(this);
         }
-    }
-
-    // Getter methods
-    public String getName() {
-        return name;
-    }
-
-    public List<String> getBrandNames() {
-        return brandNames;
-    }
-
-    public Long getMinPrice() {
-        return minPrice;
-    }
-
-    public Long getMaxPrice() {
-        return maxPrice;
-    }
-
-    public List<String> getSim() {
-        return sim;
-    }
-
-    public List<String> getConnectivity() {
-        return connectivity;
-    }
-
-    public List<String> getOs() {
-        return os;
-    }
-
-    public List<String> getProcessor() {
-        return processor;
     }
 }
 
