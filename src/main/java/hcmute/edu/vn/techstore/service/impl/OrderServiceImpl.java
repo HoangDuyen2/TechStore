@@ -100,7 +100,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     public BigDecimal getTotalPriceWithDiscount(CheckoutRequest request) {
-        OrderPriceCalculator calculator = new BaseOrderPriceCalculator();
+        OrderPriceCalculator calculator = new BaseOrderPriceCalculator(); // BaseOrderPriceCalculator đóng vai trò "thân gốc" (base calculator).
 
         if (discountService.findByCode(request.getDiscounts().getLast().getDiscountCode()).getDiscountType().equals(EDiscountType.COUPON)) {
             calculator = new CouponDecorator(calculator);

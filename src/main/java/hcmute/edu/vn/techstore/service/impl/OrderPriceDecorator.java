@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public abstract class OrderPriceDecorator implements OrderPriceCalculator {
-    protected final OrderPriceCalculator wrapped;
+    protected final OrderPriceCalculator wrapped; // Cho phép bạn gọi lại wrapped.calculateTotal(...) để áp các giảm giá lồng nhau nếu muốn.
 
     public OrderPriceDecorator(OrderPriceCalculator wrapped) {
         this.wrapped = wrapped;
