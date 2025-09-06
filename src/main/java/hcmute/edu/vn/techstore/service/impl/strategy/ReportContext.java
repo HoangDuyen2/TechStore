@@ -11,6 +11,9 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class ReportContext {
+//    Spring sẽ tự động inject tất cả các bean có kiểu ReportStrategy vào Map này
+//    key: là tên bean (ví dụ như "customerAnalysisReport" trong @Component("customerAnalysisReport"))
+//    value: là chính instance của bean tương ứng
     private final Map<String, ReportStrategy> strategies;
     private final DefaultReportStrategy defaultStrategy;
 
