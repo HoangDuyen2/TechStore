@@ -21,12 +21,10 @@ public class GroupServiceImpl implements IGroupService {
     private final GroupRepository groupRepository;
 
     @Override
-    public boolean isGroupNameExists(String name) {
-        return groupRepository.existsByName(name);
-    }
-
-    @Override
     public boolean createGroup(GroupCreateRequest groupCreateRequest) {
+        if (groupRepository.existsByName(groupCreateRequest.getName())) {
+            return false; // Group name already exists
+        }
         GroupEntity groupEntity = GroupEntity.builder()
                 .name(groupCreateRequest.getName())
                 .description(groupCreateRequest.getDescription())
@@ -62,5 +60,21 @@ public class GroupServiceImpl implements IGroupService {
                 .createdAt(groupEntity.getCreatedAt().format(formatter))
                 .updatedAt(groupEntity.getUpdatedAt().format(formatter))
                 .build();
+    }
+
+    public boolean updateGroup(Long id, GroupCreateRequest groupCreateRequest) {
+        GroupEntity groupEntity = groupRepository.findById(id)
+                .orElse(null);
+        if (groupEntity == null) {
+            return false; // Group not found
+        }
+        GroupEntity existingGroupWithName = groupRepository.findByName(groupCreateRequest.getName());
+        if (existingGroupWithName != null && !existingGroupWithName.getId().equals(id)) {
+            return false; // Another group with the same name exists
+        }
+        groupEntity.setName(groupCreateRequest.getName());
+        groupEntity.setDescription(groupCreateRequest.getDescription());
+        groupRepository.save(groupEntity);
+        return true; // Group updated successfully
     }
 }
