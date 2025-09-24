@@ -62,6 +62,7 @@ public class GroupServiceImpl implements IGroupService {
                 .build();
     }
 
+    @Override
     public boolean updateGroup(Long id, GroupCreateRequest groupCreateRequest) {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElse(null);
@@ -76,5 +77,16 @@ public class GroupServiceImpl implements IGroupService {
         groupEntity.setDescription(groupCreateRequest.getDescription());
         groupRepository.save(groupEntity);
         return true; // Group updated successfully
+    }
+
+    @Override
+    public boolean deleteGroup(Long id) {
+        GroupEntity groupEntity = groupRepository.findById(id)
+                .orElse(null);
+        if (groupEntity == null) {
+            return false; // Group not found
+        }
+        groupRepository.delete(groupEntity);
+        return true; // Group deleted successfully
     }
 }

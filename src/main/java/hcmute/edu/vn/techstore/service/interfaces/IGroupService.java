@@ -11,4 +11,8 @@ public interface IGroupService {
     Page<GroupResponse> getAllGroups(int page, int size);
 
     GroupDetailResponse getGroupDetailById(Long id);
+
+    boolean updateGroup(Long id, GroupCreateRequest groupCreateRequest);
+
+    boolean deleteGroup(Long id);
 }
