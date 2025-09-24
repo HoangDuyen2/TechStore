@@ -5,8 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class GroupResponse {
+public class GroupDetailResponse {
     private Long id;
     private String name;
     private String description;
+    private String createdAt;
+    private String updatedAt;
 }
