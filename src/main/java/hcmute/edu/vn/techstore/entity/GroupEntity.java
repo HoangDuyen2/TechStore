@@ -22,6 +22,7 @@ public class GroupEntity extends TrackingDate {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(name = "description",nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @ManyToMany(mappedBy = "groups")
