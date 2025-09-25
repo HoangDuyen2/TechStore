@@ -36,6 +36,18 @@ public class GroupServiceImpl implements IGroupService {
     }
 
     @Override
+    public boolean removeUserFromGroup(Long userId, Long groupId) {
+        UserEntity user = userRepository.findById(userId).orElse(null);
+        GroupEntity group = groupRepository.findById(groupId).orElse(null);
+        if (user == null || group == null) {
+            return false; // User or Group not found
+        }
+        group.getUsers().remove(user);
+        groupRepository.save(group);
+        return true; // Placeholder return value
+    }
+
+    @Override
     public boolean createGroup(GroupCreateRequest groupCreateRequest) {
         if (groupRepository.existsByName(groupCreateRequest.getName())) {
             return false; // Group name already exists

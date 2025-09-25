@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 public interface IGroupService {
     boolean addUserToGroup(Long userId, Long groupId);
 
+    boolean removeUserFromGroup(Long userId, Long groupId);
+
     boolean createGroup(GroupCreateRequest groupCreateRequest);
 
     Page<GroupResponse> getAllGroups(int page, int size);
