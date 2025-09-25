@@ -6,6 +6,8 @@ import hcmute.edu.vn.techstore.dto.response.GroupResponse;
 import org.springframework.data.domain.Page;
 
 public interface IGroupService {
+    boolean addUserToGroup(Long userId, Long groupId);
+
     boolean createGroup(GroupCreateRequest groupCreateRequest);
 
     Page<GroupResponse> getAllGroups(int page, int size);
