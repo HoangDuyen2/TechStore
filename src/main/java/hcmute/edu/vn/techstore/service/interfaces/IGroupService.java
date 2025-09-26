@@ -7,6 +7,8 @@ import hcmute.edu.vn.techstore.dto.response.GroupResponse;
 import org.springframework.data.domain.Page;
 
 public interface IGroupService {
+    boolean isUserInGroup(Long groupId, Long userId);
+
     boolean addUserToGroup(Long userId, Long groupId);
 
     boolean removeUserFromGroup(Long userId, Long groupId);

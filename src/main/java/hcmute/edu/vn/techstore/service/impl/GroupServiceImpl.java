@@ -17,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.format.DateTimeFormatter;
-
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements IGroupService {
@@ -26,27 +24,55 @@ public class GroupServiceImpl implements IGroupService {
     private final UserRepository userRepository;
 
     @Override
-    public boolean addUserToGroup(Long userId, Long groupId) {
+    public boolean isUserInGroup(Long groupId, Long userId) {
         UserEntity user = userRepository.findById(userId).orElse(null);
         GroupEntity group = groupRepository.findById(groupId).orElse(null);
         if (user == null || group == null) {
             return false; // User or Group not found
         }
-        group.getUsers().add(user);
-        groupRepository.save(group);
-        return true; // Placeholder return value
+        return group.getUsers().contains(user);
     }
 
     @Override
-    public boolean removeUserFromGroup(Long userId, Long groupId) {
+    public boolean addUserToGroup(Long groupId, Long userId) {
         UserEntity user = userRepository.findById(userId).orElse(null);
         GroupEntity group = groupRepository.findById(groupId).orElse(null);
         if (user == null || group == null) {
             return false; // User or Group not found
         }
-        group.getUsers().remove(user);
+
+        if (group.getUsers().contains(user)) {
+            return false; // User already in the group
+        }
+
+        // Update both sides of the relationship
+        group.getUsers().add(user);
+        user.getGroups().add(group);
+
+        // Save both entities
         groupRepository.save(group);
-        return true; // Placeholder return value
+        userRepository.save(user);
+
+        return true;
+    }
+
+    @Override
+    public boolean removeUserFromGroup(Long groupId, Long userId) {
+        UserEntity user = userRepository.findById(userId).orElse(null);
+        GroupEntity group = groupRepository.findById(groupId).orElse(null);
+        if (user == null || group == null) {
+            return false; // User or Group not found
+        }
+
+        // Update both sides of the relationship
+        group.getUsers().remove(user);
+        user.getGroups().remove(group);
+
+        // Save both entities
+        groupRepository.save(group);
+        userRepository.save(user);
+
+        return true;
     }
 
     @Override
@@ -81,7 +107,6 @@ public class GroupServiceImpl implements IGroupService {
         if (groupEntity == null) {
             return null; // Group not found
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return GroupDetailResponse.builder()
                 .id(groupEntity.getId())
                 .name(groupEntity.getName())

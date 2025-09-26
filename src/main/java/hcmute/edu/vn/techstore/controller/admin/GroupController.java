@@ -115,4 +115,24 @@ public class GroupController {
         model.addAttribute("groupUpdateRequest", groupUpdateRequest);
         return "admin/group/update-group";
     }
+
+    @PostMapping("/{id}/add-user")
+    public ResponseEntity<Map<String, String>> addUserToGroup(@PathVariable Long id, @RequestParam Long selectedUserId) {
+        Map<String, String> response = new HashMap<>();
+        if (groupService.isUserInGroup(id, selectedUserId)) {
+            response.put("status", "error");
+            response.put("message", "User is already in the group.");
+            return ResponseEntity.badRequest().body(response);
+        }
+        boolean isAdded = groupService.addUserToGroup(id, selectedUserId);
+        if (isAdded) {
+            response.put("status", "success");
+            response.put("message", "User added to group successfully.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("status", "error");
+            response.put("message", "Failed to add user to group. User or group might not exist.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

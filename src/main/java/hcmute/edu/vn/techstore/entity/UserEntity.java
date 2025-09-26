@@ -1,6 +1,5 @@
 package hcmute.edu.vn.techstore.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import hcmute.edu.vn.techstore.Enum.EGender;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"groups"})
 @Setter
 @Getter
 @Entity
