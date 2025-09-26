@@ -10,7 +10,6 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Transient;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -52,6 +51,7 @@ public class UserRequest {
 
     @ValidDateOfBirth(message = "Date of birth must be in the past and age must be between 18 and 100")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Please choose your date of birth!")
     private LocalDate dateOfBirth;
 
     private MultipartFile image;
