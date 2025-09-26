@@ -1,6 +1,7 @@
 package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.dto.request.GroupCreateRequest;
+import hcmute.edu.vn.techstore.dto.request.GroupUpdateRequest;
 import hcmute.edu.vn.techstore.dto.response.GroupDetailResponse;
 import hcmute.edu.vn.techstore.dto.response.GroupResponse;
 import hcmute.edu.vn.techstore.entity.GroupEntity;
@@ -90,18 +91,31 @@ public class GroupServiceImpl implements IGroupService {
     }
 
     @Override
-    public boolean updateGroup(Long id, GroupCreateRequest groupCreateRequest) {
+    public GroupUpdateRequest getGroupUpdateRequestById(Long id) {
+        GroupEntity groupEntity = groupRepository.findById(id)
+                .orElse(null);
+        if (groupEntity == null) {
+            return null; // Group not found
+        }
+        return GroupUpdateRequest.builder()
+                .name(groupEntity.getName())
+                .description(groupEntity.getDescription())
+                .build();
+    }
+
+    @Override
+    public boolean updateGroup(Long id, GroupUpdateRequest groupUpdateRequest) {
         GroupEntity groupEntity = groupRepository.findById(id)
                 .orElse(null);
         if (groupEntity == null) {
             return false; // Group not found
         }
-        GroupEntity existingGroupWithName = groupRepository.findByName(groupCreateRequest.getName());
+        GroupEntity existingGroupWithName = groupRepository.findByName(groupUpdateRequest.getName());
         if (existingGroupWithName != null && !existingGroupWithName.getId().equals(id)) {
             return false; // Another group with the same name exists
         }
-        groupEntity.setName(groupCreateRequest.getName());
-        groupEntity.setDescription(groupCreateRequest.getDescription());
+        groupEntity.setName(groupUpdateRequest.getName());
+        groupEntity.setDescription(groupUpdateRequest.getDescription());
         groupRepository.save(groupEntity);
         return true; // Group updated successfully
     }

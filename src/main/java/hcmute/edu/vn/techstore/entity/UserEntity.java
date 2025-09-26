@@ -78,7 +78,7 @@ public class UserEntity extends TrackingDate {
 
     @ManyToMany
     @JoinTable(
-            name = "user_groups",
+            name = "users_groups",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )

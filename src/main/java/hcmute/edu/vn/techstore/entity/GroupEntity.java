@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "groups")
+@Table(name = "user_groups")
 public class GroupEntity extends TrackingDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
