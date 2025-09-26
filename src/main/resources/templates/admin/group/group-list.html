@@ -96,6 +96,10 @@
                                                 <div class="body-text" th:text="${group.description}"></div>
                                                 <input type="hidden" class="group-id" th:value="${group.id}">
                                                 <div class="list-icon-function">
+                                                    <a class="item view"
+                                                       th:href="@{/admin/groups/{id}(id=${group.id})}">
+                                                        <i class="icon-eye"></i>
+                                                    </a>
                                                     <a class="item edit"
                                                        th:href="@{/admin/groups/edit/{id}(id=${group.id})}">
                                                         <i class="icon-edit-3"></i>
@@ -210,4 +214,3 @@
 
 <!-- Mirrored from themesflat.co/html/remos/group-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:47 GMT -->
 </html>
-

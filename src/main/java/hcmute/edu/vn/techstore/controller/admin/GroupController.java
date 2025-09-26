@@ -35,6 +35,13 @@ public class GroupController {
         return "admin/group/group-list";
     }
 
+    @GetMapping("/{id}")
+    public String viewGroupDetails(@PathVariable Long id, Model model) {
+        GroupDetailResponse groupDetailResponse = groupService.getGroupDetailById(id);
+        model.addAttribute("group", groupDetailResponse);
+        return "admin/group/group-detail";
+    }
+
     @GetMapping("/add")
     public String addGroup(Model model) {
         GroupCreateRequest groupCreateRequest = new GroupCreateRequest();

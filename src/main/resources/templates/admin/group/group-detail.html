@@ -34,7 +34,7 @@
                         <!-- main-content-wrap -->
                         <div class="main-content-wrap">
                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
-                                <h3>Discount information</h3>
+                                <h3>Group Details</h3>
                                 <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
                                     <li>
                                         <a th:href="@{/admin/dashboard}">
@@ -45,99 +45,77 @@
                                         <i class="icon-chevron-right"></i>
                                     </li>
                                     <li>
-                                        <a th:href="@{/admin/discounts}">
-                                            <div class="text-tiny">Discount</div>
+                                        <a th:href="@{/admin/groups}">
+                                            <div class="text-tiny">Groups</div>
                                         </a>
                                     </li>
                                     <li>
                                         <i class="icon-chevron-right"></i>
                                     </li>
                                     <li>
-                                        <div class="text-tiny">New discount</div>
+                                        <div class="text-tiny">Group Details</div>
                                     </li>
                                 </ul>
                             </div>
-                            <!-- new-category -->
+                            <!-- group-detail -->
                             <div class="wg-box">
                                 <div class="block-warning" th:if="${error}">
                                     <i class="icon-alert-octagon"></i>
                                     <div class="body-title-2" th:text="${error}"></div>
                                 </div>
-                                <form action="/admin/discounts/insert" method="post" onsubmit="return validateAmount()"
-                                      class="form-new-product form-style-1" th:object="${discount}">
-                                    <fieldset class="name">
-                                        <div class="body-title">Discount name <span class="tf-color-1">*</span></div>
-                                        <input class="flex-grow" type="text" placeholder="Discount name" name="name"
-                                               tabindex="0" aria-required="true" required="required"
-                                               th:field="*{name}">
-                                        <div class="block-warning" th:if="${#fields.hasErrors('name')}">
-                                            <i class="icon-alert-octagon"></i>
-                                            <div class="body-title-2" th:errors="*{name}"></div>
+                                <div class="detail-info">
+                                    <div class="detail-info-item">
+                                        <div class="body-title">Group ID</div>
+                                        <div class="body-text" th:text="${group.id}"></div>
+                                    </div>
+                                    <div class="detail-info-item">
+                                        <div class="body-title">Group Name</div>
+                                        <div class="body-text" th:text="${group.name}"></div>
+                                    </div>
+                                    <div class="detail-info-item">
+                                        <div class="body-title">Description</div>
+                                        <div class="body-text" th:text="${group.description != null && !group.description.isEmpty() ? group.description : 'No description provided'}"></div>
+                                    </div>
+
+                                    <div class="detail-info-item" th:if="${not #lists.isEmpty(group.users)}">
+                                        <div class="body-title">Users in this Group</div>
+                                        <div class="users-list">
+                                            <table class="table-detail">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Full Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr th:each="user : ${group.users}">
+                                                        <td th:text="${user.id}"></td>
+                                                        <td th:text="${user.fullName}"></td>
+                                                        <td th:text="${user.email}"></td>
+                                                        <td th:text="${user.phone}"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
-                                    </fieldset>
-                                    <fieldset class="name">
-                                        <div class="body-title">Discount code <span class="tf-color-1">*</span></div>
-                                        <input class="flex-grow" type="text" placeholder="Discount code" name="code"
-                                               tabindex="0" aria-required="true" required="required"
-                                               th:field="*{code}">
-                                        <div class="block-warning" th:if="${#fields.hasErrors('code')}">
-                                            <i class="icon-alert-octagon"></i>
-                                            <div class="body-title-2" th:errors="*{code}"></div>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="name">
-                                        <div class="body-title">Discount type <span class="tf-color-1">*</span></div>
-                                        <div class="select">
-                                            <select class="" th:field="*{type}">
-                                                <option th:each="type : ${discountTypes}"
-                                                        th:value="${type.name()}"
-                                                        th:text="${type.name()}">
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="name">
-                                        <div class="body-title">Discount amount <span class="tf-color-1">*</span></div>
-                                        <input class="flex-grow" type="number" name="amount"
-                                               tabindex="0" aria-required="true" required="required"
-                                               th:field="*{amount}" step="1"
-                                               oninput="handleAmountInput(this)">
-                                        <div class="block-warning" th:if="${#fields.hasErrors('amount')}">
-                                            <i class="icon-alert-octagon"></i>
-                                            <div class="body-title-2" th:errors="*{amount}"></div>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="name">
-                                        <div class="body-title">Discount expired date <span class="tf-color-1">*</span>
-                                        </div>
-                                        <input class="flex-grow" type="date" name="expiredDate"
-                                               tabindex="0" aria-required="true" required="required"
-                                               th:field="*{expiredDate}"
-                                               th:value="${discount.expiredDate != null ? #temporals.format(discount.expiredDate, 'yyyy-MM-dd') : ''}">
-                                        <div class="block-warning" th:if="${#fields.hasErrors('expiredDate')}">
-                                            <i class="icon-alert-octagon"></i>
-                                            <div class="body-title-2" th:errors="*{expiredDate}"></div>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset class="name">
-                                        <div class="body-title">Discount quantity <span class="tf-color-1">*</span>
-                                        </div>
-                                        <input class="flex-grow" type="number" name="quantity"
-                                               tabindex="0" aria-required="true" required="required"
-                                               th:field="*{quantity}" step="1"
-                                               oninput="this.value = this.value.replace(/[^0-9]/g, '');">
-                                        <div class="block-warning" th:if="${#fields.hasErrors('quantity')}">
-                                            <i class="icon-alert-octagon"></i>
-                                            <div class="body-title-2" th:errors="*{quantity}"></div>
-                                        </div>
-                                    </fieldset>
+                                    </div>
+
+                                    <div class="detail-info-item" th:if="${#lists.isEmpty(group.users)}">
+                                        <div class="body-title">Users</div>
+                                        <div class="body-text">No users in this group</div>
+                                    </div>
+
                                     <div class="bot">
                                         <div></div>
-                                        <button class="tf-button w208" type="submit">Save</button>
+                                        <div class="action-buttons">
+                                            <a th:href="@{/admin/groups/edit/{id}(id=${group.id})}" class="tf-button w208">Edit Group</a>
+                                            <a th:href="@{/admin/groups}" class="tf-button tf-button-alt w208 ml-10">Back to List</a>
+                                        </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
-                            <!-- /new-category -->
+                            <!-- /group-detail -->
                         </div>
                         <!-- /main-content-wrap -->
                     </div>
@@ -159,94 +137,57 @@
 <!-- Javascript -->
 <div th:insert="~{admin/fragments/script::script}"></div>
 
-<script>
-    function handleTypeChange() {
-        const type = document.querySelector('select[name=type]').value;
-        const amountInput = document.getElementById('amount');
+<style>
+.detail-info {
+    padding: 20px 0;
+}
 
-        if (type === 'VOUCHER') {
-            // When VOUCHER is selected, ensure only integers are allowed
-            amountInput.setAttribute("pattern", "^[0-9]+$");
-            document.getElementById('amount-error').style.display = 'none';
-        } else if (type === 'COUPON') {
-            // For COUPON, we allow integers between 2 and 100
-            amountInput.setAttribute("pattern", "^[0-9]+$");
-            document.getElementById('amount-error').style.display = 'none';
-        }
-    }
+.detail-info-item {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9e9e9;
+}
 
-    function handleAmountInput(input) {
-        const type = document.querySelector('select[name=type]').value;
-        let val = input.value;
+.detail-info-item:last-child {
+    border-bottom: none;
+}
 
-        // Only allow integers
-        val = val.replace(/[^0-9]/g, '');
+.table-detail {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
 
-        if (type === 'COUPON') {
-            // COUPON: between 2 and 100
-            if (val !== '') {
-                let num = parseInt(val);
-                if (num < 2) num = 2;
-                if (num > 100) num = 100;
-                val = num;
-            }
-        }
+.table-detail th, .table-detail td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #e9e9e9;
+}
 
-        if (type === 'VOUCHER') {
-            // VOUCHER: allow only integers
-            val = val.replace(/[^0-9]/g, '');
-        }
+.table-detail th {
+    background-color: #f7f7f7;
+    font-weight: 600;
+}
 
-        input.value = val;
-    }
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
 
-    function validateAmount() {
-        const amountInput = document.getElementById('amount');
-        let amount = parseInt(amountInput.value, 10);
-        const type = document.querySelector('select[name=type]').value;
+.ml-10 {
+    margin-left: 10px;
+}
 
-        if (type === 'VOUCHER') {
-            // Check if the value is divisible by 1000 for VOUCHER
-            if (isNaN(amount) || amount < 1000 || amount % 1000 !== 0) {
-                alert("Amount must be at least 1000 and divisible by 1000. Adjusting value...");
+.tf-button-alt {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+}
 
-                // Automatically multiply by 1000 if not divisible by 1000
-                if (amount < 1000) {
-                    amount = amount * 1000;
-                } else if (amount % 1000 !== 0) {
-                    amount = amount * 1000;  // Multiply by 1000 to make it divisible
-                }
-
-                amountInput.value = amount;  // Set the new value
-            }
-        }
-
-        // Allow the form to submit if all validations pass
-        return true;
-    }
-</script>
-
-<script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        // Get the date input element
-        const dateInput = document.querySelector('input[name="expiredDate"]');
-
-        // Get the date value from Thymeleaf
-        const dateValue = /*[[${discount.expiredDate}]]*/ '';
-
-        if (dateValue) {
-            // Format the date as YYYY-MM-DD
-            const date = new Date(dateValue);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-
-            // Set the formatted date to the input
-            dateInput.value = formattedDate;
-        }
-    });
-</script>
+.tf-button-alt:hover {
+    background-color: #e5e5e5;
+}
+</style>
 
 </body>
 

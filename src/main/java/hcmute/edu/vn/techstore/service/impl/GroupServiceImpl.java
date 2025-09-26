@@ -4,6 +4,7 @@ import hcmute.edu.vn.techstore.dto.request.GroupCreateRequest;
 import hcmute.edu.vn.techstore.dto.request.GroupUpdateRequest;
 import hcmute.edu.vn.techstore.dto.response.GroupDetailResponse;
 import hcmute.edu.vn.techstore.dto.response.GroupResponse;
+import hcmute.edu.vn.techstore.dto.response.UserSearchResponse;
 import hcmute.edu.vn.techstore.entity.GroupEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.GroupRepository;
@@ -80,13 +81,21 @@ public class GroupServiceImpl implements IGroupService {
         if (groupEntity == null) {
             return null; // Group not found
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return GroupDetailResponse.builder()
                 .id(groupEntity.getId())
                 .name(groupEntity.getName())
                 .description(groupEntity.getDescription())
-                .createdAt(groupEntity.getCreatedAt().format(formatter))
-                .updatedAt(groupEntity.getUpdatedAt().format(formatter))
+                .users(groupEntity.getUsers().stream()
+                        .map(user ->
+                                UserSearchResponse.builder()
+                                        .id(user.getId())
+                                        .email(user.getAccount().getEmail())
+                                        .phone(user.getPhoneNumber())
+                                        .fullName(user.getFirstName() + " " + user.getLastName())
+                                        .build()
+                        )
+                        .toList())
                 .build();
     }
 
