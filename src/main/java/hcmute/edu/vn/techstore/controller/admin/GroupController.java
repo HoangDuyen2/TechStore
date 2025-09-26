@@ -135,4 +135,19 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    @PostMapping("/{id}/remove-user")
+    public ResponseEntity<Map<String, String>> removeUserFromGroupPost(@PathVariable Long id, @RequestParam Long userId) {
+        Map<String, String> response = new HashMap<>();
+        boolean isRemoved = groupService.removeUserFromGroup(id, userId);
+        if (isRemoved) {
+            response.put("status", "success");
+            response.put("message", "User removed from group successfully.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("status", "error");
+            response.put("message", "Failed to remove user from group. User or group might not exist.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

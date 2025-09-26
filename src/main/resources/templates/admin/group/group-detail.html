@@ -87,6 +87,7 @@
                                                         <th>Full Name</th>
                                                         <th>Email</th>
                                                         <th>Phone</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -95,6 +96,13 @@
                                                         <td th:text="${user.fullName}"></td>
                                                         <td th:text="${user.email}"></td>
                                                         <td th:text="${user.phone}"></td>
+                                                        <td>
+                                                            <button class="btn-remove-user btn-sm"
+                                                                    th:data-user-id="${user.id}"
+                                                                    th:data-user-name="${user.fullName}">
+                                                                <i class="icon-trash-2"></i> Remove
+                                                            </button>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -452,6 +460,37 @@
             if (e.which === 13) { // Enter key
                 e.preventDefault();
                 searchButton.click();
+            }
+        });
+
+        // Remove user from group
+        $('.btn-remove-user').click(function() {
+            const button = $(this);
+            const userId = button.data('user-id');
+            const userName = button.data('user-name');
+
+            // Confirm before removing
+            if (confirm('Are you sure you want to remove ' + userName + ' from this group?')) {
+                $.ajax({
+                    url: '/admin/groups/' + groupId + '/remove-user',
+                    method: 'POST',
+                    data: { 'userId': userId },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Reload the page to show updated user list
+                            window.location.reload();
+                        } else {
+                            alert(response.message || 'Failed to remove user from the group');
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'An error occurred while removing user from the group';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        alert(errorMessage);
+                    }
+                });
             }
         });
     });
