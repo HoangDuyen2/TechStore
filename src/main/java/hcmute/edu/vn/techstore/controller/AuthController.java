@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Controller
 @RequiredArgsConstructor
@@ -34,9 +33,6 @@ public class AuthController {
             if (userService.register(userRequest)) {
                 return "redirect:/login";
             }
-        } catch (MaxUploadSizeExceededException ex) {
-            model.addAttribute("image", "File upload quá lớn! (tối đa 5MB)");
-            return "web/create-account";
         }
         catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -63,8 +59,6 @@ public class AuthController {
 
         return "web/login-account";
     }
-
-
 
     @GetMapping("/forgot-password")
     public String getForgotPasswordPage(Model model) {
