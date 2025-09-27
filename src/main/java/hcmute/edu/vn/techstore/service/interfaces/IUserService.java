@@ -1,13 +1,13 @@
 package hcmute.edu.vn.techstore.service.interfaces;
 
 import hcmute.edu.vn.techstore.Enum.ERole;
-import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.ChangePasswordRequest;
+import hcmute.edu.vn.techstore.dto.request.ForgotPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
+import hcmute.edu.vn.techstore.dto.request.ResetPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.entity.UserEntity;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,12 +20,12 @@ public interface IUserService {
     boolean updateActived(Long id, boolean actived);
     List<UserResponse> getAllUsersNotContains(ERole role);
     boolean updatePassword(UserRequest userRequest);
-
     ProfileRequest getProfileById(String email);
-
     boolean updateProfile(String email, ProfileRequest profileRequest) throws IOException;
-
     boolean changePassword(String email, ChangePasswordRequest changePasswordRequest) throws IOException;
-
     UserEntity findByEmail(String email);
+    boolean verifyEmail(String verificationToken);
+    boolean forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
+    boolean resetPassword(ResetPasswordRequest resetPasswordRequest);
+    boolean isValidResetToken(String token);
 }

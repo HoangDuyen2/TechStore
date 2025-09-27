@@ -3,7 +3,9 @@ package hcmute.edu.vn.techstore.service.impl;
 import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.convert.UserResponseConverter;
 import hcmute.edu.vn.techstore.dto.request.ChangePasswordRequest;
+import hcmute.edu.vn.techstore.dto.request.ForgotPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
+import hcmute.edu.vn.techstore.dto.request.ResetPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.entity.AccountEntity;
@@ -11,7 +13,7 @@ import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
-import hcmute.edu.vn.techstore.service.interfaces.IUserRegistrationStrategy;
+import hcmute.edu.vn.techstore.service.interfaces.IEmailService;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,7 @@ public class UserServiceImpl implements IUserService {
     private final UserResponseConverter userResponseConverter;
     private final ImageUtil imageUtil;
     private final RegistrationContext context;
+    private final IEmailService emailService;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
@@ -72,7 +76,12 @@ public class UserServiceImpl implements IUserService {
         }
 
         // 7. Lưu vào DB
+        String verificationToken = UUID.randomUUID().toString();
+        user.setVerificationToken(verificationToken);
         userRepository.save(user);
+        
+        // 9. Gửi email xác thực
+        emailService.sendVerificationEmail(userRequest.getEmail(), verificationToken);
         return true;
     }
 
@@ -239,5 +248,67 @@ public class UserServiceImpl implements IUserService {
     public UserEntity findByEmail(String email) {
         userRepository.findByAccount_Email(email).orElseThrow(null);
         return userRepository.findByAccount_Email(email).orElseThrow(null);
+    }
+
+    @Override
+    public boolean verifyEmail(String verificationToken) {
+        UserEntity user = userRepository.findByVerificationToken(verificationToken).orElse(null);
+        if (user != null) {
+            user.setActived(true);
+            user.setVerificationToken(null); // Xóa token sau khi xác thực
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        UserEntity user = emailExists(forgotPasswordRequest.getEmail());
+        if (user != null) {
+            // Tạo reset token và set thời gian hết hạn (1 giờ)
+            String resetToken = UUID.randomUUID().toString();
+            user.setResetPasswordToken(resetToken);
+            user.setResetPasswordExpires(LocalDateTime.now().plusHours(1));
+            userRepository.save(user);
+            
+            // Gửi email reset password
+            emailService.sendPasswordResetEmail(user.getAccount().getEmail(), resetToken);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        // Kiểm tra mật khẩu có khớp không
+        if (!isPasswordConfirmed(resetPasswordRequest.getNewPassword(), resetPasswordRequest.getConfirmPassword())) {
+            throw new BadCredentialsException("Mật khẩu không khớp!");
+        }
+
+        // Tìm user theo token và kiểm tra token còn hạn
+        UserEntity user = userRepository.findByResetPasswordTokenAndExpiresAfter(
+                resetPasswordRequest.getToken(), 
+                LocalDateTime.now()
+        ).orElse(null);
+
+        if (user != null) {
+            // Cập nhật mật khẩu mới
+            user.getAccount().setPassword(bCryptPasswordEncoder.encode(resetPasswordRequest.getNewPassword()));
+            user.setResetPasswordToken(null);
+            user.setResetPasswordExpires(null);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isValidResetToken(String token) {
+        UserEntity user = userRepository.findByResetPasswordTokenAndExpiresAfter(
+                token, 
+                LocalDateTime.now()
+        ).orElse(null);
+        return user != null;
     }
 }

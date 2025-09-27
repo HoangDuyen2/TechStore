@@ -1,11 +1,11 @@
 package hcmute.edu.vn.techstore.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import hcmute.edu.vn.techstore.Enum.EGender;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -70,6 +70,15 @@ public class UserEntity extends TrackingDate {
 
     @Column(name = "isActived")
     private boolean isActived;
+
+    @Column(name = "verificationToken")
+    private String verificationToken;
+
+    @Column(name = "resetPasswordToken")
+    private String resetPasswordToken;
+
+    @Column(name = "resetPasswordExpires")
+    private LocalDateTime resetPasswordExpires;
 
     @OneToMany(mappedBy = "user")
     private List<ReviewEntity> reviews;
