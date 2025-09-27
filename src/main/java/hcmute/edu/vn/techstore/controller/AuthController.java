@@ -3,19 +3,14 @@ package hcmute.edu.vn.techstore.controller;
 import hcmute.edu.vn.techstore.dto.interfaces.ChangePassword;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String postRegisterPage(@Validated @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) {
+    public String postRegisterPage(@Validated @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) throws Exception {
         if (bindingResult.hasErrors()) {
             return "web/create-account";
         }
@@ -39,7 +34,11 @@ public class AuthController {
             if (userService.register(userRequest)) {
                 return "redirect:/login";
             }
-        } catch (Exception e) {
+        } catch (MaxUploadSizeExceededException ex) {
+            model.addAttribute("image", "File upload quá lớn! (tối đa 5MB)");
+            return "web/create-account";
+        }
+        catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
         return "web/create-account";

@@ -67,7 +67,7 @@
                             <form method="post" th:action="@{/register}" th:object="${userRequest}" enctype="multipart/form-data">
                                 <!-- Add error message for BadCredentialsException -->
                                 <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
-                                
+
                                 <ul class="form-fill">
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
                                         <label>Lastname</label>
@@ -119,7 +119,8 @@
                                         <label>Profile Image</label>
                                         <input type="file" th:field="*{image}" accept="image/*" class="form-control">
                                         <span class="text-danger" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></span>
-                                        <small class="form-text text-muted">Upload a profile picture (JPG, PNG, GIF)</small>
+                                        <span class="text-danger" th:if="${image != null}" th:text="${image}"></span>
+                                        <small class="form-text text-muted">Upload a profile picture (JPG, PNG, GIF) - Maximum 5MB</small>
                                     </li>
                                 </ul>
                                 <div class="register-action" data-animate="animate__fadeInUp">
