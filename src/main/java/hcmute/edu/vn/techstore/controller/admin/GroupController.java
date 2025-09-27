@@ -71,6 +71,11 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/list-groups")
+    public ResponseEntity<?> listGroups() {
+        return ResponseEntity.ok(groupService.getAllGroups());
+    }
+
     @PostMapping("/insert")
     public String insertGroup(Model model,
                               @Valid @ModelAttribute("group") GroupCreateRequest groupCreateRequest,

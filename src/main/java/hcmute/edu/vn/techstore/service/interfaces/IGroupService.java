@@ -6,6 +6,8 @@ import hcmute.edu.vn.techstore.dto.response.GroupDetailResponse;
 import hcmute.edu.vn.techstore.dto.response.GroupResponse;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 public interface IGroupService {
     boolean isUserInGroup(Long groupId, Long userId);
 
@@ -16,6 +18,8 @@ public interface IGroupService {
     boolean createGroup(GroupCreateRequest groupCreateRequest);
 
     Page<GroupResponse> getAllGroups(int page, int size);
+
+    List<GroupResponse> getAllGroups();
 
     GroupDetailResponse getGroupDetailById(Long id);
 

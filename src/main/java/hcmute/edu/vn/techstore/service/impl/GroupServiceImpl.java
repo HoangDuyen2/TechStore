@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements IGroupService {
@@ -98,6 +100,16 @@ public class GroupServiceImpl implements IGroupService {
                 .name(groupEntity.getName())
                 .description(groupEntity.getDescription())
                 .build());
+    }
+
+    @Override
+    public List<GroupResponse> getAllGroups() {
+        List<GroupEntity> groupEntities = groupRepository.findAll();
+        return groupEntities.stream().map(groupEntity -> GroupResponse.builder()
+                .id(groupEntity.getId())
+                .name(groupEntity.getName())
+                .description(groupEntity.getDescription())
+                .build()).toList();
     }
 
     @Override
