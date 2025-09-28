@@ -104,10 +104,11 @@
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
                                         <label>Gender</label>
                                         <select th:field="*{gender}" class="form-control">
-                                            <option value="">Select gender</option>
-                                            <option th:each="gender : ${T(hcmute.edu.vn.techstore.Enum.EGender).values()}" 
-                                                    th:value="${gender}" 
-                                                    th:text="${gender}"></option>
+                                            <option th:each="gender, iterStat : ${T(hcmute.edu.vn.techstore.Enum.EGender).values()}"
+                                                    th:value="${gender}"
+                                                    th:text="${gender}"
+                                                    th:selected="${iterStat.index == 0}">
+                                            </option>
                                         </select>
                                     </li>
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
