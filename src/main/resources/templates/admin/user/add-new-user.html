@@ -220,8 +220,14 @@
                                         <div th:if="${new_user.userId == null and status == true}">
                                             <button class="tf-button w180" type="submit">Add</button>
                                         </div>
-                                        <div th:if="${status} != true">
+                                        <div th:if="${status} != true" style="display: flex; flex-wrap: wrap; gap: 20px;">
                                             <a th:href="@{'/admin/users/' + ${new_user.userId} + '?status=true'}" class="tf-button w180">Edit</a>
+                                            <!-- Add to Group button - only visible when viewing a user -->
+                                            <button th:if="${new_user.userId != null}" type="button" class="tf-button w180"
+                                                    id="addToGroupBtn"
+                                                    data-bs-toggle="modal" data-bs-target="#addToGroupModal">
+                                                Add to Group
+                                            </button>
                                         </div>
                                     </div>
                                 </form>
@@ -244,6 +250,56 @@
     </div>
     <!-- /#wrapper -->
 
+    <!-- Add to Group Modal -->
+    <div class="modal fade" id="addToGroupModal" tabindex="-1" aria-labelledby="addToGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addToGroupModalLabel">Add User to Group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="groupLoadingSpinner" class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p>Loading groups...</p>
+                    </div>
+
+                    <div id="groupsContainer" style="display:none;">
+                        <p>Select a group to add the user to:</p>
+                        <div class="group-list" style="max-height: 300px; overflow-y: auto; margin-top: 15px;">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 10%;">ID</th>
+                                        <th style="width: 30%;">Group Name</th>
+                                        <th style="width: 45%;">Description</th>
+                                        <th style="width: 15%;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="groupsList">
+                                    <!-- Groups will be loaded here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="noGroupsMessage" style="display:none;">
+                        <div class="alert alert-info">No groups available. Please create a group first.</div>
+                    </div>
+
+                    <div id="groupsError" style="display:none;">
+                        <div class="alert alert-danger">Error loading groups. Please try again later.</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Javascript -->
     <div th:insert="~{admin/fragments/script::script}"></div>
 
@@ -262,6 +318,170 @@
 
         // Gọi lại hàm nếu người dùng reload và đã chọn sẵn role
         window.addEventListener("DOMContentLoaded", toggleExtraFields);
+
+        // Add to Group functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the Add to Group button
+            const addToGroupBtn = document.getElementById('addToGroupBtn');
+
+            if (addToGroupBtn) {
+                addToGroupBtn.addEventListener('click', function() {
+                    loadGroups();
+                });
+            }
+
+            // Add event listener for the modal
+            const addToGroupModal = document.getElementById('addToGroupModal');
+            if (addToGroupModal) {
+                addToGroupModal.addEventListener('hidden.bs.modal', function() {
+                    // Reset modal state when closed
+                    document.getElementById('groupsContainer').style.display = 'none';
+                    document.getElementById('noGroupsMessage').style.display = 'none';
+                    document.getElementById('groupsError').style.display = 'none';
+                    document.getElementById('groupLoadingSpinner').style.display = 'block';
+                    document.getElementById('groupsList').innerHTML = '';
+                });
+            }
+        });
+
+        // Function to load groups
+        function loadGroups() {
+            const userId = document.querySelector('input[name="userId"]').value;
+
+            // Show loading spinner
+            document.getElementById('groupLoadingSpinner').style.display = 'block';
+            document.getElementById('groupsContainer').style.display = 'none';
+            document.getElementById('noGroupsMessage').style.display = 'none';
+            document.getElementById('groupsError').style.display = 'none';
+
+            // Fetch groups from API
+            fetch('/admin/groups/list-groups')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load groups');
+                    }
+                    return response.json();
+                })
+                .then(groups => {
+                    // Hide loading spinner
+                    document.getElementById('groupLoadingSpinner').style.display = 'none';
+
+                    if (groups && groups.length > 0) {
+                        // Show groups container
+                        document.getElementById('groupsContainer').style.display = 'block';
+
+                        // Populate groups list
+                        const groupsList = document.getElementById('groupsList');
+                        groupsList.innerHTML = '';
+
+                        groups.forEach(group => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${group.id}</td>
+                                <td>${group.name}</td>
+                                <td>${group.description || 'No description'}</td>
+                                <td>
+                                    <button
+                                        class="btn btn-primary btn-sm add-to-group-btn"
+                                        data-group-id="${group.id}"
+                                        data-group-name="${group.name}">
+                                        Add
+                                    </button>
+                                </td>
+                            `;
+                            groupsList.appendChild(row);
+                        });
+
+                        // Add event listeners to the Add buttons
+                        document.querySelectorAll('.add-to-group-btn').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const groupId = this.getAttribute('data-group-id');
+                                const groupName = this.getAttribute('data-group-name');
+                                addUserToGroup(userId, groupId, groupName);
+                            });
+                        });
+                    } else {
+                        // Show no groups message
+                        document.getElementById('noGroupsMessage').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading groups:', error);
+                    // Hide loading spinner and show error message
+                    document.getElementById('groupLoadingSpinner').style.display = 'none';
+                    document.getElementById('groupsError').style.display = 'block';
+                });
+        }
+
+        // Function to add user to group
+        function addUserToGroup(userId, groupId, groupName) {
+            // Show loading state on the button
+            const button = document.querySelector(`.add-to-group-btn[data-group-id="${groupId}"]`);
+            const originalText = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Adding...';
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('selectedUserId', userId);
+
+            // Send request to add user to group
+            fetch(`/admin/groups/${groupId}/add-user`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Reset button state
+                button.disabled = false;
+                button.innerHTML = originalText;
+
+                // Create a notification element
+                const notification = document.createElement('div');
+                notification.className = data.status === 'success'
+                    ? 'alert alert-success'
+                    : 'alert alert-danger';
+                notification.textContent = data.message;
+
+                // Add the notification to the modal body
+                const modalBody = document.querySelector('.modal-body');
+                modalBody.insertBefore(notification, modalBody.firstChild);
+
+                // Auto-remove the notification after 3 seconds
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+
+                // If successful, update the button
+                if (data.status === 'success') {
+                    button.innerHTML = 'Added ✓';
+                    button.disabled = true;
+                    button.className = 'btn btn-success btn-sm';
+                }
+            })
+            .catch(error => {
+                console.error('Error adding user to group:', error);
+
+                // Reset button state
+                button.disabled = false;
+                button.innerHTML = originalText;
+
+                // Show error message
+                const notification = document.createElement('div');
+                notification.className = 'alert alert-danger';
+                notification.textContent = 'Failed to add user to group. Please try again.';
+
+                const modalBody = document.querySelector('.modal-body');
+                modalBody.insertBefore(notification, modalBody.firstChild);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            });
+        }
     </script>
 
 </body>
