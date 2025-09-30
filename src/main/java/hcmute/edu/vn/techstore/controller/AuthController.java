@@ -29,8 +29,7 @@ public class AuthController {
             return "web/create-account";
         }
         try {
-            userRequest.setRoleName("ROLE_CUSTOMER");
-            if (userService.register(userRequest)) {
+            if (userService.register(userRequest)){
                 return "redirect:/login";
             }
         }

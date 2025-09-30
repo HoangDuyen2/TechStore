@@ -897,7 +897,7 @@
         // Regex cơ bản cho email
         const emailRegex = /^(?!.*\.\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-        if (email.length > 0 && !emailRegex.test(email)) {
+        if (!emailRegex.test(email)) {
             errorSpan.textContent = "Vui lòng nhập email dưới dạng xxx@gmail.com";
         } else {
             errorSpan.textContent = "";
