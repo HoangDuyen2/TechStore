@@ -68,6 +68,9 @@
                                 <!-- Add error message for BadCredentialsException -->
                                 <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
                                 
+                                <!-- Add success message for registration -->
+                                <div class="alert alert-success" th:if="${successMessage != null}" th:text="${successMessage}"></div>
+                                
                                 <ul class="form-fill">
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
                                         <label>Lastname</label>
@@ -104,10 +107,11 @@
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
                                         <label>Gender</label>
                                         <select th:field="*{gender}" class="form-control">
-                                            <option value="">Select gender</option>
-                                            <option th:each="gender : ${T(hcmute.edu.vn.techstore.Enum.EGender).values()}" 
-                                                    th:value="${gender}" 
-                                                    th:text="${gender}"></option>
+                                            <option th:each="gender, iterStat : ${T(hcmute.edu.vn.techstore.Enum.EGender).values()}"
+                                                    th:value="${gender}"
+                                                    th:text="${gender}"
+                                                    th:selected="${iterStat.index == 0}">
+                                            </option>
                                         </select>
                                     </li>
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
@@ -119,7 +123,8 @@
                                         <label>Profile Image</label>
                                         <input type="file" th:field="*{image}" accept="image/*" class="form-control">
                                         <span class="text-danger" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></span>
-                                        <small class="form-text text-muted">Upload a profile picture (JPG, PNG, GIF)</small>
+                                        <span class="text-danger" th:if="${image != null}" th:text="${image}"></span>
+                                        <small class="form-text text-muted">Upload a profile picture (JPG, PNG, GIF) - Maximum 5MB</small>
                                     </li>
                                 </ul>
                                 <div class="register-action" data-animate="animate__fadeInUp">

@@ -6,22 +6,23 @@ import hcmute.edu.vn.techstore.dto.request.ChangePasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
+import hcmute.edu.vn.techstore.dto.response.UserSearchResponse;
 import hcmute.edu.vn.techstore.entity.AccountEntity;
 import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
-import hcmute.edu.vn.techstore.service.interfaces.IUserRegistrationStrategy;
+import hcmute.edu.vn.techstore.repository.specification.UserSpecification;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -239,5 +240,29 @@ public class UserServiceImpl implements IUserService {
     public UserEntity findByEmail(String email) {
         userRepository.findByAccount_Email(email).orElseThrow(null);
         return userRepository.findByAccount_Email(email).orElseThrow(null);
+    }
+
+    @Override
+    public List<UserSearchResponse> searchUsers(String keyword) {
+        // Create specifications for each search criterion
+        Specification<UserEntity> hasExactEmail = UserSpecification.hasEmail(keyword);
+        Specification<UserEntity> hasExactPhone = UserSpecification.hasPhone(keyword);
+        Specification<UserEntity> emailContains = UserSpecification.emailContains(keyword);
+        Specification<UserEntity> phoneContains = UserSpecification.phoneContains(keyword);
+
+        // Combine them with OR operations (user matches if ANY criterion is satisfied)
+        Specification<UserEntity> specification = Specification.where(hasExactEmail)
+                .or(hasExactPhone)
+                .or(emailContains)
+                .or(phoneContains);
+
+        List<UserEntity> userEntities = userRepository.findAll(specification);
+        return userEntities.stream().map(user -> UserSearchResponse.builder()
+                        .id(user.getId())
+                        .email(user.getAccount().getEmail())
+                        .phone(user.getPhoneNumber())
+                        .fullName(user.getFirstName() + " " + user.getLastName())
+                        .build())
+                .toList();
     }
 }

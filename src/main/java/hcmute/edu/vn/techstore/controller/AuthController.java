@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import hcmute.edu.vn.techstore.dto.interfaces.OnCreate;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String postRegisterPage(@Validated @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) {
+    public String postRegisterPage(@Validated @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) throws Exception {
         if (bindingResult.hasErrors()) {
             return "web/create-account";
         }
@@ -33,7 +32,8 @@ public class AuthController {
             if (userService.register(userRequest)){
                 return "redirect:/login";
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
         return "web/create-account";
@@ -58,8 +58,6 @@ public class AuthController {
 
         return "web/login-account";
     }
-
-
 
     @GetMapping("/forgot-password")
     public String getForgotPasswordPage(Model model) {

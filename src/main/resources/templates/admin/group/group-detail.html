@@ -1,0 +1,565 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<!-- Mirrored from themesflat.co/html/remos/add-attributes.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:48 GMT -->
+<div th:insert="~{admin/fragments/head::head}"></div>
+
+<body class="body">
+
+<!-- #wrapper -->
+<div id="wrapper">
+    <!-- #page -->
+    <div id="page" class="">
+        <!-- layout-wrap -->
+        <div class="layout-wrap">
+            <!-- preload -->
+            <div id="preload" class="preload-container">
+                <div class="preloading">
+                    <span></span>
+                </div>
+            </div>
+            <!-- /preload -->
+            <!-- section-menu-left -->
+            <div th:insert="~{admin/fragments/menu-left::section-menu-left}"></div>
+            <!-- /section-menu-left -->
+            <!-- section-content-right -->
+            <div class="section-content-right">
+                <!-- header-dashboard -->
+                <div th:insert="~{admin/fragments/header_dashboard::header-dashboard}"></div>
+                <!-- /header-dashboard -->
+                <!-- main-content -->
+                <div class="main-content">
+                    <!-- main-content-wrap -->
+                    <div class="main-content-inner">
+                        <!-- main-content-wrap -->
+                        <div class="main-content-wrap">
+                            <div class="flex items-center flex-wrap justify-between gap20 mb-27">
+                                <h3>Group Details</h3>
+                                <ul class="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                                    <li>
+                                        <a th:href="@{/admin/dashboard}">
+                                            <div class="text-tiny">Dashboard</div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <i class="icon-chevron-right"></i>
+                                    </li>
+                                    <li>
+                                        <a th:href="@{/admin/groups}">
+                                            <div class="text-tiny">Groups</div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <i class="icon-chevron-right"></i>
+                                    </li>
+                                    <li>
+                                        <div class="text-tiny">Group Details</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- group-detail -->
+                            <div class="wg-box">
+                                <div class="block-warning" th:if="${error}">
+                                    <i class="icon-alert-octagon"></i>
+                                    <div class="body-title-2" th:text="${error}"></div>
+                                </div>
+                                <div class="detail-info">
+                                    <div class="detail-info-item">
+                                        <div class="body-title">Group ID</div>
+                                        <div class="body-text" th:text="${group.id}"></div>
+                                    </div>
+                                    <div class="detail-info-item">
+                                        <div class="body-title">Group Name</div>
+                                        <div class="body-text" th:text="${group.name}"></div>
+                                    </div>
+                                    <div class="detail-info-item">
+                                        <div class="body-title">Description</div>
+                                        <div class="body-text" th:text="${group.description != null && !group.description.isEmpty() ? group.description : 'No description provided'}"></div>
+                                    </div>
+
+                                    <div class="detail-info-item" th:if="${not #lists.isEmpty(group.users)}">
+                                        <div class="body-title">Users in this Group</div>
+                                        <div class="users-list">
+                                            <table class="table-detail">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Full Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr th:each="user : ${group.users}">
+                                                        <td th:text="${user.id}"></td>
+                                                        <td th:text="${user.fullName}"></td>
+                                                        <td th:text="${user.email}"></td>
+                                                        <td th:text="${user.phone}"></td>
+                                                        <td>
+                                                            <button class="btn-remove-user btn-sm"
+                                                                    th:data-user-id="${user.id}"
+                                                                    th:data-user-name="${user.fullName}">
+                                                                <i class="icon-trash-2"></i> Remove
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-info-item" th:if="${#lists.isEmpty(group.users)}">
+                                        <div class="body-title">Users</div>
+                                        <div class="body-text">No users in this group</div>
+                                    </div>
+
+                                    <div class="bot">
+                                        <div></div>
+                                        <div class="action-buttons">
+                                            <button type="button" class="tf-button w208 mr-10" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                                <i class="icon-plus"></i> Add User
+                                            </button>
+                                            <a th:href="@{/admin/groups/edit/{id}(id=${group.id})}" class="tf-button w208">Edit Group</a>
+                                            <a th:href="@{/admin/groups}" class="tf-button tf-button-alt w208 ml-10">Back to List</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /group-detail -->
+                        </div>
+                        <!-- /main-content-wrap -->
+                    </div>
+                    <!-- /main-content-wrap -->
+                    <!-- bottom-page -->
+                    <div th:insert="~{admin/fragments/bottom_page::bottom-page}"></div>
+                    <!-- /bottom-page -->
+                </div>
+                <!-- /main-content -->
+            </div>
+            <!-- /section-content-right -->
+        </div>
+        <!-- /layout-wrap -->
+    </div>
+    <!-- /#page -->
+</div>
+<!-- /#wrapper -->
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Add User to Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="search-section mb-4">
+                    <div class="form-group">
+                        <label for="userSearchInput">Search Users</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="userSearchInput" placeholder="Enter name, email or phone...">
+                            <button class="btn btn-primary" type="button" id="searchUserBtn">Search</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="searchResults" class="mt-3">
+                    <!-- Search results will be displayed here -->
+                    <div class="search-placeholder text-center">
+                        <p>Search for users to add to this group</p>
+                    </div>
+                </div>
+                <div id="selectedUsers" class="mt-4" style="display: none;">
+                    <h6>Selected Users</h6>
+                    <ul class="list-group" id="selectedUsersList">
+                        <!-- Selected users will be added here -->
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="addSelectedUsersBtn">Add Selected Users</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Javascript -->
+<div th:insert="~{admin/fragments/script::script}"></div>
+
+<style>
+.detail-info {
+    padding: 20px 0;
+}
+
+.detail-info-item {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.detail-info-item:last-child {
+    border-bottom: none;
+}
+
+.table-detail {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.table-detail th, .table-detail td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #e9e9e9;
+}
+
+.table-detail th {
+    background-color: #f7f7f7;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.users-list {
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.btn-remove-user {
+    padding: 6px 12px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.btn-remove-user:hover {
+    background-color: #ff3333;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.tf-button-alt {
+    background-color: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.tf-button-alt:hover {
+    background-color: #e5e5e5;
+}
+
+/* Modal styles */
+.modal-content {
+    border-radius: 8px;
+}
+
+.search-results-table {
+    width: 100%;
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+.search-results-table th,
+.search-results-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #e9e9e9;
+}
+
+.search-results-table th {
+    background-color: #f7f7f7;
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.modal-body {
+    padding: 20px;
+    font-size: 16px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.search-section label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+#userSearchInput {
+    font-size: 16px;
+    padding: 10px 15px;
+    height: auto;
+}
+
+#searchUserBtn {
+    font-size: 16px;
+    padding: 10px 20px;
+    height: auto;
+}
+
+.user-select-radio {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.search-loading,
+.search-error,
+.search-no-results,
+.search-placeholder {
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.modal-footer .btn {
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
+.selected-user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 16px;
+    padding: 12px 15px;
+}
+
+#selectedUsers h6 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+</style>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        const groupId = /*[[${group.id}]]*/ null;
+        const searchInput = $('#userSearchInput');
+        const searchButton = $('#searchUserBtn');
+        const searchResults = $('#searchResults');
+        const selectedUsers = $('#selectedUsers');
+        const selectedUsersList = $('#selectedUsersList');
+        const addSelectedUsersBtn = $('#addSelectedUsersBtn');
+
+        // Variable to store the selected user
+        let selectedUserId = null;
+        let selectedUserData = null;
+
+        // Search for users
+        searchButton.click(function() {
+            const keyword = searchInput.val().trim();
+
+            if (!keyword) {
+                searchResults.html('<div class="search-error">Please enter a search term</div>');
+                return;
+            }
+
+            // Show loading indicator
+            searchResults.html('<div class="search-loading"><i class="icon-loader animate-spin"></i> Searching...</div>');
+
+            // Make AJAX request to search users
+            $.ajax({
+                url: '/admin/users/search',
+                method: 'GET',
+                data: { keyword: keyword },
+                success: function(response) {
+                    displaySearchResults(response);
+                },
+                error: function(xhr) {
+                    let errorMessage = 'An error occurred while searching users';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+                    searchResults.html('<div class="search-error">' + errorMessage + '</div>');
+                }
+            });
+        });
+
+        // Display search results
+        function displaySearchResults(users) {
+            if (!users || users.length === 0) {
+                searchResults.html('<div class="search-no-results">No users found matching your search criteria</div>');
+                return;
+            }
+
+            let html = '<table class="search-results-table">';
+            html += '<thead><tr>';
+            html += '<th>Select</th>';
+            html += '<th>ID</th>';
+            html += '<th>Name</th>';
+            html += '<th>Email</th>';
+            html += '<th>Phone</th>';
+            html += '</tr></thead><tbody>';
+
+            const groupUsers = /*[[${group.users}]]*/ [];
+
+            users.forEach(function(user) {
+                // Check if user is already in the group
+                const isInGroup = groupUsers.some(groupUser => parseInt(groupUser.id) === parseInt(user.id));
+                // Check if this user is the selected one
+                const isSelected = parseInt(selectedUserId) === parseInt(user.id);
+
+                html += '<tr>';
+                html += '<td><input type="radio" name="userSelect" class="user-select-radio" data-user-id="' + user.id +
+                         '" data-user-name="' + user.fullName +
+                         '" data-user-email="' + user.email +
+                         '" data-user-phone="' + (user.phone || '') +
+                         '"' + (isInGroup ? ' disabled' : '') +
+                         (isSelected ? ' checked' : '') + '></td>';
+                html += '<td>' + user.id + '</td>';
+                html += '<td>' + user.fullName + '</td>';
+                html += '<td>' + user.email + '</td>';
+                html += '<td>' + (user.phone || '') + '</td>';
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            searchResults.html(html);
+
+            // Add event listeners to radio buttons
+            $('.user-select-radio').on('change', function() {
+                const radio = $(this);
+                const userId = radio.data('user-id');
+                const userName = radio.data('user-name');
+                const userEmail = radio.data('user-email');
+                const userPhone = radio.data('user-phone');
+
+                // Store the selected user
+                selectedUserId = userId;
+                selectedUserData = {
+                    id: userId,
+                    fullName: userName,
+                    email: userEmail,
+                    phone: userPhone
+                };
+
+                updateSelectedUsersList();
+            });
+        }
+
+        // Update the selected users list
+        function updateSelectedUsersList() {
+            if (!selectedUserId) {
+                selectedUsers.hide();
+                return;
+            }
+
+            selectedUsersList.empty();
+            selectedUsers.show();
+
+            const item = $('<li class="list-group-item selected-user-item"></li>');
+            item.append('<span>' + selectedUserData.fullName + ' (' + selectedUserData.email + ')</span>');
+            item.append('<button type="button" class="remove-selected-user"><i class="icon-x"></i></button>');
+            selectedUsersList.append(item);
+
+            // Add event listener to remove button
+            $('.remove-selected-user').on('click', function() {
+                // Remove user selection
+                selectedUserId = null;
+                selectedUserData = null;
+
+                // Uncheck the radio button
+                $('.user-select-radio:checked').prop('checked', false);
+
+                updateSelectedUsersList();
+            });
+        }
+
+        // Add selected user to the group
+        addSelectedUsersBtn.click(function() {
+            if (!selectedUserId) {
+                alert('Please select a user to add to the group');
+                return;
+            }
+
+            // Send as form data with parameter name "selectedUserId" to match the controller method
+            $.ajax({
+                url: '/admin/groups/' + groupId + '/add-user',
+                method: 'POST',
+                data: { 'selectedUserId': selectedUserId },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Reload the page to show updated user list
+                        window.location.reload();
+                    } else {
+                        alert(response.message || 'Failed to add user to the group');
+                    }
+                },
+                error: function(xhr) {
+                    let errorMessage = 'An error occurred while adding user to the group';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    alert(errorMessage);
+                }
+            });
+        });
+
+        // Handle enter key press in search input
+        searchInput.on('keypress', function(e) {
+            if (e.which === 13) { // Enter key
+                e.preventDefault();
+                searchButton.click();
+            }
+        });
+
+        // Remove user from group
+        $('.btn-remove-user').click(function() {
+            const button = $(this);
+            const userId = button.data('user-id');
+            const userName = button.data('user-name');
+
+            // Confirm before removing
+            if (confirm('Are you sure you want to remove ' + userName + ' from this group?')) {
+                $.ajax({
+                    url: '/admin/groups/' + groupId + '/remove-user',
+                    method: 'POST',
+                    data: { 'userId': userId },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            // Reload the page to show updated user list
+                            window.location.reload();
+                        } else {
+                            alert(response.message || 'Failed to remove user from the group');
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'An error occurred while removing user from the group';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        alert(errorMessage);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+</body>
+
+
+<!-- Mirrored from themesflat.co/html/remos/new-group.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:47 GMT -->
+</html>
