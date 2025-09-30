@@ -28,4 +28,6 @@ public interface IGroupService {
     boolean updateGroup(Long id, GroupUpdateRequest groupUpdateRequest);
 
     boolean deleteGroup(Long id);
+
+    boolean deleteGroups(List<Long> ids);
 }

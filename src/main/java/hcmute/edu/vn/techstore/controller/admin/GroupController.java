@@ -15,7 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -58,7 +60,7 @@ public class GroupController {
     }
 
     @GetMapping("/delete/{id}")
-    public ResponseEntity<Map<String, String>> deleteGroup(@PathVariable Long id, Model model) {
+    public ResponseEntity<Map<String, String>> deleteGroup(@PathVariable Long id) {
         Map<String, String> response = new HashMap<>();
         if (groupService.deleteGroup(id)) {
             response.put("status", "success");
@@ -68,6 +70,20 @@ public class GroupController {
             response.put("status", "error");
             response.put("message", "Failed to delete the group.");
             return org.springframework.http.ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/delete-multiple")
+    public ResponseEntity<Map<String, String>> deleteGroups(@RequestParam List<Long> ids) {
+        Map<String, String> response = new HashMap<>();
+        if (groupService.deleteGroups(ids)) {
+            response.put("status", "success");
+            response.put("message", "Groups deleted successfully.");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("status", "error");
+            response.put("message", "Failed to delete the groups.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
