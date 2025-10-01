@@ -265,4 +265,19 @@ public class UserServiceImpl implements IUserService {
                         .build())
                 .toList();
     }
+
+    @Override
+    public boolean isValidEmailOrPhoneNumber(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return false;
+        }
+
+        // Email regex pattern
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+        // Phone number regex pattern (simple version, adjust as needed for your requirements)
+        String phoneRegex = "^\\d{10,15}$";  // Accepts 10-15 digits
+
+        return input.matches(emailRegex) || input.matches(phoneRegex);
+    }
 }

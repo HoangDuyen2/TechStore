@@ -31,4 +31,6 @@ public interface IUserService {
     UserEntity findByEmail(String email);
 
     List<UserSearchResponse> searchUsers(String keyword);
+
+    boolean isValidEmailOrPhoneNumber(String input);
 }
