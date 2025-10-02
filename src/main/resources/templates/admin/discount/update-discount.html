@@ -126,7 +126,10 @@
                                     </fieldset>
                                     <div class="bot">
                                         <div></div>
-                                        <button class="tf-button w208" type="submit">Save</button>
+                                        <div class="flex gap-3">
+                                            <button class="tf-button w208" type="button" id="sendDiscountBtn">Send</button>
+                                            <button class="tf-button w208" type="submit">Save</button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -238,8 +241,560 @@
             // Set the formatted date to the input
             dateInput.value = formattedDate;
         }
+
+        // Variables to store selected recipients
+        let selectedGroups = [];
+        let selectedUsers = [];
+
+        // When the Send button is clicked, open the modal and load the groups
+        document.getElementById('sendDiscountBtn').addEventListener('click', function() {
+            // Reset selections
+            selectedGroups = [];
+            selectedUsers = [];
+
+            // Clear any previous search results
+            document.getElementById('userSearchResults').innerHTML = '';
+            document.getElementById('userSearchInput').value = '';
+
+            updateSelectedRecipients();
+
+            // Load groups
+            loadGroups();
+
+            // Show the modal
+            $('#sendDiscountModal').modal('show');
+        });
+
+        // Function to load groups from the server
+        function loadGroups() {
+            const recipientsList = document.getElementById('recipientsList');
+            recipientsList.innerHTML = `
+                <p class="text-center">Loading groups...</p>
+            `;
+
+            fetch('/admin/groups/list-groups')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load groups');
+                    }
+                    return response.json();
+                })
+                .then(groups => {
+                    if (groups.length === 0) {
+                        recipientsList.innerHTML = '<p class="text-muted">No groups available</p>';
+                        return;
+                    }
+
+                    let html = '<div class="list-group">';
+                    groups.forEach(group => {
+                        html += `
+                            <div class="list-group-item" data-id="${group.id}">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="group-${group.id}"
+                                           data-id="${group.id}" data-name="${group.name}" data-type="group">
+                                    <label class="form-check-label" for="group-${group.id}">${group.name}</label>
+                                    <small class="text-muted d-block">${group.description || 'No description'}</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+
+                    recipientsList.innerHTML = html;
+
+                    // Add event listeners to checkboxes
+                    document.querySelectorAll('#recipientsList input[type="checkbox"]').forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            const id = parseInt(this.getAttribute('data-id'));
+                            const name = this.getAttribute('data-name');
+                            const type = this.getAttribute('data-type');
+                            const listItem = this.closest('.list-group-item');
+
+                            if (this.checked) {
+                                // Add visual feedback for checked state
+                                listItem.classList.add('selected');
+
+                                // Add to selected groups if not already in the list
+                                if (type === 'group' && !selectedGroups.some(g => g.id === id)) {
+                                    selectedGroups.push({
+                                        id: id,
+                                        name: name,
+                                        type: type
+                                    });
+                                }
+                            } else {
+                                // Remove visual feedback when unchecked
+                                listItem.classList.remove('selected');
+
+                                // Remove from selected groups
+                                if (type === 'group') {
+                                    selectedGroups = selectedGroups.filter(g => g.id !== id);
+                                }
+                            }
+
+                            updateSelectedRecipients();
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading groups:', error);
+                    recipientsList.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load groups. Please try again later.
+                        </div>
+                    `;
+                });
+        }
+
+        // Event listener for the search button
+        const searchBtn = document.getElementById('searchUserBtn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function() {
+                const keyword = document.getElementById('userSearchInput').value.trim();
+                if (keyword) {
+                    searchUsers(keyword);
+                } else {
+                    alert('Please enter an email or phone number to search');
+                }
+            });
+        }
+
+        // Allow pressing Enter to search
+        const searchInput = document.getElementById('userSearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const keyword = this.value.trim();
+                    if (keyword) {
+                        searchUsers(keyword);
+                    } else {
+                        alert('Please enter an email or phone number to search');
+                    }
+                    e.preventDefault(); // Prevent form submission
+                }
+            });
+        }
+
+        // Function to search for users
+        function searchUsers(keyword) {
+            const resultsContainer = document.getElementById('userSearchResults');
+            resultsContainer.innerHTML = `
+                <p class="text-center">Searching for users...</p>
+            `;
+
+            console.log("Searching for users with keyword:", keyword);
+
+            // Create the URL with the keyword parameter
+            const searchUrl = `/admin/users/search?keyword=${encodeURIComponent(keyword)}`;
+            console.log("Search URL:", searchUrl);
+
+            // Use XMLHttpRequest for better error handling and debugging
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', searchUrl, true);
+
+            xhr.onload = function() {
+                console.log("Search XHR status:", xhr.status);
+                console.log("Search XHR response:", xhr.responseText);
+
+                try {
+                    const response = JSON.parse(xhr.responseText);
+
+                    // Check if response contains an error message
+                    if (response.error) {
+                        console.error("Server returned error:", response.error);
+                        resultsContainer.innerHTML = `
+                            <div class="alert alert-warning">
+                                <i class="fa fa-exclamation-triangle mr-2"></i>
+                                ${response.error}
+                            </div>
+                            <p class="mt-2">Please enter a valid email or phone number.</p>
+                        `;
+                        return;
+                    }
+
+                    // If we get here, response is a user array
+                    const users = response;
+                    console.log("Parsed users:", users);
+
+                    if (!users || users.length === 0) {
+                        resultsContainer.innerHTML = '<p class="text-muted">No users found with that email or phone number</p>';
+                        return;
+                    }
+
+                    let html = '<div class="list-group mt-2">';
+                    users.forEach(user => {
+                        const isChecked = selectedUsers.some(u => u.id === user.id) ? 'checked' : '';
+                        const displayName = user.fullName || user.email || 'Unknown';
+                        html += `
+                            <div class="list-group-item">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input user-checkbox" id="user-${user.id}"
+                                           data-id="${user.id}" data-name="${displayName}"
+                                           data-type="user" ${isChecked}>
+                                    <label class="form-check-label" for="user-${user.id}">${displayName}</label>
+                                    <small class="text-muted d-block">${user.email || 'No email'}</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+
+                    resultsContainer.innerHTML = html;
+
+                    // Apply initial styling to any pre-checked items
+                    document.querySelectorAll('#userSearchResults .user-checkbox:checked').forEach(checkbox => {
+                        checkbox.closest('.list-group-item').classList.add('selected-item');
+                    });
+
+                    // Add event listeners to user checkboxes
+                    document.querySelectorAll('#userSearchResults .user-checkbox').forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            const id = parseInt(this.getAttribute('data-id'));
+                            const name = this.getAttribute('data-name');
+                            const type = this.getAttribute('data-type');
+                            const listItem = this.closest('.list-group-item');
+
+                            if (this.checked) {
+                                // Add visual feedback for checked state
+                                listItem.classList.add('selected-item');
+
+                                // Add to selected users if not already in the list
+                                if (!selectedUsers.some(u => u.id === id)) {
+                                    selectedUsers.push({
+                                        id: id,
+                                        name: name,
+                                        type: type
+                                    });
+                                }
+                            } else {
+                                // Remove visual feedback when unchecked
+                                listItem.classList.remove('selected-item');
+
+                                // Remove from selected users
+                                selectedUsers = selectedUsers.filter(u => u.id !== id);
+                            }
+
+                            updateSelectedRecipients();
+                        });
+                    });
+                } catch (e) {
+                    console.error("Error parsing response:", e);
+                    resultsContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            Error parsing response: ${e.message}
+                        </div>
+                    `;
+                }
+            };
+
+            xhr.onerror = function() {
+                console.error("Network error during user search");
+                resultsContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        Network error occurred. Please check your connection and try again.
+                    </div>
+                `;
+            };
+
+            xhr.send();
+        }
+
+        // Function to update the selected recipients display
+        function updateSelectedRecipients() {
+            const container = document.getElementById('selectedRecipients');
+
+            // Combine groups and users
+            const allRecipients = [...selectedGroups, ...selectedUsers];
+
+            if (allRecipients.length === 0) {
+                container.innerHTML = '<p class="text-muted" id="noRecipientsMessage">No recipients selected</p>';
+                return;
+            }
+
+            let html = '';
+            allRecipients.forEach(recipient => {
+                // Use plain HTML and CSS, avoiding Bootstrap's close button class entirely
+                html += `
+                    <div class="recipient-badge ${recipient.type}">
+                        ${recipient.type === 'group' ? 'Group' : 'User'}: ${recipient.name}
+                        <span class="remove-btn" data-type="${recipient.type}" data-id="${recipient.id}">
+                            &times;
+                        </span>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Add event listeners to remove buttons - using our custom class
+            container.querySelectorAll('.remove-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    const id = parseInt(this.getAttribute('data-id'));
+
+                    if (type === 'group') {
+                        selectedGroups = selectedGroups.filter(g => g.id !== id);
+                        // Uncheck the corresponding checkbox
+                        const checkbox = document.getElementById(`group-${id}`);
+                        if (checkbox) {
+                            checkbox.checked = false;
+                            // Reset background color using class
+                            checkbox.closest('.list-group-item').classList.remove('selected');
+                        }
+                    } else {
+                        selectedUsers = selectedUsers.filter(u => u.id !== id);
+                        // Uncheck the corresponding checkbox
+                        const checkbox = document.getElementById(`user-${id}`);
+                        if (checkbox) {
+                            checkbox.checked = false;
+                            // Reset background color using class
+                            checkbox.closest('.list-group-item').classList.remove('selected-item');
+                        }
+                    }
+
+                    updateSelectedRecipients();
+                });
+            });
+        }
+
+        // Send discount to selected recipients
+        const sendBtn = document.getElementById('sendDiscountToRecipientsBtn');
+        if (sendBtn) {
+            sendBtn.addEventListener('click', function() {
+                const discountId = /*[[${discountId}]]*/ -1;
+
+                // Get IDs from selected groups and users
+                const groupIds = selectedGroups.map(g => g.id);
+                const userIds = selectedUsers.map(u => u.id);
+
+                // Validate that at least one recipient is selected
+                if (groupIds.length === 0 && userIds.length === 0) {
+                    alert('Please select at least one recipient (group or user) before sending.');
+                    return;
+                }
+
+                // Prepare request data
+                const requestData = {
+                    discountId: discountId,
+                    groupIds: groupIds.length > 0 ? groupIds : null,
+                    userIds: userIds.length > 0 ? userIds : null
+                };
+
+                console.log("Sending request data:", requestData);
+
+                // Show loading
+                this.disabled = true;
+                this.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+
+                // Send the request
+                fetch('/admin/discounts/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                .then(response => {
+                    console.log("Send response status:", response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Send response data:", data);
+                    this.disabled = false;
+                    this.innerHTML = 'Send Discount';
+
+                    if (data.status === 'success') {
+                        alert(data.message || 'Discount sent successfully!');
+                        $('#sendDiscountModal').modal('hide');
+                    } else {
+                        alert(data.message || 'Failed to send discount. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error sending discount:', error);
+                    this.disabled = false;
+                    this.innerHTML = 'Send Discount';
+                    alert('An error occurred while sending the discount. Please try again later.');
+                });
+            });
+        }
+
+        // Initialize modal with proper close functionality
+        $(document).ready(function() {
+            // Initialize the modal with proper dismiss handlers
+            $('#sendDiscountModal').modal({
+                keyboard: true, // Allow Esc key to close the modal
+                backdrop: true, // Click outside to close
+                show: false     // Don't show on page load
+            });
+
+            // Add explicit handler for modal close button
+            $('.modal .close, .modal .btn-secondary').on('click', function() {
+                $('#sendDiscountModal').modal('hide');
+            });
+
+            // Add styling for remove buttons
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    .remove-btn {
+                        display: inline-block;
+                        margin-left: 8px;
+                        font-size: 20px;
+                        font-weight: bold;
+                        color: white;
+                        opacity: 0.7;
+                        cursor: pointer;
+                        vertical-align: middle;
+                        line-height: 1;
+                    }
+                    .remove-btn:hover {
+                        opacity: 1;
+                        text-decoration: none;
+                    }
+                </style>
+            `);
+        });
     });
 </script>
+
+<!-- Also add some CSS to style the checkboxes nicely -->
+<style>
+    /* Larger font sizes */
+    .modal-body {
+        font-size: 16px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .form-check-label {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 0;
+    }
+
+    small.text-muted {
+        font-size: 14px;
+    }
+
+    /* Better checkbox styling */
+    .form-check-input {
+        cursor: pointer;
+        height: 20px;
+        width: 20px;
+        margin-top: 3px;
+        margin-right: 8px;
+    }
+
+    /* Item selection styling - IMPORTANT FOR VISUAL FEEDBACK */
+    .list-group-item.selected {
+        background-color: #e8f4f8 !important;
+        border-left: 4px solid #17a2b8;
+    }
+
+    /* Hover effects */
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Badge styling */
+    .recipient-badge {
+        display: inline-block;
+        padding: 8px 12px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        position: relative;
+    }
+
+    .recipient-badge.group {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .recipient-badge.user {
+        background-color: #007bff;
+        color: white;
+    }
+
+    /* Close button styling - FIX FOR RECIPIENT REMOVE BUTTON */
+    .recipient-remove-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        margin-left: 6px;
+        padding: 0 4px;
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1;
+    }
+
+    /* Override bootstrap close button styling to ensure X shows properly */
+    .modal .close {
+        font-size: 24px;
+        opacity: 0.8;
+    }
+
+    .modal .close:hover {
+        opacity: 1;
+    }
+</style>
+
+<!-- Modal for sending discount -->
+<div class="modal fade" id="sendDiscountModal" tabindex="-1" role="dialog" aria-labelledby="sendDiscountModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sendDiscountModalLabel">Send Discount</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Recipients Section -->
+                <div>
+                    <h6>Recipients</h6>
+                    <div id="recipientsList" class="mt-3 mb-4">
+                        <p class="text-center">Click the Send button to load recipients</p>
+                    </div>
+                </div>
+
+                <!-- Search Users Section -->
+                <div class="mt-4">
+                    <h6>Search Users to Add</h6>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="userSearchInput" placeholder="Search by email or phone number">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="searchUserBtn">Search</button>
+                        </div>
+                    </div>
+                    <div id="userSearchResults" class="mt-2">
+                        <!-- User search results will be displayed here -->
+                    </div>
+                </div>
+
+                <!-- Selected Recipients Section -->
+                <div class="mt-4">
+                    <h6>Selected Recipients</h6>
+                    <div id="selectedRecipients" class="border p-2 mb-3" style="min-height: 100px; max-height: 200px; overflow-y: auto;">
+                        <p class="text-muted" id="noRecipientsMessage">No recipients selected</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="sendDiscountToRecipientsBtn">Send Discount</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 
