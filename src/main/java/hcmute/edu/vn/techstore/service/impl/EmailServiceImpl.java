@@ -74,4 +74,30 @@ public class EmailServiceImpl implements IEmailService {
         message.setText(emailContent);
         mailSender.send(message);
     }
+
+    @Override
+    public void sendDiscountCode(String to, String code, String description) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(to);
+        message.setSubject("Mã giảm giá từ TechStore");
+
+        String emailContent = String.format("""
+            Xin chào!
+            
+            Chúng tôi rất vui được gửi đến bạn mã giảm giá đặc biệt từ TechStore.
+            
+            Mã giảm giá của bạn: %s
+            
+            Chi tiết: %s
+            
+            Hãy sử dụng mã này trong lần mua sắm tiếp theo để nhận ưu đãi hấp dẫn!
+            
+            Trân trọng,
+            Đội ngũ TechStore
+            """, code, description);
+
+        message.setText(emailContent);
+        mailSender.send(message);
+    }
 }
