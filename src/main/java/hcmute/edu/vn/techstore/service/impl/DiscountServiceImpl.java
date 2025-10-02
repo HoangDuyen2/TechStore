@@ -144,30 +144,42 @@ public class DiscountServiceImpl implements IDiscountService {
         if (discount == null) {
             return false;
         }
-        Set<Long> userIdSet = new HashSet<>(sendDiscountRequest.getUserIds());
-        for (Long groupId : sendDiscountRequest.getGroupIds()) {
-            groupService.getGroupDetailById(groupId).getUsers().stream()
-                    .map(UserSearchResponse::getId)
-                    .forEach(userIdSet::add);
+        if (discount.getQuantity() <= 0) {
+            return false;
+        }
+        Set<Long> userIdSet = new HashSet<>();
+        if (sendDiscountRequest.getUserIds() != null && !sendDiscountRequest.getUserIds().isEmpty()) {
+            userIdSet = new HashSet<>(sendDiscountRequest.getUserIds());
+        }
+        if (sendDiscountRequest.getGroupIds() != null && !sendDiscountRequest.getGroupIds().isEmpty()) {
+            for (Long groupId : sendDiscountRequest.getGroupIds()) {
+                groupService.getGroupDetailById(groupId).getUsers().stream()
+                        .map(UserSearchResponse::getId)
+                        .forEach(userIdSet::add);
+            }
         }
         return discount.getQuantity() >= userIdSet.size();
     }
 
     @Override
-    public boolean sendEmailDiscounts(SendDiscountRequest request) {
-        DiscountEntity discount = discountRepository.findById(request.getDiscountId()).orElse(null);
+    public boolean sendEmailDiscounts(SendDiscountRequest sendDiscountRequest) {
+        DiscountEntity discount = discountRepository.findById(sendDiscountRequest.getDiscountId()).orElse(null);
         if (discount == null) {
             return false;
         }
         Set<String> emailSet = new HashSet<>();
-        for (Long userId : request.getUserIds()) {
-            String email = userService.getUserById(userId).getEmail();
-            emailSet.add(email);
+        if (sendDiscountRequest.getUserIds() != null && !sendDiscountRequest.getUserIds().isEmpty()) {
+            for (Long userId : sendDiscountRequest.getUserIds()) {
+                String email = userService.getUserById(userId).getEmail();
+                emailSet.add(email);
+            }
         }
-        for (Long groupId : request.getGroupIds()) {
-            groupService.getGroupDetailById(groupId).getUsers().stream()
-                    .map(UserSearchResponse::getEmail)
-                    .forEach(emailSet::add);
+        if (sendDiscountRequest.getGroupIds() != null && !sendDiscountRequest.getGroupIds().isEmpty()) {
+            for (Long groupId : sendDiscountRequest.getGroupIds()) {
+                groupService.getGroupDetailById(groupId).getUsers().stream()
+                        .map(UserSearchResponse::getEmail)
+                        .forEach(emailSet::add);
+            }
         }
         for (String email : emailSet) {
             if (EDiscountType.COUPON.equals(discount.getDiscountType())) {
