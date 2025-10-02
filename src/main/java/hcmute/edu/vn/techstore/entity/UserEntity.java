@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,6 +72,15 @@ public class UserEntity extends TrackingDate {
 
     @Column(name = "isActived")
     private boolean isActived;
+
+    @Column(name = "verificationToken")
+    private String verificationToken;
+
+    @Column(name = "resetPasswordToken")
+    private String resetPasswordToken;
+
+    @Column(name = "resetPasswordExpires")
+    private LocalDateTime resetPasswordExpires;
 
     @OneToMany(mappedBy = "user")
     private List<ReviewEntity> reviews;
