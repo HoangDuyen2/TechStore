@@ -173,7 +173,39 @@ public class GroupServiceImpl implements IGroupService {
         if (groupEntity == null) {
             return false; // Group not found
         }
+
+        // Clear all user associations first to avoid foreign key constraint violation
+        for (UserEntity user : groupEntity.getUsers()) {
+            user.getGroups().remove(groupEntity);
+            userRepository.save(user);
+        }
+        groupEntity.getUsers().clear();
+        groupRepository.save(groupEntity);
+
+        // Now delete the group
         groupRepository.delete(groupEntity);
         return true; // Group deleted successfully
+    }
+
+    @Override
+    public boolean deleteGroups(List<Long> ids) {
+        List<GroupEntity> groupEntities = groupRepository.findAllById(ids);
+        if (groupEntities.isEmpty()) {
+            return false; // No groups found to delete
+        }
+
+        // Clear all user associations first to avoid foreign key constraint violation
+        for (GroupEntity group : groupEntities) {
+            for (UserEntity user : group.getUsers()) {
+                user.getGroups().remove(group);
+                userRepository.save(user);
+            }
+            group.getUsers().clear();
+            groupRepository.save(group);
+        }
+
+        // Now delete the groups
+        groupRepository.deleteAll(groupEntities);
+        return true; // Groups deleted successfully
     }
 }

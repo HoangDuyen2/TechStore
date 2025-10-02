@@ -74,11 +74,23 @@
                                             <div class="text-tiny">entries</div>
                                         </div>
                                     </div>
-                                    <a class="tf-button style-1 w208" th:href="@{/admin/groups/add}"><i
-                                            class="icon-plus"></i>Add new</a>
+                                    <div class="flex gap-2">
+                                        <button id="deleteSelectedBtn" class="tf-button style-1 w208 btn-danger"
+                                                style="background-color: #d33; margin-right: 10px;" disabled>
+                                            <i class="icon-trash-2"></i>Delete Selected
+                                        </button>
+                                        <a class="tf-button style-1 w208" th:href="@{/admin/groups/add}">
+                                            <i class="icon-plus"></i>Add new
+                                        </a>
+                                    </div>
                                 </div>
                                 <div class="wg-table table-all-category">
                                     <ul class="table-title flex gap20 mb-14">
+                                        <li style="width: 50px;">
+                                            <div class="body-title">
+                                                <input type="checkbox" id="selectAll" class="select-checkbox">
+                                            </div>
+                                        </li>
                                         <li>
                                             <div class="body-title">Group Name</div>
                                         </li>
@@ -92,6 +104,10 @@
                                     <ul class="flex flex-column" th:each="group : ${groupResponses}">
                                         <li class="product-item gap14">
                                             <div class="flex items-center justify-between gap20 mb-14 flex-grow">
+                                                <div style="width: 50px;">
+                                                    <input type="checkbox" class="group-checkbox select-checkbox"
+                                                           th:value="${group.id}">
+                                                </div>
                                                 <div class="body-text" th:text="${group.name}"></div>
                                                 <div class="body-text" th:text="${group.description}"></div>
                                                 <input type="hidden" class="group-id" th:value="${group.id}">
@@ -158,6 +174,7 @@
 <script th:src="@{/admin/asset/sweetalert/sweetalert2.all.min.js}"></script>
 <script>
     $(document).ready(function () {
+        // Single delete functionality
         $(".confirm-text-delete").on("click", function () {
             var groupId = $(this).closest("li").find(".group-id").val(); // Get groupId from current row
             Swal.fire({
@@ -206,7 +223,92 @@
                     });
                 }
             });
-        })
+        });
+
+        // Bulk delete functionality
+        // Handle "Select All" checkbox
+        $("#selectAll").change(function() {
+            $(".group-checkbox").prop('checked', $(this).is(':checked'));
+            updateDeleteButtonState();
+        });
+
+        // Handle individual checkboxes
+        $(document).on('change', '.group-checkbox', function() {
+            updateDeleteButtonState();
+            // If any checkbox is unchecked, uncheck the "Select All" checkbox
+            if (!$(this).is(':checked')) {
+                $("#selectAll").prop('checked', false);
+            }
+            // If all checkboxes are checked, check the "Select All" checkbox
+            else if ($('.group-checkbox:checked').length === $('.group-checkbox').length) {
+                $("#selectAll").prop('checked', true);
+            }
+        });
+
+        // Enable/disable delete button based on selections
+        function updateDeleteButtonState() {
+            var selectedCount = $('.group-checkbox:checked').length;
+            $("#deleteSelectedBtn").prop('disabled', selectedCount === 0);
+        }
+
+        // Handle bulk delete button click
+        $("#deleteSelectedBtn").click(function() {
+            var selectedIds = [];
+            $('.group-checkbox:checked').each(function() {
+                selectedIds.push($(this).val());
+            });
+
+            if (selectedIds.length > 0) {
+                Swal.fire({
+                    title: "Delete selected groups?",
+                    text: `You are about to delete ${selectedIds.length} group(s). This cannot be undone!`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete them!",
+                    confirmButtonClass: "btn btn-primary",
+                    cancelButtonClass: "btn btn-danger ml-1",
+                    buttonsStyling: false
+                }).then(function(result) {
+                    if (result.value) {
+                        $.ajax({
+                            url: '/admin/groups/delete-multiple',
+                            method: 'POST',
+                            data: { ids: selectedIds },
+                            traditional: true, // Important for passing array parameters
+                            success: function(response) {
+                                if (response.status === "success") {
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Deleted!",
+                                        text: response.message,
+                                        confirmButtonClass: "btn btn-success"
+                                    }).then(() => {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Error!",
+                                        text: response.message,
+                                        confirmButtonClass: "btn btn-danger"
+                                    });
+                                }
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error!",
+                                    text: "Failed to delete the selected groups.",
+                                    confirmButtonClass: "btn btn-danger"
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
     });
 </script>
 
