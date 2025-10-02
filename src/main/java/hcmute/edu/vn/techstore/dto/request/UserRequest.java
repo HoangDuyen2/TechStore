@@ -22,8 +22,8 @@ import java.time.LocalDate;
 public class UserRequest {
     private Long userId;
 
-    @NotBlank(message = "Please enter your email!", groups = ChangePassword.class)
-    @Pattern(regexp = "(?i)[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}", message = "Email must have @ and .")
+    @NotBlank(message = "Please enter your email!", groups = {jakarta.validation.groups.Default.class, ChangePassword.class, OnCreate.class})
+    @Email(message = "Vui lòng nhập email dưới dạng xxx@gmail.com")
     private String email;
 
     @NotBlank(groups = {OnCreate.class, ChangePassword.class}, message = "Please enter your password")

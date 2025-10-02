@@ -52,6 +52,24 @@ public class UserController {
         return "admin/user/add-new-user";
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUsers(@RequestParam("keyword") String keyword) {
+        try {
+            // Validate keyword is either email or phone number
+            if (!userService.isValidEmailOrPhoneNumber(keyword)) {
+                Map<String, String> errorResponse = new HashMap<>();
+                errorResponse.put("error", "Search keyword must be a valid email or phone number");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+
+            return ResponseEntity.ok(userService.searchUsers(keyword));
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
     @PostMapping("/add-user")
     public String addNewUser(@ModelAttribute("new_user") UserRequest userRequest, BindingResult result, Model model) {
         result = checkBindingResult(result, userRequest, OnCreate.class);

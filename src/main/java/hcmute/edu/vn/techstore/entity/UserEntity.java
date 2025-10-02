@@ -6,9 +6,11 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"groups"})
 @Setter
 @Getter
 @Entity
@@ -82,4 +84,12 @@ public class UserEntity extends TrackingDate {
 
     @OneToMany(mappedBy = "user")
     private List<ReviewEntity> reviews;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_groups",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private Set<GroupEntity> groups = new HashSet<>();
 }

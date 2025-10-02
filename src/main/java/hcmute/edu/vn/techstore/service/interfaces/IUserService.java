@@ -7,6 +7,7 @@ import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.ResetPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
+import hcmute.edu.vn.techstore.dto.response.UserSearchResponse;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 
 import java.io.IOException;
@@ -28,4 +29,7 @@ public interface IUserService {
     boolean forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
     boolean resetPassword(ResetPasswordRequest resetPasswordRequest);
     boolean isValidResetToken(String token);
+    List<UserSearchResponse> searchUsers(String keyword);
+
+    boolean isValidEmailOrPhoneNumber(String input);
 }

@@ -76,8 +76,8 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public CheckoutRequest applyDiscount(CheckoutRequest checkoutRequest) {
         if (checkoutRequest.getDiscountCode() != null && !checkoutRequest.getDiscountCode().isEmpty()) {
-            if (discountService.checkDiscount(checkoutRequest.getDiscountCode())) {
-                DiscountEntity discountEntity = discountService.findByCode(checkoutRequest.getDiscountCode());
+            DiscountEntity discountEntity = discountService.findByCode(checkoutRequest.getDiscountCode());
+            if (discountEntity != null && discountEntity.getQuantity() > 0 && discountEntity.getExpiredDate().isAfter(java.time.LocalDate.now())) {
                 CheckoutRequest.DiscountCheckout discountCheckout = new CheckoutRequest.DiscountCheckout();
                 discountCheckout.setDiscountCode(discountEntity.getCode());
                 discountCheckout.setDiscountName(discountEntity.getName());

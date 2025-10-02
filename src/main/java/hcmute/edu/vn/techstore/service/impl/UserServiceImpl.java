@@ -8,15 +8,18 @@ import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.ResetPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
+import hcmute.edu.vn.techstore.dto.response.UserSearchResponse;
 import hcmute.edu.vn.techstore.entity.AccountEntity;
 import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IEmailService;
+import hcmute.edu.vn.techstore.repository.specification.UserSpecification;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -310,5 +313,41 @@ public class UserServiceImpl implements IUserService {
                 LocalDateTime.now()
         ).orElse(null);
         return user != null;
+    public List<UserSearchResponse> searchUsers(String keyword) {
+        // Create specifications for each search criterion
+        Specification<UserEntity> hasExactEmail = UserSpecification.hasEmail(keyword);
+        Specification<UserEntity> hasExactPhone = UserSpecification.hasPhone(keyword);
+        Specification<UserEntity> emailContains = UserSpecification.emailContains(keyword);
+        Specification<UserEntity> phoneContains = UserSpecification.phoneContains(keyword);
+
+        // Combine them with OR operations (user matches if ANY criterion is satisfied)
+        Specification<UserEntity> specification = Specification.where(hasExactEmail)
+                .or(hasExactPhone)
+                .or(emailContains)
+                .or(phoneContains);
+
+        List<UserEntity> userEntities = userRepository.findAll(specification);
+        return userEntities.stream().map(user -> UserSearchResponse.builder()
+                        .id(user.getId())
+                        .email(user.getAccount().getEmail())
+                        .phone(user.getPhoneNumber())
+                        .fullName(user.getFirstName() + " " + user.getLastName())
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public boolean isValidEmailOrPhoneNumber(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return false;
+        }
+
+        // Email regex pattern
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+        // Phone number regex pattern (simple version, adjust as needed for your requirements)
+        String phoneRegex = "^\\d{10,15}$";  // Accepts 10-15 digits
+
+        return input.matches(emailRegex) || input.matches(phoneRegex);
     }
 }

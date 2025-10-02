@@ -50,9 +50,11 @@
                         <div class="brand-slider owl-carousel owl-theme" id="brand-slider">
                             <div class="item" data-animate="animate__fadeInUp" th:each="brand : ${brands}">
                                 <div class="brand-img">
-                                    <a th:href="@{/products(brandNames=${brand.name})}" class="brand-img"><img
-                                            th:src="*{brand.getImage()}" class="img-fluid"
-                                            alt="brand"></a>
+                                    <a th:href="@{/products(brandNames=${brand.name})}" class="brand-img">
+                                        <img th:src="*{brand.getImage()}" class="img-fluid"
+                                             style="width: 120px; height: 60px; object-fit: contain; display: block;"
+                                             alt="brand">
+                                    </a>
                                 </div>
                             </div>
                         </div>

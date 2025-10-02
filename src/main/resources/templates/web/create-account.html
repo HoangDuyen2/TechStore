@@ -67,7 +67,10 @@
                             <form method="post" th:action="@{/register}" th:object="${userRequest}" enctype="multipart/form-data">
                                 <!-- Add error message for BadCredentialsException -->
                                 <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
-
+                                
+                                <!-- Add success message for registration -->
+                                <div class="alert alert-success" th:if="${successMessage != null}" th:text="${successMessage}"></div>
+                                
                                 <ul class="form-fill">
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
                                         <label>Lastname</label>
@@ -81,8 +84,9 @@
                                     </li>
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
                                         <label>Email</label>
-                                        <input type="email" th:field="*{email}" placeholder="Example: example@gmail.com">
+                                        <input type="email" id="email" th:field="*{email}" placeholder="Example: example@gmail.com">
                                         <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                                        <span class="text-danger" id="emailError"></span>
                                     </li>
                                     <li class="form-fill-li" data-animate="animate__fadeInUp">
                                         <label>Phone number</label>
@@ -885,7 +889,21 @@
         });
     });
 </script>
+<script>
+    document.getElementById("email").addEventListener("input", function() {
+        const email = this.value;
+        const errorSpan = document.getElementById("emailError");
 
+        // Regex cơ bản cho email
+        const emailRegex = /^(?!.*\.\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (!emailRegex.test(email)) {
+            errorSpan.textContent = "Vui lòng nhập email dưới dạng xxx@gmail.com";
+        } else {
+            errorSpan.textContent = "";
+        }
+    });
+</script>
 <!-- back-to-top end -->
 <!-- plugin js -->
 <script th:src="@{/web/assert/js/plugin.js}"></script>
