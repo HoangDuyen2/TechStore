@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.service.interfaces;
 
+import hcmute.edu.vn.techstore.dto.request.SendDiscountRequest;
 import hcmute.edu.vn.techstore.entity.DiscountEntity;
 import hcmute.edu.vn.techstore.dto.request.DiscountRequest;
 import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
@@ -26,4 +27,8 @@ public interface IDiscountService {
     boolean checkDiscount(String code);
 
     String getTotalAvailableDiscount();
+
+    boolean checkDiscountQuantity(SendDiscountRequest sendDiscountRequest);
+
+    boolean sendEmailDiscounts(SendDiscountRequest request);
 }

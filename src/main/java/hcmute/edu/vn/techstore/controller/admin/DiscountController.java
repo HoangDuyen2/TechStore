@@ -1,6 +1,7 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
 import hcmute.edu.vn.techstore.Enum.EDiscountType;
+import hcmute.edu.vn.techstore.dto.request.SendDiscountRequest;
 import hcmute.edu.vn.techstore.entity.DiscountEntity;
 import hcmute.edu.vn.techstore.dto.request.DiscountRequest;
 import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
@@ -81,9 +82,9 @@ public class DiscountController {
 
     @PostMapping("/update/{id}")
     public String updateDiscount(@PathVariable("id") Long id,
-                                  @Valid @ModelAttribute("discount") DiscountRequest discountRequest,
-                                  BindingResult bindingResult,
-                                  Model model) {
+                                 @Valid @ModelAttribute("discount") DiscountRequest discountRequest,
+                                 BindingResult bindingResult,
+                                 Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("error", "Validation failed. Please correct the errors and try again.");
             model.addAttribute("discountId", id);
@@ -108,6 +109,32 @@ public class DiscountController {
         } else {
             response.put("status", "error");
             response.put("message", "Failed to delete the discount.");
+            return org.springframework.http.ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<Map<String, String>> sendDiscount(@RequestBody SendDiscountRequest sendDiscountRequest) {
+        Map<String, String> response = new HashMap<>();
+        if (sendDiscountRequest.getDiscountId() == null ||
+                (sendDiscountRequest.getUserIds() == null || sendDiscountRequest.getUserIds().isEmpty()) &&
+                        (sendDiscountRequest.getGroupIds() == null || sendDiscountRequest.getGroupIds().isEmpty())) {
+            response.put("status", "error");
+            response.put("message", "Invalid request data.");
+            return org.springframework.http.ResponseEntity.badRequest().body(response);
+        }
+        if (!discountService.checkDiscountQuantity(sendDiscountRequest)) {
+            response.put("status", "error");
+            response.put("message", "Not enough discount quantity available.");
+            return org.springframework.http.ResponseEntity.badRequest().body(response);
+        }
+        if (discountService.sendEmailDiscounts(sendDiscountRequest)) {
+            response.put("status", "success");
+            response.put("message", "Discount sent successfully.");
+            return org.springframework.http.ResponseEntity.ok(response);
+        } else {
+            response.put("status", "error");
+            response.put("message", "Failed to send the discount.");
             return org.springframework.http.ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
