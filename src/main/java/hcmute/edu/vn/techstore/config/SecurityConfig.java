@@ -34,6 +34,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products","/products/**", "/forgot-password","/api/products/search","/about-us")
                         .permitAll()
+                        .requestMatchers("/compare/**")
+                        .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
                         .requestMatchers("/staff/**", "/admin/asset/**")

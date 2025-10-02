@@ -126,6 +126,10 @@
                                                 <span class="product-icon"><i class="feather-eye"></i></span>
                                                 <span class="tooltip-text">quickview</span>
                                             </a>
+                                            <a href="#" class="compare-btn" th:data-product-id="${product.getId()}">
+                                                <span class="product-icon"><i class="feather-bar-chart-2"></i></span>
+                                                <span class="tooltip-text">so sánh</span>
+                                            </a>
                                         </div>
                                         <!-- Thêm thuộc tính xác thực -->
                                         <div th:attr="data-authenticated=${user != null}"></div>
@@ -185,6 +189,10 @@
                                             <a href="#quickview-modal" data-bs-toggle="modal" class="quick-view">
                                                 <span class="product-icon"><i class="feather-eye"></i></span>
                                                 <span class="tooltip-text">quickview</span>
+                                            </a>
+                                            <a href="#" class="compare-btn" th:data-product-id="${product.getId()}" th:if="${user != null}">
+                                                <span class="product-icon"><i class="feather-bar-chart-2"></i></span>
+                                                <span class="tooltip-text">so sánh</span>
                                             </a>
                                         </div>
                                     </div>
@@ -649,6 +657,66 @@
 <!-- cart-drawer start -->
 <div th:insert="~{web/fragments/cart_drawer::cart-drawer}"></div>
 <!-- cart-drawer end -->
+
+<!-- Product Selection Modal for Compare -->
+<div class="modal fade" id="productSelectionModal" tabindex="-1" aria-labelledby="productSelectionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productSelectionModalLabel">
+                    <i class="feather-search"></i> Chọn sản phẩm để so sánh
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="productSearchInput" class="form-label">Tìm kiếm sản phẩm:</label>
+                    <input type="text" class="form-control" id="productSearchInput" 
+                           placeholder="Nhập tên sản phẩm để tìm kiếm..." autocomplete="off">
+                </div>
+                <div id="productSearchResults" class="search-results-container" style="max-height: 400px; overflow-y: auto;">
+                    <div class="text-center py-4">
+                        <i class="feather-search text-muted" style="font-size: 2rem;"></i>
+                        <p class="text-muted mt-2">Nhập tên sản phẩm để bắt đầu tìm kiếm</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Product Selection Modal End -->
+
+<!-- Compare Product Modal -->
+<div class="modal fade" id="compareModal" tabindex="-1" aria-labelledby="compareModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="compareModalLabel">
+                    <i class="feather-bar-chart-2"></i> So sánh sản phẩm
+                </h5>
+                <button type="button" class="btn-close close-compare-modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="compareModalBody">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Đang tải danh sách so sánh...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger clear-all-compare-btn">
+                    <i class="fas fa-trash"></i> Xóa tất cả
+                </button>
+                <button type="button" class="btn btn-secondary close-compare-modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Compare Product Modal End -->
 <!-- bottom-menu start -->
 <div class="bottom-menu">
     <ul class="bottom-menu-element">
@@ -712,6 +780,7 @@
 <script th:src="@{/web/assert/js/plugin.js}"></script>
 <!-- theme js -->
 <script th:src="@{/web/assert/js/main.js}"></script>
+<script th:src="@{/web/assert/js/compare-product.js}"></script>
 <script>
     function addToCart(button) {
         const isAuthenticated = [[${#authentication.principal != 'anonymousUser'}]];
