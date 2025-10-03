@@ -309,10 +309,13 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean isValidResetToken(String token) {
         UserEntity user = userRepository.findByResetPasswordTokenAndExpiresAfter(
-                token, 
+                token,
                 LocalDateTime.now()
         ).orElse(null);
         return user != null;
+    }
+
+    @Override
     public List<UserSearchResponse> searchUsers(String keyword) {
         // Create specifications for each search criterion
         Specification<UserEntity> hasExactEmail = UserSpecification.hasEmail(keyword);
