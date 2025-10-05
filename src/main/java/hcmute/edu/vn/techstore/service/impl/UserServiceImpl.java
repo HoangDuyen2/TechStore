@@ -309,10 +309,13 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean isValidResetToken(String token) {
         UserEntity user = userRepository.findByResetPasswordTokenAndExpiresAfter(
-                token, 
+                token,
                 LocalDateTime.now()
         ).orElse(null);
         return user != null;
+    }
+
+    @Override
     public List<UserSearchResponse> searchUsers(String keyword) {
         // Create specifications for each search criterion
         Specification<UserEntity> hasExactEmail = UserSpecification.hasEmail(keyword);
@@ -345,9 +348,14 @@ public class UserServiceImpl implements IUserService {
         // Email regex pattern
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
-        // Phone number regex pattern (simple version, adjust as needed for your requirements)
-        String phoneRegex = "^\\d{10,15}$";  // Accepts 10-15 digits
+        // Phone number regex pattern (10-15 digits)
+        String phoneRegex = "^\\d{10,15}$";
 
-        return input.matches(emailRegex) || input.matches(phoneRegex);
+        // General string pattern (letters, numbers, underscore, min length 1)
+        String generalStringRegex = "^[a-zA-Z0-9_]+$";
+
+        return input.matches(emailRegex)
+                || input.matches(phoneRegex)
+                || input.matches(generalStringRegex);
     }
 }

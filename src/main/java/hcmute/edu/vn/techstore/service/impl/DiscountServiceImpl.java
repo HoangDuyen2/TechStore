@@ -1,12 +1,18 @@
 package hcmute.edu.vn.techstore.service.impl;
 
 import hcmute.edu.vn.techstore.Enum.EDiscountType;
+import hcmute.edu.vn.techstore.dto.request.SendDiscountRequest;
+import hcmute.edu.vn.techstore.dto.response.UserSearchResponse;
 import hcmute.edu.vn.techstore.entity.DiscountEntity;
 import hcmute.edu.vn.techstore.dto.request.DiscountRequest;
 import hcmute.edu.vn.techstore.dto.response.DiscountResponse;
 import hcmute.edu.vn.techstore.repository.DiscountRepository;
 import hcmute.edu.vn.techstore.repository.OrderRepository;
 import hcmute.edu.vn.techstore.service.interfaces.IDiscountService;
+import hcmute.edu.vn.techstore.service.interfaces.IEmailService;
+import hcmute.edu.vn.techstore.service.interfaces.IGroupService;
+import hcmute.edu.vn.techstore.service.interfaces.IUserService;
+import hcmute.edu.vn.techstore.utils.PriceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +27,10 @@ import java.util.Set;
 public class DiscountServiceImpl implements IDiscountService {
     private final DiscountRepository discountRepository;
     private final OrderRepository orderRepository;
+    private final IEmailService emailService;
+    private final IUserService userService;
+    private final IGroupService groupService;
+    private final PriceUtil priceUtil;
 
     @Override
     public Page<DiscountResponse> findAll(Pageable pageable) {
@@ -126,5 +136,59 @@ public class DiscountServiceImpl implements IDiscountService {
             }
         }
         return String.valueOf(totalAvailableDiscount);
+    }
+
+    @Override
+    public boolean checkDiscountQuantity(SendDiscountRequest sendDiscountRequest) {
+        DiscountEntity discount = discountRepository.findById(sendDiscountRequest.getDiscountId()).orElse(null);
+        if (discount == null) {
+            return false;
+        }
+        if (discount.getQuantity() <= 0) {
+            return false;
+        }
+        Set<Long> userIdSet = new HashSet<>();
+        if (sendDiscountRequest.getUserIds() != null && !sendDiscountRequest.getUserIds().isEmpty()) {
+            userIdSet = new HashSet<>(sendDiscountRequest.getUserIds());
+        }
+        if (sendDiscountRequest.getGroupIds() != null && !sendDiscountRequest.getGroupIds().isEmpty()) {
+            for (Long groupId : sendDiscountRequest.getGroupIds()) {
+                groupService.getGroupDetailById(groupId).getUsers().stream()
+                        .map(UserSearchResponse::getId)
+                        .forEach(userIdSet::add);
+            }
+        }
+        return discount.getQuantity() >= userIdSet.size();
+    }
+
+    @Override
+    public boolean sendEmailDiscounts(SendDiscountRequest sendDiscountRequest) {
+        DiscountEntity discount = discountRepository.findById(sendDiscountRequest.getDiscountId()).orElse(null);
+        if (discount == null) {
+            return false;
+        }
+        Set<String> emailSet = new HashSet<>();
+        if (sendDiscountRequest.getUserIds() != null && !sendDiscountRequest.getUserIds().isEmpty()) {
+            for (Long userId : sendDiscountRequest.getUserIds()) {
+                String email = userService.getUserById(userId).getEmail();
+                emailSet.add(email);
+            }
+        }
+        if (sendDiscountRequest.getGroupIds() != null && !sendDiscountRequest.getGroupIds().isEmpty()) {
+            for (Long groupId : sendDiscountRequest.getGroupIds()) {
+                groupService.getGroupDetailById(groupId).getUsers().stream()
+                        .map(UserSearchResponse::getEmail)
+                        .forEach(emailSet::add);
+            }
+        }
+        for (String email : emailSet) {
+            if (EDiscountType.COUPON.equals(discount.getDiscountType())) {
+                emailService.sendDiscountCode(email, discount.getCode(), discount.getAmount().toString(), "%");
+            } else {
+                emailService.sendDiscountCode(email, discount.getCode(), priceUtil.formatPrice(priceUtil.parsePrice(discount.getAmount().toString())), "$");
+            }
+        }
+        decreaseQuantity(discount.getCode(), emailSet.size());
+        return true;
     }
 }
