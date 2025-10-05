@@ -156,6 +156,14 @@
                                                         <div th:if="${order.orderStatus.name() == 'SHIPPING'}">
                                                             <a class="btn-order-tab btn-order-cancel flex-center" th:href="@{/orders/{id}/received(id=${order.id})}">Received</a>
                                                         </div>
+                                                        <div th:if="${order.orderStatus.name() == 'DELIVERED_SUCCESSFULLY'}">
+                                                            <button
+                                                                    class="btn-order-tab btn-order-change flex-center"
+                                                                    th:attr="data-order-id=${order.id}"
+                                                                    onclick="downloadInvoice(this.getAttribute('data-order-id'))">
+                                                                Download Invoice
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 <tr class="order-hidden">
@@ -908,6 +916,42 @@
                         alert(error.message);
                     })
                     .finally(() => closeAddressModal());
+            }
+        </script>
+        <script>
+            async function downloadInvoice(orderId) {
+                try {
+                    const res = await fetch(`/api/orders/${orderId}/invoice`, {
+                        method: 'GET'
+                        // Nếu dùng JWT qua cookie HttpOnly thì không cần header gì thêm.
+                        // Nếu bạn dùng Bearer token thủ công, thêm headers: { 'Authorization': 'Bearer ' + token }
+                    });
+
+                    if (!res.ok) {
+                        // Thông báo lỗi rõ ràng theo các HTTP status trong Service: 403/404/409/500...
+                        const message = await res.text();
+                        alert(message || `Cannot download invoice. HTTP ${res.status}`);
+                        return;
+                        // Gợi ý hiển thị cụ thể:
+                        // 403 -> "Bạn không có quyền tải hóa đơn này"
+                        // 404 -> "Không tìm thấy đơn hàng"
+                        // 409 -> "Chỉ được in hóa đơn sau khi đơn đã giao thành công"
+                    }
+
+                    const blob = await res.blob();
+                    // Tạo link tải file
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `TechStore-invoice.pdf`; // tên file tải xuống
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                } catch (e) {
+                    console.error(e);
+                    alert('Network error. Please try again.');
+                }
             }
         </script>
     </body>

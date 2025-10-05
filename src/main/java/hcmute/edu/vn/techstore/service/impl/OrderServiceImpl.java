@@ -16,8 +16,11 @@ import hcmute.edu.vn.techstore.service.mail.EmailSender;
 import hcmute.edu.vn.techstore.service.mail.OrderConcreteSubject;
 import hcmute.edu.vn.techstore.utils.PriceUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
@@ -38,6 +41,7 @@ public class OrderServiceImpl implements IOrderService {
     private final OrderConverter orderConverter;
     private final ReportContext reportContext;
     private final EmailSender emailSender;
+    private final IPdfService pdfService;
 
 
 
@@ -265,5 +269,27 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public ReportResponse getReport(LocalDate startDate, LocalDate endDate, String reportType) {
         return reportContext.generateReport(reportType, startDate, endDate);
+    }
+
+    @Override
+    public ByteArrayOutputStream generateInvoice(String currentUserEmail, Long orderId) {
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found"));
+
+        String ownerEmail = order.getUser().getAccount().getEmail();
+        if (ownerEmail == null || !ownerEmail.equalsIgnoreCase(currentUserEmail)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to download this invoice");
+        }
+
+        if (order.getOrderStatus() != EOrderStatus.DELIVERED_SUCCESSFULLY) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Invoice is only available after the order is delivered successfully"
+            );
+        }
+
+        OrderResponse orderResponse = orderConverter.toResponse(order);
+
+        return pdfService.generateInvoicePdf(orderResponse);
     }
 }
