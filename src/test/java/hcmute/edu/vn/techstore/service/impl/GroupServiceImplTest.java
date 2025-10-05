@@ -52,8 +52,10 @@ class GroupServiceImplTest {
         @DisplayName("User is in the group")
         void testIsUserInGroup_UserInGroup() {
             // Given
-            Long groupId = 3L;
             Long userId = 1L;
+            Long groupId = 2L;
+            group.getUsers().add(user);
+            user.getGroups().add(group);
 
             // Mock repository behavior
             when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -64,16 +66,16 @@ class GroupServiceImplTest {
 
             // Then
             assertTrue(result);
-            verify(userRepository).findById(userId);
-            verify(groupRepository).findById(groupId);
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
         }
 
         @Test
         @DisplayName("User is not in the group")
         void testIsUserInGroup_UserNotInGroup() {
             // Given
-            Long groupId = 1L;
             Long userId = 1L;
+            Long groupId = 2L;
 
             // Mock repository behavior
             when(userRepository.findById(userId)).thenReturn(Optional.of(user));
@@ -84,28 +86,48 @@ class GroupServiceImplTest {
 
             // Then
             assertFalse(result);
-            verify(userRepository).findById(userId);
-            verify(groupRepository).findById(groupId);
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
         }
 
         @Test
-        @DisplayName("User or Group not found")
-        void testIsUserInGroup_UserOrGroupNotFound() {
+        @DisplayName("User not found")
+        void testIsUserInGroup_UserNotFound() {
             // Given
-            Long groupId = 1L;
             Long userId = 10L;
+            Long groupId = 2L;
 
             // Mock repository behavior
-            when(userRepository.findById(userId)).thenReturn(Optional.of(new UserEntity()));
-            when(groupRepository.findById(groupId)).thenReturn(Optional.of(new GroupEntity()));
+            when(userRepository.findById(userId)).thenReturn(Optional.empty());
+            when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));
 
             // When
             boolean result = groupService.isUserInGroup(groupId, userId);
 
             // Then
             assertFalse(result);
-            verify(userRepository).findById(userId);
-            verify(groupRepository).findById(groupId);
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
+        }
+
+        @Test
+        @DisplayName("Group not found")
+        void testIsUserInGroup_GroupNotFound() {
+            // Given
+            Long userId = 1L;
+            Long groupId = 10L;
+
+            // Mock repository behavior
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            when(groupRepository.findById(groupId)).thenReturn(Optional.empty());
+
+            // When
+            boolean result = groupService.isUserInGroup(groupId, userId);
+
+            // Then
+            assertFalse(result);
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
         }
     }
 
@@ -130,10 +152,10 @@ class GroupServiceImplTest {
             assertTrue(result);
             assertTrue(group.getUsers().contains(user));
             assertTrue(user.getGroups().contains(group));
-            verify(userRepository).findById(userId);
-            verify(groupRepository).findById(groupId);
-            verify(groupRepository).save(group);
-            verify(userRepository).save(user);
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
+            verify(groupRepository, atMostOnce()).save(group);
+            verify(userRepository, atMostOnce()).save(user);
         }
 
         @Test
@@ -156,8 +178,8 @@ class GroupServiceImplTest {
 
             // Then
             assertFalse(result);
-            verify(userRepository).findById(userId);
-            verify(groupRepository).findById(groupId);
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
             verify(groupRepository, never()).save(any());
             verify(userRepository, never()).save(any());
         }
