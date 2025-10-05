@@ -1,37 +1,26 @@
 <!doctype html>
 <html xmlns:th="https://www.thymeleaf.org">
 
-<!-- Mirrored from themesflat.co/html/remos/add-attributes.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:41:48 GMT -->
 <div th:insert="~{admin/fragments/head::head}"></div>
 
 <body class="body">
 
-<!-- #wrapper -->
 <div id="wrapper">
-    <!-- #page -->
     <div id="page" class="">
-        <!-- layout-wrap -->
         <div class="layout-wrap">
-            <!-- preload -->
             <div id="preload" class="preload-container">
                 <div class="preloading">
                     <span></span>
                 </div>
             </div>
-            <!-- /preload -->
-            <!-- section-menu-left -->
+
             <div th:insert="~{admin/fragments/menu-left::section-menu-left}"></div>
-            <!-- /section-menu-left -->
-            <!-- section-content-right -->
+
             <div class="section-content-right">
-                <!-- header-dashboard -->
                 <div th:insert="~{admin/fragments/header_dashboard::header-dashboard}"></div>
-                <!-- /header-dashboard -->
-                <!-- main-content -->
+
                 <div class="main-content">
-                    <!-- main-content-wrap -->
                     <div class="main-content-inner">
-                        <!-- main-content-wrap -->
                         <div class="main-content-wrap">
                             <div class="flex items-center flex-wrap justify-between gap20 mb-27">
                                 <h3>Report</h3>
@@ -49,6 +38,7 @@
                                     </li>
                                 </ul>
                             </div>
+
                             <!-- Date range selector -->
                             <div class="tf-section mb-30">
                                 <div class="wg-box">
@@ -81,7 +71,7 @@
                             </div>
 
                             <div class="tf-section-3 mb-30">
-                                <!-- chart-default -->
+                                <!-- Total Orders Card -->
                                 <div class="wg-chart-default">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap14">
@@ -116,8 +106,8 @@
                                         <div id="line-chart-11"></div>
                                     </div>
                                 </div>
-                                <!-- /chart-default -->
-                                <!-- chart-default -->
+
+                                <!-- Total Revenue Card -->
                                 <div class="wg-chart-default">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap14">
@@ -126,9 +116,9 @@
                                                      viewBox="0 0 48 52" fill="none">
                                                     <path opacity="0.08"
                                                           d="M19.1086 2.12943C22.2027 0.343099 26.0146 0.343099 29.1086 2.12943L42.4913 9.85592C45.5853 11.6423 47.4913 14.9435 47.4913 18.5162V33.9692C47.4913 37.5418 45.5853 40.8431 42.4913 42.6294L29.1086 50.3559C26.0146 52.1423 22.2027 52.1423 19.1086 50.3559L5.72596 42.6294C2.63194 40.8431 0.725956 37.5418 0.725956 33.9692V18.5162C0.725956 14.9435 2.63195 11.6423 5.72596 9.85592L19.1086 2.12943Z"
-                                                          fill="url(#paint0_linear_53_110)"></path>
+                                                          fill="url(#paint0_linear_53_111)"></path>
                                                     <defs>
-                                                        <linearGradient id="paint0_linear_53_110" x1="-43.532"
+                                                        <linearGradient id="paint0_linear_53_111" x1="-43.532"
                                                                         y1="-34.3465" x2="37.6769" y2="43.9447"
                                                                         gradientUnits="userSpaceOnUse">
                                                             <stop stop-color="#92BCFF"></stop>
@@ -152,8 +142,8 @@
                                         <div id="line-chart-12"></div>
                                     </div>
                                 </div>
-                                <!-- /chart-default -->
-                                <!-- chart-default -->
+
+                                <!-- Products Sold Card -->
                                 <div class="wg-chart-default">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap14">
@@ -162,9 +152,9 @@
                                                      viewBox="0 0 48 52" fill="none">
                                                     <path opacity="0.08"
                                                           d="M19.1086 2.12943C22.2027 0.343099 26.0146 0.343099 29.1086 2.12943L42.4913 9.85592C45.5853 11.6423 47.4913 14.9435 47.4913 18.5162V33.9692C47.4913 37.5418 45.5853 40.8431 42.4913 42.6294L29.1086 50.3559C26.0146 52.1423 22.2027 52.1423 19.1086 50.3559L5.72596 42.6294C2.63194 40.8431 0.725956 37.5418 0.725956 33.9692V18.5162C0.725956 14.9435 2.63195 11.6423 5.72596 9.85592L19.1086 2.12943Z"
-                                                          fill="url(#paint0_linear_53_110)"></path>
+                                                          fill="url(#paint0_linear_53_112)"></path>
                                                     <defs>
-                                                        <linearGradient id="paint0_linear_53_110" x1="-43.532"
+                                                        <linearGradient id="paint0_linear_53_112" x1="-43.532"
                                                                         y1="-34.3465" x2="37.6769" y2="43.9447"
                                                                         gradientUnits="userSpaceOnUse">
                                                             <stop stop-color="#92BCFF"></stop>
@@ -188,15 +178,31 @@
                                         <div id="line-chart-13"></div>
                                     </div>
                                 </div>
-                                <!-- /chart-default -->
                             </div>
 
+                            <!-- Charts Section -->
                             <div class="tf-section mb-30">
                                 <div class="wg-box">
-                                    <h5 class="mb-20" th:text="${reportType == 'default' ? 'Top Selling Products' : 
+                                    <h5 class="mb-20">Sales Overview</h5>
+                                    <div style="height: 400px;">
+                                        <canvas id="salesChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Top Selling Products with Chart -->
+                            <div class="tf-section mb-30">
+                                <div class="wg-box">
+                                    <h5 class="mb-20" th:text="${reportType == 'default' ? 'Top Selling Products' :
                                                                   reportType == 'categoryReport' ? 'Top Selling Categories' :
                                                                   reportType == 'dailySalesReport' ? 'Top Selling Days' :
                                                                   'Top Customers'}">Top Selling Products</h5>
+
+                                    <!-- Chart for Top Selling Products -->
+                                    <div style="height: 300px; margin-bottom: 30px;">
+                                        <canvas id="topProductsChart"></canvas>
+                                    </div>
+
                                     <div class="flex items-center justify-between gap10 flex-wrap">
                                         <div class="wg-filter flex-grow">
                                             <div class="show">
@@ -213,7 +219,7 @@
                                             <form class="form-search">
                                                 <fieldset class="name">
                                                     <input type="text" placeholder="Search here..."
-                                                           class="product-search-input" name="name" ...>
+                                                           class="product-search-input" name="name">
                                                 </fieldset>
                                                 <div class="button-submit">
                                                     <button class="" type="submit"><i class="icon-search"></i></button>
@@ -237,15 +243,15 @@
                                             <li class="product-item gap14"
                                                 th:each="product : ${report.topSellingProducts}">
                                                 <div class="image no-bg">
-                                                    <img th:src="${product.getImage()}" alt="Product Image">
+                                                    <img th:src="${product.image}" alt="Product Image">
                                                 </div>
                                                 <div class="flex items-center justify-between gap20 flex-grow">
                                                     <div class="name">
-                                                        <a th:href="@{/admin/products/images/{id}(id=${product.getId()})}"
+                                                        <a th:href="@{/admin/products/images/{id}(id=${product.id})}"
                                                            class="body-title-2"
-                                                           th:text="${product.getName()}"></a>
+                                                           th:text="${product.name}"></a>
                                                     </div>
-                                                    <div class="body-text" th:text="${product.getQuantitySold()}"></div>
+                                                    <div class="body-text" th:text="${product.quantitySold}"></div>
                                                     <div class="body-text"
                                                          th:text="${'$' + #numbers.formatDecimal(product.revenue, 0, 'COMMA', 2, 'POINT')}"></div>
                                                 </div>
@@ -261,7 +267,7 @@
                                 </div>
                             </div>
 
-                            <!-- order-list -->
+                            <!-- Recent Orders -->
                             <div class="wg-box">
                                 <h5 class="mb-20">Recent Orders</h5>
                                 <div class="wg-table table-all-user">
@@ -287,22 +293,22 @@
                                             <div class="flex items-center justify-between gap20 flex-grow">
                                                 <div class="body-text"
                                                      style="width: 10%; min-width: 120px;margin-left: 10px"
-                                                     th:text="${eachOrder.getOrderId()}"></div>
+                                                     th:text="${eachOrder.orderId}"></div>
                                                 <div class="body-text body-title-2" style="width: 15%; min-width: 150px"
-                                                     th:text="${eachOrder.getCustomerName()}"></div>
+                                                     th:text="${eachOrder.customerName}"></div>
                                                 <div class="body-text" style="width: 40%; min-width: 150px"
-                                                     th:text="${eachOrder.getOrderDate()}"></div>
+                                                     th:text="${eachOrder.orderDate}"></div>
                                                 <div class="body-text" style="width: 35%; min-width: 120px"
-                                                     th:text="${'$' + #numbers.formatDecimal(eachOrder.getAmount(), 0, 'COMMA', 2, 'POINT')}"></div>
+                                                     th:text="${'$' + #numbers.formatDecimal(eachOrder.amount, 0, 'COMMA', 2, 'POINT')}"></div>
                                             </div>
                                             <div class="list-icon-function" style="width: 10%">
                                                 <div class="item eye">
                                                     <a class="icon-eye"
-                                                       th:href="@{/staff/orders/{id}(id=${eachOrder.getOrderId()})}"></a>
+                                                       th:href="@{/staff/orders/{id}(id=${eachOrder.orderId})}"></a>
                                                 </div>
                                                 <div class="item edit">
                                                     <a class="icon-edit"
-                                                       th:href="@{'/staff/orders/' + ${eachOrder.getOrderId()} + '?status=true'}"></a>
+                                                       th:href="@{'/staff/orders/' + ${eachOrder.orderId} + '?status=true'}"></a>
                                                 </div>
                                             </div>
                                         </li>
@@ -315,30 +321,24 @@
                                     </ul>
                                 </div>
                             </div>
-                            <!-- /order-list -->
                         </div>
-                        <!-- /main-content-wrap -->
                     </div>
-                    <!-- /main-content-wrap -->
-                    <!-- bottom-page -->
+
                     <div th:insert="~{admin/fragments/bottom_page::bottom-page}"></div>
-                    <!-- /bottom-page -->
                 </div>
-                <!-- /main-content -->
             </div>
-            <!-- /section-content-right -->
         </div>
-        <!-- /layout-wrap -->
     </div>
-    <!-- /#page -->
 </div>
-<!-- /#wrapper -->
 
 <!-- Javascript -->
 <div th:insert="~{admin/fragments/script::script}"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <script th:src="@{/admin/asset/js/pagination-filter.js}"></script>
-<script>
+
+<script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialize pagination
         initPaginationAndFilter({
             itemSelector: '.product-item',
             listContainerSelector: '.flex.flex-column',
@@ -349,11 +349,143 @@
             displayStyle: 'flex',
             itemsPerPage: 5
         });
+
+        // Get data from Thymeleaf
+        const topProducts = /*[[${report.topSellingProducts}]]*/ [];
+        const totalRevenue = /*[[${report.totalRevenue}]]*/ 0;
+        const totalOrders = /*[[${report.totalOrders}]]*/ 0;
+        const totalProductsSold = /*[[${report.totalProductsSold}]]*/ 0;
+
+        // Sales Overview Chart (Doughnut)
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        new Chart(salesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Revenue', 'Orders', 'Products Sold'],
+                datasets: [{
+                    data: [totalRevenue, totalOrders * 100, totalProductsSold * 10],
+                    backgroundColor: [
+                        'rgba(35, 119, 252, 0.8)',
+                        'rgba(146, 188, 255, 0.8)',
+                        'rgba(99, 102, 241, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(35, 119, 252, 1)',
+                        'rgba(146, 188, 255, 1)',
+                        'rgba(99, 102, 241, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sales Distribution Overview',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Top Products Chart (Horizontal Bar)
+        if (topProducts && topProducts.length > 0) {
+            const productNames = topProducts.map(p => p.name.length > 20 ? p.name.substring(0, 20) + '...' : p.name);
+            const productQuantities = topProducts.map(p => p.quantitySold);
+            const productRevenues = topProducts.map(p => p.revenue);
+
+            const topProductsCtx = document.getElementById('topProductsChart').getContext('2d');
+            new Chart(topProductsCtx, {
+                type: 'bar',
+                data: {
+                    labels: productNames,
+                    datasets: [
+                        {
+                            label: 'Quantity Sold',
+                            data: productQuantities,
+                            backgroundColor: 'rgba(35, 119, 252, 0.7)',
+                            borderColor: 'rgba(35, 119, 252, 1)',
+                            borderWidth: 2,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Revenue ($)',
+                            data: productRevenues,
+                            backgroundColor: 'rgba(146, 188, 255, 0.7)',
+                            borderColor: 'rgba(146, 188, 255, 1)',
+                            borderWidth: 2,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Top Products Performance',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Quantity Sold'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Revenue ($)'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
     });
 </script>
 
 </body>
-
-
-<!-- Mirrored from themesflat.co/html/remos/report.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 02 Apr 2025 06:43:43 GMT -->
 </html>
