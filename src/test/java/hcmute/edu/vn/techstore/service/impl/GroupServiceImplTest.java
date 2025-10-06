@@ -220,4 +220,78 @@ class GroupServiceImplTest {
             verify(userRepository, never()).save(any());
         }
     }
+
+    @Nested
+    @DisplayName("Test removeUserFromGroup method")
+    class RemoveUserFromGroup {
+        @Test
+        @DisplayName("Remove user from group successfully")
+        void testRemoveUserFromGroup_Success() {
+            // Given
+            Long userId = 1L;
+            Long groupId = 2L;
+            group.getUsers().add(user);
+            user.getGroups().add(group);
+
+            // Mock repository behavior
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));
+
+            // When
+            boolean result = groupService.removeUserFromGroup(groupId, userId);
+
+            // Then
+            assertTrue(result);
+            assertFalse(group.getUsers().contains(user));
+            assertFalse(user.getGroups().contains(group));
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
+            verify(groupRepository, atMostOnce()).save(group);
+            verify(userRepository, atMostOnce()).save(user);
+        }
+
+        @Test
+        @DisplayName("Remove user from group fails when user not found")
+        void testRemoveUserFromGroup_UserNotFound() {
+            // Given
+            Long userId = 1L;
+            Long groupId = 2L;
+
+            // Mock repository behavior
+            when(userRepository.findById(userId)).thenReturn(Optional.empty());
+            when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));
+
+            // When
+            boolean result = groupService.removeUserFromGroup(groupId, userId);
+
+            // Then
+            assertFalse(result);
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
+            verify(groupRepository, never()).save(any());
+            verify(userRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("Remove user from group fails when group not found")
+        void testRemoveUserFromGroup_GroupNotFound() {
+            // Given
+            Long userId = 1L;
+            Long groupId = 2L;
+
+            // Mock repository behavior
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            when(groupRepository.findById(groupId)).thenReturn(Optional.empty());
+
+            // When
+            boolean result = groupService.removeUserFromGroup(groupId, userId);
+
+            // Then
+            assertFalse(result);
+            verify(userRepository, atMostOnce()).findById(userId);
+            verify(groupRepository, atMostOnce()).findById(groupId);
+            verify(groupRepository, never()).save(any());
+            verify(userRepository, never()).save(any());
+        }
+    }
 }
