@@ -1,5 +1,6 @@
 package hcmute.edu.vn.techstore.service.impl;
 
+import hcmute.edu.vn.techstore.dto.request.GroupCreateRequest;
 import hcmute.edu.vn.techstore.entity.GroupEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.GroupRepository;
@@ -292,6 +293,50 @@ class GroupServiceImplTest {
             verify(groupRepository, atMostOnce()).findById(groupId);
             verify(groupRepository, never()).save(any());
             verify(userRepository, never()).save(any());
+        }
+    }
+
+    @Nested
+    @DisplayName("Test createGroup method")
+    class CreateGroup {
+        @Test
+        @DisplayName("Create group successfully")
+        void testCreateGroup_Success() {
+            // Given
+            GroupCreateRequest request = new GroupCreateRequest();
+            request.setName("test");
+            request.setDescription("This is a test group");
+
+            // Mock repository behavior
+            when(groupRepository.existsByName(request.getName())).thenReturn(false);
+
+            // When
+            boolean result = groupService.createGroup(request);
+
+            // Then
+            assertTrue(result);
+            verify(groupRepository, atMostOnce()).existsByName(request.getName());
+            verify(groupRepository, atMostOnce()).save(any(GroupEntity.class));
+        }
+
+        @Test
+        @DisplayName("Create group fails when group name already exists")
+        void testCreateGroup_GroupNameExists() {
+            // Given
+            GroupCreateRequest request = new GroupCreateRequest();
+            request.setName("test");
+            request.setDescription("This is a test group");
+
+            // Mock repository behavior
+            when(groupRepository.existsByName(request.getName())).thenReturn(true);
+
+            // When
+            boolean result = groupService.createGroup(request);
+
+            // Then
+            assertFalse(result);
+            verify(groupRepository, atMostOnce()).existsByName(request.getName());
+            verify(groupRepository, never()).save(any(GroupEntity.class));
         }
     }
 }
