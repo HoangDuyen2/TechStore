@@ -44,6 +44,7 @@
                             </div>
                             <form th:action="@{/admin/update-profile}" method="post" enctype="multipart/form-data"
                                   class="form-add-new-user form-style-2" th:object="${adminProfile}">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <div class="wg-box">
                                     <div class="left">
                                         <h5 class="mb-4">Account</h5>

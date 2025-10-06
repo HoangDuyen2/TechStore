@@ -85,6 +85,7 @@
                                     </div>
                                     <div class="contact-form-list">
                                         <form method="post">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                             <ul class="form-fill">
                                                 <li class="form-fill-li name" data-animate="animate__fadeInUp">
                                                     <label>Name</label>
@@ -604,6 +605,7 @@
         <!-- cart-drawer start -->
         <div class="cart-drawer" id="cart-drawer">
             <form method="post" action="javascript:void(0)" class="drawer-contents">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <div class="drawer-fixed-header">
                     <div class="drawer-header">
                         <h6 class="drawer-header-title">Cart</h6>
