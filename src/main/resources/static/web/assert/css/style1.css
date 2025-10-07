@@ -1684,6 +1684,53 @@ button.toggler-btn span.toggler-icon {
 }
 
 /*------------------------------------------------------------------
+[29.1. Compare-wrapper css ]
+*/
+.compare-wrapper a {
+    display: flex;
+    align-items: center;
+}
+.compare-wrapper a span.compare-icon-count {
+    display: block;
+    position: relative;
+    padding: 0px 8px 0px 0px;
+}
+.compare-wrapper a span.compare-icon-count span.compare-icon {
+    display: block;
+    font-weight: normal;
+    color: var(--heading-font-color);
+    font-size: 24px;
+    line-height: 0;
+    margin-right: 10px;
+    -webkit-transition: color 0.3s ease-in-out;
+    -o-transition: color 0.3s ease-in-out;
+    transition: color 0.3s ease-in-out;
+}
+.compare-wrapper a:hover span.compare-icon-count span.compare-icon {
+    color: var(--primary-font-color);
+}
+.compare-wrapper a span.compare-icon-count span.compare-count {
+    color: var(--heading-font-color);
+    font-size: 16px;
+    position: absolute;
+    top: 3px;
+    right: -5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    line-height: 1;
+}
+@media (max-width: 1199px) {
+    .compare-wrapper a span.compare-icon-count span.compare-icon {
+        font-size: 18px;
+    }
+    .compare-wrapper a span.compare-icon-count span.compare-count {
+        top: 0px;
+    }
+}
+
+/*------------------------------------------------------------------
 [30. Social-icon css ]
 */
 ul.social-icon {

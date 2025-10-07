@@ -1,7 +1,7 @@
 <!doctype html>
 <html xmlns:th="https://www.thymeleaf.org">
 
-<head th:replace="web/fragments/head :: head('TechStore - Chi tiết sản phẩm')"></head><title>TechStore - Home</title>
+<head th:replace="~{web/fragments/head :: head('TechStore - Chi tiết sản phẩm')}"></head>
     <body>
         <!-- header-area start -->
         <div th:insert="~{web/fragments/header::header}"></div>
@@ -489,6 +489,10 @@
                                                                 <span class="product-icon"><i class="feather-eye"></i></span>
                                                                 <span class="tooltip-text">quickview</span>
                                                             </a>
+                                                            <a href="#" class="compare-btn" th:data-product-id="${product.getId()}" th:if="${user != null}">
+                                                                <span class="product-icon"><i class="feather-bar-chart-2"></i></span>
+                                                                <span class="tooltip-text">so sánh</span>
+                                                            </a>
                                                         </div>
                                                         <!-- Thêm thuộc tính xác thực -->
                                                         <div th:attr="data-authenticated=${user != null}"></div>
@@ -549,6 +553,10 @@
                                                                 <span class="product-icon"><i class="feather-eye"></i></span>
                                                                 <span class="tooltip-text">quickview</span>
                                                             </a>
+                                                            <a href="#" class="compare-btn" th:data-product-id="${product.getId()}" th:if="${user != null}">
+                                                                <span class="product-icon"><i class="feather-bar-chart-2"></i></span>
+                                                                <span class="tooltip-text">so sánh</span>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -598,6 +606,11 @@
                 </div>
             </div>
         </div>        <!-- quickview.html-modal end -->
+
+        <!-- Compare Modals -->
+        <div th:insert="~{web/fragments/compare_modals::product-selection-modal}"></div>
+        <div th:insert="~{web/fragments/compare_modals::compare-modal}"></div>
+        <!-- Compare Modals End -->
         <!-- mobile-menu start -->
         <div class="mobile-menu" id="mobile-menu">
             <div class="mobile-contents">
@@ -1296,5 +1309,6 @@
 </script>
 
 <script th:src="@{/web/assert/js/search-autocomplete.js}"></script>
+<script th:src="@{/web/assert/js/compare-product.js}"></script>
 
 </html>

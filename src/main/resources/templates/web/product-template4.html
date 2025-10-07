@@ -2510,10 +2510,17 @@
         <!-- back-to-top start -->
         <a href="javascript:void(0)" id="top" class="scroll"><span><i class="feather-arrow-up"></i></span></a>
         <!-- back-to-top end -->
+        
+        <!-- Compare Modals -->
+        <div th:insert="~{web/fragments/compare_modals::product-selection-modal}"></div>
+        <div th:insert="~{web/fragments/compare_modals::compare-modal}"></div>
+        <!-- Compare Modals End -->
+        
         <!-- plugin js -->
         <script th:src="@{/web/assert/js/plugin.js}"></script>
         <!-- theme js -->
         <script th:src="@{/web/assert/js/main.js}"></script>
+        <script th:src="@{/web/assert/js/compare-product.js}"></script>
     </body>
 
 <!-- Mirrored from spacingtech.com/html/etro/etro/product-template4.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Mar 2025 13:01:36 GMT -->
