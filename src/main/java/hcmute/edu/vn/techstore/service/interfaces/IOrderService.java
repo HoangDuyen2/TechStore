@@ -6,6 +6,7 @@ import hcmute.edu.vn.techstore.dto.response.OrderCompleteRespone;
 import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.dto.response.ReportResponse;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface IOrderService {
     String getTotalProductsSold();
 
     ReportResponse getReport(LocalDate startDate, LocalDate endDate, String reportType);
+
+    ByteArrayOutputStream generateInvoice(String email, Long orderId);
 }

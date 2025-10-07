@@ -38,6 +38,8 @@ public class SecurityConfig {
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
+                        .requestMatchers("/api/orders/**")
+                        .hasRole("CUSTOMER")
                         .requestMatchers("/staff/**", "/admin/asset/**")
                         .hasAnyRole("STAFF","ADMIN")
                         .requestMatchers("/admin/**")
