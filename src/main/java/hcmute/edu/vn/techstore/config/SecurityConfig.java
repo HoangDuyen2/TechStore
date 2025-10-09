@@ -44,7 +44,7 @@ public class SecurityConfig {
                                         .policyDirectives("default-src 'self'; " +
                                                 "script-src 'self'; " +
                                                 "style-src 'self'; " +
-                                                "img-src 'self' data:; " +
+                                                "img-src 'self' data: res.cloudinary.com; " +
                                                 "font-src 'self'; " +
                                                 "connect-src 'self'; " +
                                                 "form-action 'self'; " +
