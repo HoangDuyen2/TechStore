@@ -11,6 +11,7 @@
                             </div>
                             <div class="subscribe-content">
                                 <form method="post" id="contact_form" accept-charset="UTF-8" class="contact-form">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                     <input type="hidden" name="form_type" value="customer">
                                     <input type="hidden" name="utf8" value="✓">
                                     <input type="hidden" name="contact[tags]" value="newsletter">

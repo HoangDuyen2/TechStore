@@ -219,6 +219,7 @@
                                             </div>
                                             <div class="product-info" data-animate="animate__fadeInUp">
                                                 <form method="post" class="cart">
+                                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                     <div class="product-quantity-action">
                                                         <h6>Quantity:</h6>
                                                         <div class="product-quantity">
@@ -518,6 +519,7 @@
                                         <!-- spar-from start -->
                                         <div class="spr-form collapse" id="add-review">
                                             <form method="post" class="new-review-form">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                 <h3 class="spr-form-title">Write a review</h3>
                                                 <fieldset class="spr-form-contact">
                                                     <div class="spr-form-contact-name">
@@ -2256,6 +2258,7 @@
         <!-- cart-drawer start -->
         <div class="cart-drawer" id="cart-drawer">
             <form method="post" action="javascript:void(0)" class="drawer-contents">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <div class="drawer-fixed-header">
                     <div class="drawer-header">
                         <h6 class="drawer-header-title">Cart</h6>

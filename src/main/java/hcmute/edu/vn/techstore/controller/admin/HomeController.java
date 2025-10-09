@@ -1,31 +1,25 @@
 package hcmute.edu.vn.techstore.controller.admin;
 
-import hcmute.edu.vn.techstore.Enum.EGender;
 import hcmute.edu.vn.techstore.dto.interfaces.ChangePassword;
 import hcmute.edu.vn.techstore.dto.interfaces.OnUpdate;
-import hcmute.edu.vn.techstore.dto.interfaces.StaffGroup;
-import hcmute.edu.vn.techstore.dto.request.AdminProfileRequest;
+import hcmute.edu.vn.techstore.dto.request.ForgotPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.service.interfaces.IDiscountService;
 import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
 import hcmute.edu.vn.techstore.service.interfaces.IProductService;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
-import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Objects;
 import java.util.Set;
 
 @Controller
@@ -85,13 +79,13 @@ public class HomeController {
 
     @GetMapping("/forgot-password")
     public String forgotPassword(Model model) {
-        UserRequest userRequest = new UserRequest();
+        ForgotPasswordRequest userRequest = new ForgotPasswordRequest();
         model.addAttribute("adminProfile", userRequest);
         return "admin/forgot-password";
     }
 
     @PostMapping("/change-password")
-    public String changePassword(@Validated(ChangePassword.class) @ModelAttribute("adminProfile") UserRequest userRequest,
+    public String changePassword(@Valid @ModelAttribute("adminProfile") ForgotPasswordRequest userRequest,
                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "admin/forgot-password";
