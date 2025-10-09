@@ -2,6 +2,7 @@ package hcmute.edu.vn.techstore.controller.admin;
 
 import hcmute.edu.vn.techstore.dto.interfaces.ChangePassword;
 import hcmute.edu.vn.techstore.dto.interfaces.OnUpdate;
+import hcmute.edu.vn.techstore.dto.request.ForgotPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
@@ -71,7 +72,7 @@ public class ProfileController {
     }
 
     @PostMapping("/change-password")
-    public String changePassword(@Validated(ChangePassword.class) @ModelAttribute("adminProfile") UserRequest userRequest,
+    public String changePassword(@Valid @ModelAttribute("adminProfile") ForgotPasswordRequest userRequest,
                                  BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "admin/forgot-password";

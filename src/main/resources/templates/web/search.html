@@ -1118,6 +1118,7 @@
                                     </div>
                                     <div class="product-button">
                                         <form method="post" class="cart">
+                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                             <div class="pro-detail-button">
                                                 <div class="product-quantity-button">
                                                     <div class="product-quantity-action">
@@ -1625,6 +1626,7 @@
         <!-- cart-drawer start -->
         <div class="cart-drawer" id="cart-drawer">
             <form method="post" action="javascript:void(0)" class="drawer-contents">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <div class="drawer-fixed-header">
                     <div class="drawer-header">
                         <h6 class="drawer-header-title">Cart</h6>

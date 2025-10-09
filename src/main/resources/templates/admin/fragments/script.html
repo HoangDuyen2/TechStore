@@ -40,4 +40,62 @@
     <script th:src="@{/admin/asset/js/tinymce/tinymce-custom.js}"></script>
     <script th:src="@{/admin/asset/js/swiper-bundle.min.js}"></script>
     <script th:src="@{/admin/asset/js/carousel.js}"></script>
+    <script>
+    (function() {
+        var tokenMeta = document.querySelector('meta[name="_csrf"]');
+        var headerMeta = document.querySelector('meta[name="_csrf_header"]');
+        if (!tokenMeta || !headerMeta) return;
+        var csrfToken = tokenMeta.getAttribute('content');
+        var csrfHeader = headerMeta.getAttribute('content');
+
+        // Append CSRF to all non-GET forms
+        var forms = document.querySelectorAll('form');
+        forms.forEach(function(form) {
+            var method = (form.getAttribute('method') || 'GET').toUpperCase();
+            if (method === 'GET') return;
+            if (!form.querySelector('input[name="_csrf"]')) {
+                var hidden = document.createElement('input');
+                hidden.setAttribute('type', 'hidden');
+                hidden.setAttribute('name', '_csrf');
+                hidden.setAttribute('value', csrfToken);
+                form.appendChild(hidden);
+            }
+        });
+
+        // Inject into fetch
+        if (window.fetch) {
+            var originalFetch = window.fetch;
+            window.fetch = function(input, init) {
+                init = init || {};
+                init.headers = init.headers || {};
+                if (typeof init.headers.set === 'function') {
+                    init.headers.set(csrfHeader, csrfToken);
+                } else if (Array.isArray(init.headers)) {
+                    init.headers.push([csrfHeader, csrfToken]);
+                } else {
+                    init.headers[csrfHeader] = csrfToken;
+                }
+                return originalFetch(input, init);
+            };
+        }
+
+        // Inject into XHR
+        if (window.XMLHttpRequest) {
+            var origOpen = XMLHttpRequest.prototype.open;
+            var origSend = XMLHttpRequest.prototype.send;
+            XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+                this._csrfMethod = method;
+                return origOpen.apply(this, arguments);
+            };
+            XMLHttpRequest.prototype.send = function(body) {
+                try {
+                    if (this._csrfMethod && this._csrfMethod.toUpperCase() !== 'GET') {
+                        this.setRequestHeader(csrfHeader, csrfToken);
+                    }
+                } catch (e) {}
+                return origSend.apply(this, arguments);
+            };
+        }
+    })();
+    </script>
 </div>

@@ -1,21 +1,18 @@
 package hcmute.edu.vn.techstore.controller;
 
 import hcmute.edu.vn.techstore.dto.interfaces.ChangePassword;
+import hcmute.edu.vn.techstore.dto.interfaces.OnCreate;
+import hcmute.edu.vn.techstore.dto.request.ForgotPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,7 +27,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String postRegisterPage(@Validated @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) {
+    public String postRegisterPage(@Validated(OnCreate.class) @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "web/create-account";
         }
@@ -69,13 +66,13 @@ public class AuthController {
 
     @GetMapping("/forgot-password")
     public String getForgotPasswordPage(Model model) {
-        UserRequest userRequest = new UserRequest();
+        ForgotPasswordRequest userRequest = new ForgotPasswordRequest();
         model.addAttribute("changePasswordRequest", userRequest);
         return "web/change-password";
     }
 
     @PostMapping("/forgot-password")
-    public String postForgotPasswordPage(@Validated(ChangePassword.class) @ModelAttribute("userRequest") UserRequest userRequest, BindingResult bindingResult, Model model) {
+    public String postForgotPasswordPage(@Valid @ModelAttribute("changePasswordRequest") ForgotPasswordRequest userRequest, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "web/change-password";
         }

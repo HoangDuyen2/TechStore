@@ -3,6 +3,7 @@ package hcmute.edu.vn.techstore.service.impl;
 import hcmute.edu.vn.techstore.Enum.ERole;
 import hcmute.edu.vn.techstore.convert.UserResponseConverter;
 import hcmute.edu.vn.techstore.dto.request.ChangePasswordRequest;
+import hcmute.edu.vn.techstore.dto.request.ForgotPasswordRequest;
 import hcmute.edu.vn.techstore.dto.request.ProfileRequest;
 import hcmute.edu.vn.techstore.dto.request.UserRequest;
 import hcmute.edu.vn.techstore.dto.response.UserResponse;
@@ -11,7 +12,6 @@ import hcmute.edu.vn.techstore.entity.RoleEntity;
 import hcmute.edu.vn.techstore.entity.UserEntity;
 import hcmute.edu.vn.techstore.repository.RoleRepository;
 import hcmute.edu.vn.techstore.repository.UserRepository;
-import hcmute.edu.vn.techstore.service.interfaces.IUserRegistrationStrategy;
 import hcmute.edu.vn.techstore.service.interfaces.IUserService;
 import hcmute.edu.vn.techstore.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -157,7 +156,7 @@ public class UserServiceImpl implements IUserService {
         return userEntities.stream().map(userResponseConverter::toUserResponse).toList();
     }
 
-    public boolean updatePassword(UserRequest userRequest) {
+    public boolean updatePassword(ForgotPasswordRequest userRequest) {
         UserEntity userEntity = emailExists(userRequest.getEmail());
 
         if (userEntity == null) {

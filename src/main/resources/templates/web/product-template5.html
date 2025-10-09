@@ -170,6 +170,7 @@
                                         </div>
                                         <div class="product-info">
                                             <form method="post" class="cart">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                 <div class="pro-detail-button">
                                                     <div class="product-quantity-button">
                                                         <div class="product-quantity-action">
@@ -260,6 +261,7 @@
                                                         <div class="ask-form">
                                                             <h6>Ask a question</h6>
                                                             <form method="post" class="contact-form">
+                                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                                 <input type="hidden" name="contact[product url]" value="">
                                                                 <div class="form-grp">
                                                                     <input type="text" name="contact[name]" required="" placeholder="Your name*">
@@ -464,6 +466,7 @@
                                                     <!-- spar-from start -->
                                                     <div class="spr-form collapse" id="add-review">
                                                         <form method="post" class="new-review-form">
+                                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                             <h3 class="spr-form-title">Write a review</h3>
                                                             <fieldset class="spr-form-contact">
                                                                 <div class="spr-form-contact-name">
@@ -2222,6 +2225,7 @@
         <!-- cart-drawer start -->
         <div class="cart-drawer" id="cart-drawer">
             <form method="post" action="javascript:void(0)" class="drawer-contents">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <div class="drawer-fixed-header">
                     <div class="drawer-header">
                         <h6 class="drawer-header-title">Cart</h6>
