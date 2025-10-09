@@ -31,8 +31,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .csrf(csrf -> {
+                    CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+                    repository.setCookieCustomizer(customizer -> customizer.sameSite("Lax"));
+                    csrf.csrfTokenRepository(repository);
+                })
                 .headers(header ->
                         header.httpStrictTransportSecurity(hsts ->
                                         hsts.includeSubDomains(true)
