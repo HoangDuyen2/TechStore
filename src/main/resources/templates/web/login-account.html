@@ -68,7 +68,7 @@
                             <!-- account login start -->
                             <div class="acc-page">
                                 <div class="login">
-                                    <form method="post" th:action="@{/loginProcess}" th:object="${userRequest}">
+                                    <form id="loginForm" method="post" th:action="@{/loginProcess}" th:object="${userRequest}">
                                         <!-- Add error message for BadCredentialsException -->
                                         <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
                                         <div class="login-form-container">
@@ -76,11 +76,13 @@
                                                 <li class="log-email" data-animate="animate__fadeInUp">
                                                     <label>Email address</label>
                                                     <input th:field="*{email}" placeholder="Example: example@gmail.com" autocomplete="off">
+                                                    <span id="emailError" class="text-danger"></span>
                                                     <span class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
                                                 </li>
                                                 <li class="log-pwd" data-animate="animate__fadeInUp">
                                                     <label>Password</label>
                                                     <input type="password" th:field="*{password}" placeholder="Please enter your password!">
+                                                    <span id="passwordError" class="text-danger"></span>
                                                     <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
                                                 </li>
                                             </ul>
@@ -897,5 +899,36 @@
 <script th:src="@{/web/assert/js/plugin.js}"></script>
 <!-- theme js -->
 <script th:src="@{/web/assert/js/main.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('loginForm');
+        const emailInput = form.querySelector('[name="email"]') || document.getElementById('email');
+        const passwordInput = form.querySelector('[name="password"]') || document.getElementById('password');
+
+        const emailErr = document.createElement('span');
+        emailErr.className = 'text-danger';
+        emailInput.insertAdjacentElement('afterend', emailErr);
+
+        const passErr = document.createElement('span');
+        passErr.className = 'text-danger';
+        passwordInput.insertAdjacentElement('afterend', passErr);
+
+        form.addEventListener('submit', function (e) {
+            let valid = true;
+            emailErr.textContent = '';
+            passErr.textContent = '';
+
+            if (!emailInput.value.trim()) {
+                emailErr.textContent = 'Vui lòng nhập email.';
+                valid = false;
+            }
+            if (!passwordInput.value.trim()) {
+                passErr.textContent = 'Vui lòng nhập mật khẩu.';
+                valid = false;
+            }
+            if (!valid) e.preventDefault(); // không gửi lên BE
+        });
+    });
+</script>
 </body>
 </html>
