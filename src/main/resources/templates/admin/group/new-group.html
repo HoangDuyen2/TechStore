@@ -9,11 +9,11 @@
 <!-- #wrapper -->
 <div id="wrapper">
     <!-- #page -->
-    <div id="page" class="">
+    <div class="" id="page">
         <!-- layout-wrap -->
         <div class="layout-wrap">
             <!-- preload -->
-            <div id="preload" class="preload-container">
+            <div class="preload-container" id="preload">
                 <div class="preloading">
                     <span></span>
                 </div>
@@ -67,13 +67,13 @@
                                     <i class="icon-check-circle"></i>
                                     <div class="body-title-2" th:text="${success}"></div>
                                 </div>
-                                <form action="/admin/groups/insert" method="post"
-                                      class="form-new-product form-style-1" th:object="${group}">
+                                <form action="/admin/groups/insert" class="form-new-product form-style-1"
+                                      method="post" th:object="${group}">
                                     <fieldset class="name">
                                         <div class="body-title">Group name <span class="tf-color-1">*</span></div>
-                                        <input class="flex-grow" type="text" placeholder="Group name" name="name"
-                                               tabindex="0" aria-required="true" required="required"
-                                               th:field="*{name}">
+                                        <input aria-required="true" class="flex-grow" name="name" placeholder="Group name"
+                                               required="required" tabindex="0" th:field="*{name}"
+                                               type="text">
                                         <div class="block-warning" th:if="${#fields.hasErrors('name')}">
                                             <i class="icon-alert-octagon"></i>
                                             <div class="body-title-2" th:errors="*{name}"></div>
@@ -81,8 +81,8 @@
                                     </fieldset>
                                     <fieldset class="name">
                                         <div class="body-title">Description</div>
-                                        <textarea class="flex-grow" placeholder="Description" name="description"
-                                                  th:field="*{description}" rows="4"></textarea>
+                                        <textarea class="flex-grow" name="description" placeholder="Description"
+                                                  rows="4" th:field="*{description}"></textarea>
                                         <div class="block-warning" th:if="${#fields.hasErrors('description')}">
                                             <i class="icon-alert-octagon"></i>
                                             <div class="body-title-2" th:errors="*{description}"></div>
@@ -118,11 +118,11 @@
 
 <script>
     // Simple form validation
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const form = document.querySelector('form');
         const nameInput = document.querySelector('input[name="name"]');
 
-        form.addEventListener('submit', function(event) {
+        form.addEventListener('submit', function (event) {
             // Validate name is not empty
             if (!nameInput.value.trim()) {
                 event.preventDefault();
@@ -130,6 +130,15 @@
                 nameInput.focus();
             }
         });
+
+        // Redirect after success message is shown
+        const successMessage = document.querySelector('.block-success');
+        if (successMessage) {
+            // Wait 2 seconds before redirecting to allow users to see the success message
+            setTimeout(function () {
+                window.location.href = '/admin/groups';
+            }, 2000);
+        }
     });
 </script>
 
