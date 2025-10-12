@@ -340,6 +340,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public boolean deleteUsers(List<Long> ids) {
+        for (Long id : ids)
+            updateActived(id, false);
+        return true;
+    }
+
+    @Override
     public boolean isValidEmailOrPhoneNumber(String input) {
         if (input == null || input.trim().isEmpty()) {
             return false;

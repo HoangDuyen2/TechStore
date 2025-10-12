@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -159,5 +160,19 @@ public class UserController {
         }
 
         return result;
+    }
+
+    @PostMapping("/delete-multiple-users")
+    public ResponseEntity<Map<String, String>> deleteUsers(@RequestParam List<Long> ids) {
+        Map<String, String> response = new HashMap<>();
+        if (userService.deleteUsers(ids)){
+            response.put("status", "success");
+            response.put("message", "Users deleted successfully.");
+            return ResponseEntity.ok(response);
+        }else {
+            response.put("status", "error");
+            response.put("message", "Failed to delete users");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }
