@@ -32,8 +32,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> {
-                    CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-                    repository.setCookieCustomizer(customizer -> customizer.sameSite("Lax"));
+                    CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
+                    repository.setCookieCustomizer(customizer -> customizer.sameSite("Lax")
+                            .httpOnly(true)
+                            .secure(true)
+                            .path("/")
+                            .maxAge(3600));
+                    repository.setCookieName("XSRF-TOKEN");
                     csrf.csrfTokenRepository(repository);
                 })
                 .headers(header ->
