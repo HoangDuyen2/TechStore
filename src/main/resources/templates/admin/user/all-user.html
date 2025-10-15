@@ -66,11 +66,21 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <a class="tf-button style-1 w208" th:href="@{/admin/users/add-new-user}"><i class="icon-plus"></i>Add new</a>
+                                        <div class="flex items-center gap10">
+                                            <button id="inactiveSelectedBtn" class="tf-button style-2 w208" style="display: none;">
+                                                <i class="icon-user-minus"></i>Inactive Selected
+                                            </button>
+                                            <a class="tf-button style-1 w208" th:href="@{/admin/users/add-new-user}"><i class="icon-plus"></i>Add new</a>
+                                        </div>
                                     </div>
                                     <div class="wg-table table-all-user">
                                         <ul class="table-title flex gap20 mb-14">
-                                            <li style="width: 18%; min-width: 100px;">
+                                            <li style="width: 3%; min-width: 40px;">
+                                                <div class="body-title">
+                                                    <input type="checkbox" id="selectAllCheckbox" class="checkbox-input">
+                                                </div>
+                                            </li>
+                                            <li style="width: 15%; min-width: 100px;">
                                                 <div class="body-title">User</div>
                                             </li>
                                             <li style="width: 15%; min-width: 100px;">
@@ -88,6 +98,9 @@
                                         </ul>
                                         <ul class="list">
                                             <li class="user-item gap14" th:each="eachUser : ${users}">
+                                                <div style="width: 3%; min-width: 40px;" class="flex items-center justify-center">
+                                                    <input type="checkbox" class="user-checkbox checkbox-input" th:value="${eachUser.userId}">
+                                                </div>
                                                 <div class="image">
                                                     <img th:src="${eachUser.getImage()}"
                                                          alt="Ảnh người dùng mặc định">
@@ -140,6 +153,27 @@
     </div>
     <!-- /#wrapper -->
 
+    <!-- CSS for checkboxes -->
+    <style>
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #3085d6;
+        }
+        
+        #inactiveSelectedBtn {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+        
+        #inactiveSelectedBtn:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+    </style>
+
     <!-- Javascript -->
     <div th:insert="~{admin/fragments/script::script}"></div>
     <script th:src="@{/admin/asset/sweetalert/sweetalert2.all.min.js}"></script>
@@ -147,6 +181,7 @@
     <script th:src="@{/admin/asset/js/search.js}"></script>
     <script>
         $(document).ready(function () {
+            // Handle individual toggle switch
             $(".toggle-switch").on("click", function () {
                 const $this = $(this);
                 const userId = $this.data("user-id");
@@ -175,7 +210,6 @@
                                     text: "User status has been updated.",
                                     confirmButtonColor: "#3085d6"
                                 }).then(() => {
-                                    // Reload hoặc cập nhật UI tại chỗ
                                     location.reload();
                                 });
                             },
@@ -191,6 +225,113 @@
                     }
                 });
             });
+
+            // Handle select all checkbox
+            $("#selectAllCheckbox").on("change", function () {
+                const isChecked = $(this).is(":checked");
+                $(".user-checkbox").prop("checked", isChecked);
+                updateInactiveButtonVisibility();
+            });
+
+            // Handle individual user checkbox
+            $(".user-checkbox").on("change", function () {
+                updateSelectAllCheckbox();
+                updateInactiveButtonVisibility();
+            });
+
+            // Handle inactive selected users button
+            $("#inactiveSelectedBtn").on("click", function () {
+                const selectedUserIds = $(".user-checkbox:checked").map(function () {
+                    return $(this).val();
+                }).get();
+
+                if (selectedUserIds.length === 0) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "No Selection",
+                        text: "Please select at least one user to inactive.",
+                        confirmButtonColor: "#3085d6"
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: `This will inactive ${selectedUserIds.length} user(s).`,
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Yes, inactive them!",
+                    cancelButtonText: "Cancel",
+                    buttonsStyling: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Show loading
+                        Swal.fire({
+                            title: "Processing...",
+                            text: "Please wait while we inactive the selected users.",
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        $.ajax({
+                            url: "/admin/users/delete-multiple-users",
+                            method: "POST",
+                            data: {
+                                ids: selectedUserIds
+                            },
+                            traditional: true,
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success!",
+                                    text: response.message || "Users have been inactivated successfully.",
+                                    confirmButtonColor: "#3085d6"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function (xhr) {
+                                let errorMessage = "Failed to inactive users.";
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMessage = xhr.responseJSON.message;
+                                }
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Failed!",
+                                    text: errorMessage,
+                                    confirmButtonColor: "#d33"
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            function updateSelectAllCheckbox() {
+                const totalCheckboxes = $(".user-checkbox").length;
+                const checkedCheckboxes = $(".user-checkbox:checked").length;
+                
+                if (checkedCheckboxes === 0) {
+                    $("#selectAllCheckbox").prop("indeterminate", false).prop("checked", false);
+                } else if (checkedCheckboxes === totalCheckboxes) {
+                    $("#selectAllCheckbox").prop("indeterminate", false).prop("checked", true);
+                } else {
+                    $("#selectAllCheckbox").prop("indeterminate", true);
+                }
+            }
+
+            function updateInactiveButtonVisibility() {
+                const selectedCount = $(".user-checkbox:checked").length;
+                if (selectedCount > 0) {
+                    $("#inactiveSelectedBtn").show();
+                } else {
+                    $("#inactiveSelectedBtn").hide();
+                }
+            }
         });
     </script>
 </body>

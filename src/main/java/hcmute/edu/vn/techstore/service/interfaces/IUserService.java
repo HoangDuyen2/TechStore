@@ -30,6 +30,6 @@ public interface IUserService {
     boolean resetPassword(ResetPasswordRequest resetPasswordRequest);
     boolean isValidResetToken(String token);
     List<UserSearchResponse> searchUsers(String keyword);
-
+    boolean deleteUsers(List<Long> ids);
     boolean isValidEmailOrPhoneNumber(String input);
 }
