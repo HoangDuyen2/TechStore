@@ -1,6 +1,5 @@
 package hcmute.edu.vn.techstore.controller.customer;
 
-import hcmute.edu.vn.techstore.dto.response.CartResponse;
 import hcmute.edu.vn.techstore.entity.CartEntity;
 import hcmute.edu.vn.techstore.service.interfaces.ICartDetailService;
 import hcmute.edu.vn.techstore.service.interfaces.ICartService;
@@ -12,8 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,8 +27,12 @@ public class CartController {
 
     @GetMapping("/add-cart")
     @ResponseBody
-    public String addCart(@RequestParam("productId") Long productId, Principal principal) {
-        cartService.addCart(productId, SecurityUtils.getCurrentUsername());
+    public String addCart(@RequestParam("productId") Long productId) {
+        String username = SecurityUtils.getCurrentUsername();
+        if (username == null || username.equals("anonymousUser")) {
+            return "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!";
+        }
+        cartService.addCart(productId, username);
         return "Thêm sản phẩm vào giỏ hàng thành công!";
     }
 

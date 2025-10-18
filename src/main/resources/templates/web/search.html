@@ -1131,7 +1131,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <button type="button" onclick="location. href='cart-page.html'" class="btn add-to-cart ajax-spin-cart">
+                                                    <button type="button" class="btn add-to-cart ajax-spin-cart"
+                                                            th:attr="data-product-id=${product.id}">
                                                     <span class="cart-title">Add to cart</span>
                                                     </button>
                                                 </div>
@@ -1893,6 +1894,8 @@
         <script th:src="@{/web/assert/js/plugin.js}"></script>
         <!-- theme js -->
         <script th:src="@{/web/assert/js/main.js}"></script>
+        <!-- cart functions js -->
+        <script th:src="@{/web/assert/js/cart-functions.js}"></script>
     </body>
 
 <!-- Mirrored from spacingtech.com/html/etro/etro/search.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 18 Mar 2025 13:01:03 GMT -->

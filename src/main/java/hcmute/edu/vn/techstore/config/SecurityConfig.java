@@ -50,17 +50,17 @@ public class SecurityConfig {
                                 .contentTypeOptions(contentTypeOptions -> {})
                                 .xssProtection(HeadersConfigurer.XXssConfig::disable).contentSecurityPolicy(csp -> csp
                                         .policyDirectives("default-src 'self'; " +
-                                                "script-src 'self'; " +
-                                                "style-src 'self'; " +
+                                                "script-src 'self' 'unsafe-inline' 'unsafe-hashes'; " +
+                                                "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
                                                 "img-src 'self' data: res.cloudinary.com; " +
-                                                "font-src 'self'; " +
+                                                "font-src 'self' https://fonts.gstatic.com data:; " +
                                                 "connect-src 'self'; " +
                                                 "form-action 'self'; " +
                                                 "frame-ancestors 'none'; " +
                                                 "object-src 'none';")
                                 ))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products","/products/**", "/forgot-password","/api/products/search","/about-us")
+                        .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products","/products/**", "/forgot-password","/api/products/search","/about-us","/add-cart","/decrease-cart","/delete-cart")
                         .permitAll()
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
