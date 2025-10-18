@@ -47,7 +47,6 @@ public class SecurityConfig {
                                                 .maxAgeInSeconds(31536000)//1 year
                                 )
                                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
-                                .contentTypeOptions(contentTypeOptions -> {})
                                 .xssProtection(HeadersConfigurer.XXssConfig::disable).contentSecurityPolicy(csp -> csp
                                         .policyDirectives("default-src 'self'; " +
                                                 "script-src 'self'; " +
@@ -60,12 +59,12 @@ public class SecurityConfig {
                                                 "object-src 'none';")
                                 ))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/register","/uploads/**","/web/assert/**","/forgot-password","/products","/products/**", "/forgot-password","/api/products/search","/about-us")
+                        .requestMatchers("/register", "/uploads/**", "/web/assert/**", "/forgot-password", "/products", "/products/**", "/forgot-password", "/api/products/search", "/about-us")
                         .permitAll()
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
                         .requestMatchers("/staff/**", "/admin/asset/**")
-                        .hasAnyRole("STAFF","ADMIN")
+                        .hasAnyRole("STAFF", "ADMIN")
                         .requestMatchers("/admin/**")
                         .hasRole("ADMIN")
                         .anyRequest()
