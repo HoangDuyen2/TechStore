@@ -2,7 +2,6 @@ package hcmute.edu.vn.techstore.controller.customer;
 
 import hcmute.edu.vn.techstore.Enum.EOrderStatus;
 import hcmute.edu.vn.techstore.Enum.EPayment;
-import hcmute.edu.vn.techstore.config.VNPAYConfig;
 import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
 import hcmute.edu.vn.techstore.service.interfaces.IOrderService;
 import hcmute.edu.vn.techstore.service.payment.PaymentStrategy;
@@ -10,16 +9,13 @@ import hcmute.edu.vn.techstore.service.payment.PaymentStrategyFactory;
 import hcmute.edu.vn.techstore.service.payment.VnPayPaymentStrategy;
 import hcmute.edu.vn.techstore.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpSession;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +69,7 @@ public class OrderController {
             // Get the appropriate payment strategy
             PaymentStrategy paymentStrategy = paymentStrategyFactory.getStrategy(checkoutRequest.getPaymentMethod());
 
-            if (checkoutRequest.getPaymentMethod() == EPayment.Paypal||checkoutRequest.getPaymentMethod() == EPayment.VNPay) {
+            if (checkoutRequest.getPaymentMethod() == EPayment.Paypal || checkoutRequest.getPaymentMethod() == EPayment.VNPay) {
                 session.setAttribute("checkoutRequest", checkoutRequest);
             }
 
@@ -99,8 +95,8 @@ public class OrderController {
 
     @GetMapping("/paypal/success")
     public String handlePayPalSuccess(@RequestParam("paymentId") String paymentId,
-                                    @RequestParam("PayerID") String payerId,
-                                    HttpSession session) {
+                                      @RequestParam("PayerID") String payerId,
+                                      HttpSession session) {
         try {
             CheckoutRequest checkoutRequest = (CheckoutRequest) session.getAttribute("checkoutRequest");
             if (checkoutRequest == null) {
@@ -134,7 +130,7 @@ public class OrderController {
 
         // 2.2 Verify payment và lấy status
         int paymentStatus =
-                ((VnPayPaymentStrategy)paymentStrategyFactory
+                ((VnPayPaymentStrategy) paymentStrategyFactory
                         .getStrategy(EPayment.VNPay))
                         .orderReturn(request);
 
@@ -161,13 +157,21 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{orderId}/cancel")
-    public String cancelOrder(Model model, @PathVariable Long orderId) {
+    public String cancelOrder(@PathVariable Long orderId) {
+        String email = SecurityUtils.getCurrentUsername();
+        if (!orderService.isOrderOwnedByUser(orderId, email)) {
+            return "web/404";
+        }
         orderService.changeStatusOrder(orderId, EOrderStatus.CANCELLED);
         return "redirect:/order-history";
     }
 
     @GetMapping("/orders/{orderId}/received")
-    public String receivedOrder(Model model, @PathVariable Long orderId) {
+    public String receivedOrder(@PathVariable Long orderId) {
+        String email = SecurityUtils.getCurrentUsername();
+        if (!orderService.isOrderOwnedByUser(orderId, email)) {
+            return "web/404";
+        }
         orderService.changeStatusOrder(orderId, EOrderStatus.DELIVERED_SUCCESSFULLY);
         return "redirect:/order-history";
     }
@@ -175,6 +179,10 @@ public class OrderController {
     @PostMapping("/orders/{id}/change-address")
     @ResponseBody
     public ResponseEntity<?> changeOrderAddress(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        String email = SecurityUtils.getCurrentUsername();
+        if (!orderService.isOrderOwnedByUser(id, email)) {
+            return ResponseEntity.status(403).body("You do not have permission to change this order's address.");
+        }
         String newAddress = body.get("address");
         orderService.updateOrderAddress(id, newAddress);
         return ResponseEntity.ok().build();

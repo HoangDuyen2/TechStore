@@ -7,7 +7,10 @@ import hcmute.edu.vn.techstore.dto.request.CheckoutRequest;
 import hcmute.edu.vn.techstore.dto.response.OrderCompleteRespone;
 import hcmute.edu.vn.techstore.dto.response.OrderResponse;
 import hcmute.edu.vn.techstore.dto.response.ReportResponse;
-import hcmute.edu.vn.techstore.entity.*;
+import hcmute.edu.vn.techstore.entity.CartEntity;
+import hcmute.edu.vn.techstore.entity.DiscountEntity;
+import hcmute.edu.vn.techstore.entity.OrderDetailEntity;
+import hcmute.edu.vn.techstore.entity.OrderEntity;
 import hcmute.edu.vn.techstore.repository.*;
 import hcmute.edu.vn.techstore.service.impl.strategy.ReportContext;
 import hcmute.edu.vn.techstore.service.interfaces.*;
@@ -20,7 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +43,6 @@ public class OrderServiceImpl implements IOrderService {
     private final OrderConverter orderConverter;
     private final ReportContext reportContext;
     private final EmailSender emailSender;
-
 
 
     @Override
@@ -135,10 +139,7 @@ public class OrderServiceImpl implements IOrderService {
             orderEntity.setDiscounts(checkoutRequest.getDiscounts().stream()
                     .map(discountCheckout -> {
                         DiscountEntity discountEntity = discountService.findByCode(discountCheckout.getDiscountCode());
-                        if (discountEntity != null) {
-                            return discountEntity;
-                        }
-                        return null;
+                        return discountEntity;
                     }).collect(Collectors.toSet()));
         }
         orderEntity.setPayment(paymentRepository.findByName(checkoutRequest.getPaymentMethod().name()).orElse(null));
@@ -160,7 +161,7 @@ public class OrderServiceImpl implements IOrderService {
         // Clear cart details after order is created
         CartEntity cartEntity = cartRepository.findByCart_User_Account_Email(checkoutRequest.getEmail()).orElse(null);
         for (CheckoutRequest.ProductCheckout productCheckout : checkoutRequest.getProductCheckouts()) {
-            cartDetailService.deleteCartDetail(productCheckout.getId(),cartEntity);
+            cartDetailService.deleteCartDetail(productCheckout.getId(), cartEntity);
         }
 
         return orderEntity.getId();
@@ -265,5 +266,11 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public ReportResponse getReport(LocalDate startDate, LocalDate endDate, String reportType) {
         return reportContext.generateReport(reportType, startDate, endDate);
+    }
+
+    @Override
+    public boolean isOrderOwnedByUser(Long orderId, String userEmail) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
+        return orderEntity != null && orderEntity.getUser().getAccount().getEmail().equals(userEmail);
     }
 }
