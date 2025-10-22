@@ -15,14 +15,19 @@ public interface IOrderService {
     CheckoutRequest applyDiscount(CheckoutRequest checkoutRequest);
 
     Long createOrder(CheckoutRequest checkoutRequest);
+
     boolean changeStatusOrder(Long orderId, EOrderStatus status);
+
     List<OrderResponse> getAllOrdersByUserEmail(String email);
 
     List<OrderResponse> getAllOrders();
+
     OrderResponse getOrderById(Long orderId);
 
     OrderCompleteRespone getOrderCompleteResponse(Long orderId);
+
     boolean updateOrderAddress(Long orderId, String address);
+
     List<OrderResponse> getOrdersByStatus(EOrderStatus status);
 
     String getTotalPurchaseDue();
@@ -30,4 +35,6 @@ public interface IOrderService {
     String getTotalProductsSold();
 
     ReportResponse getReport(LocalDate startDate, LocalDate endDate, String reportType);
+
+    boolean isOrderOwnedByUser(Long orderId, String userEmail);
 }
