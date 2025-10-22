@@ -59,7 +59,7 @@ public class SecurityConfig {
                                                 "object-src 'none';")
                                 ))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/register", "/uploads/**", "/web/assert/**", "/forgot-password", "/products", "/products/**", "/forgot-password", "/api/products/search", "/about-us")
+                        .requestMatchers("/register", "/uploads/**", "/web/assert/**", "/forgot-password", "/reset-password", "/products", "/products/**", "/forgot-password", "/api/products/search", "/about-us")
                         .permitAll()
                         .requestMatchers("/web/**")
                         .hasAnyRole("CUSTOMER", "ADMIN", "STAFF")
